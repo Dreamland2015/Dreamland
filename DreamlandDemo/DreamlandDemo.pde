@@ -38,7 +38,9 @@ void setup()
 	lx.setPatterns(new LXPattern[] 
 	{
 		new LayerDemoPattern(lx),
-		new IteratorTestPattern(lx)
+		new IteratorTestPattern(lx),
+		new SolidColorPattern(lx, 100),
+		new BaseHuePattern(lx)
 	});
 
 	// Add pieces of the UI

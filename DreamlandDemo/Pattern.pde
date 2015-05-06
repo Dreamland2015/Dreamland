@@ -7,14 +7,17 @@ class LayerDemoPattern extends LXPattern {
   
   private final BasicParameter colorSpread = new BasicParameter("Clr", 0.5, 0, 3);
   private final BasicParameter stars = new BasicParameter("Stars", 100, 0, 100);
-  private final BasicParameter saturation = new BasicParameter("sat",100, 0, 100);
+  private final BasicParameter sat = new BasicParameter("sat",100, 0, 100);
+  private final BasicParameter brightPercent = new BasicParameter("Bright %", 1, 0, 1);
 
   
-  public LayerDemoPattern(LX lx) {
+  public LayerDemoPattern(LX lx) 
+  {
     super(lx);
     addParameter(colorSpread);
     addParameter(stars);
-    addParameter(saturation);
+    addParameter(sat);
+    addParameter(brightPercent);
     addLayer(new CircleLayer(lx));
     addLayer(new RodLayer(lx));
     for (int i = 0; i < 200; ++i) {
@@ -47,7 +50,7 @@ class LayerDemoPattern extends LXPattern {
         colors[p.index] = LXColor.hsb(
           lx.getBaseHuef() + colorSpread.getValuef() * distanceFromCenter,
           100,
-          max(0, 100 - falloff*distanceFromBrightness)
+          max(0, 100 - falloff*distanceFromBrightness) * brightPercent.getValuef()
         );
       }
     }
@@ -70,8 +73,8 @@ class LayerDemoPattern extends LXPattern {
         if (b > 0) {
           addColor(p.index, LXColor.hsb(
             lx.getBaseHuef() + p.z,
-            saturation.getValuef(),
-            b
+            sat.getValuef(),
+            b * brightPercent.getValuef()
           ));
         }
       }
