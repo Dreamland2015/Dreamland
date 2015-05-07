@@ -2,5 +2,5 @@
 
 void buildOutputs()
 {
-	lx.addOutput(new FadecandyOutput(lx, "127.0.0.1", 7890));
+	lx.addOutput(new FadecandyOutput(lx, "192.168.2.2", 7890));
 }

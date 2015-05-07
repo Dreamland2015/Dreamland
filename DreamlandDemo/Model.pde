@@ -11,7 +11,7 @@ static class Model extends LXModel
   private static class Fixture extends LXAbstractFixture 
   {
     private static final int OFFSET = 2 * FEET;
-    private static final int NUMBER_OF_LEGS = 1;
+    private static final int NUMBER_OF_LEGS = 9;
     private static final int NUMBER_OF_LEDS_PER_LEG = 16;
     
     private Fixture() 

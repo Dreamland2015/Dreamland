@@ -148,7 +148,7 @@ static class Model extends LXModel
   private static class Fixture extends LXAbstractFixture 
   {
     private static final int OFFSET = 2 * FEET;
-    private static final int NUMBER_OF_LEGS = 1;
+    private static final int NUMBER_OF_LEGS = 9;
     private static final int NUMBER_OF_LEDS_PER_LEG = 16;
     
     private Fixture() 
@@ -180,10 +180,11 @@ static class Model extends LXModel
  
 class LayerDemoPattern extends LXPattern {
   
-  private final BasicParameter colorSpread = new BasicParameter("Clr", 0.5f, 0, 3);
+  private final BasicParameter colorSpread = new BasicParameter("Clr", 3, 0, 3);
   private final BasicParameter stars = new BasicParameter("Stars", 100, 0, 100);
   private final BasicParameter sat = new BasicParameter("sat",100, 0, 100);
   private final BasicParameter brightPercent = new BasicParameter("Bright %", 1, 0, 1);
+  private final BasicParameter sinPeriod = new BasicParameter("Period", 11000, 0, 1);
 
   
   public LayerDemoPattern(LX lx) 
@@ -193,11 +194,12 @@ class LayerDemoPattern extends LXPattern {
     addParameter(stars);
     addParameter(sat);
     addParameter(brightPercent);
+    addParameter(sinPeriod);
     addLayer(new CircleLayer(lx));
-    addLayer(new RodLayer(lx));
-    for (int i = 0; i < 200; ++i) {
-      addLayer(new StarLayer(lx));
-    }
+    // addLayer(new RodLayer(lx));
+    // for (int i = 0; i < 200; ++i) {
+    //   addLayer(new StarLayer(lx));
+    // }
   }
   
   public void run(double deltaMs) {
@@ -224,64 +226,64 @@ class LayerDemoPattern extends LXPattern {
         float distanceFromBrightness = dist(p.x, abs(p.y - model.cy), brightnessX.getValuef(), yWave);
         colors[p.index] = LXColor.hsb(
           lx.getBaseHuef() + colorSpread.getValuef() * distanceFromCenter,
-          100,
+          sat.getValuef(),
           max(0, 100 - falloff*distanceFromBrightness) * brightPercent.getValuef()
         );
       }
     }
   }
   
-  private class RodLayer extends LXLayer {
+  // private class RodLayer extends LXLayer {
     
-    private final SinLFO zPeriod = new SinLFO(2000, 5000, 9000);
-    private final SinLFO zPos = new SinLFO(model.zMin, model.zMax, zPeriod);
+  //   private final SinLFO zPeriod = new SinLFO(2000, 5000, 9000);
+  //   private final SinLFO zPos = new SinLFO(model.zMin, model.zMax, zPeriod);
     
-    private RodLayer(LX lx) {
-      super(lx);
-      addModulator(zPeriod).start();
-      addModulator(zPos).start();
-    }
+  //   private RodLayer(LX lx) {
+  //     super(lx);
+  //     addModulator(zPeriod).start();
+  //     addModulator(zPos).start();
+  //   }
     
-    public void run(double deltaMs) {
-      for (LXPoint p : model.points) {
-        float b = 100 - dist(p.x, p.y, model.cx, model.cy) - abs(p.z - zPos.getValuef());
-        if (b > 0) {
-          addColor(p.index, LXColor.hsb(
-            lx.getBaseHuef() + p.z,
-            sat.getValuef(),
-            b * brightPercent.getValuef()
-          ));
-        }
-      }
-    }
-  }
+  //   public void run(double deltaMs) {
+  //     for (LXPoint p : model.points) {
+  //       float b = 100 - dist(p.x, p.y, model.cx, model.cy) - abs(p.z - zPos.getValuef());
+  //       if (b > 0) {
+  //         addColor(p.index, LXColor.hsb(
+  //           lx.getBaseHuef() + p.z,
+  //           sat.getValuef(),
+  //           b * brightPercent.getValuef()
+  //         ));
+  //       }
+  //     }
+  //   }
+  // }
   
-  private class StarLayer extends LXLayer {
+  // private class StarLayer extends LXLayer {
     
-    private final TriangleLFO maxBright = new TriangleLFO(0, stars, random(2000, 8000));
-    private final SinLFO brightness = new SinLFO(-1, maxBright, random(3000, 9000)); 
+  //   private final TriangleLFO maxBright = new TriangleLFO(0, stars, random(2000, 8000));
+  //   private final SinLFO brightness = new SinLFO(-1, maxBright, random(3000, 9000)); 
     
-    private int index = 0;
+  //   private int index = 0;
     
-    private StarLayer(LX lx) { 
-      super(lx);
-      addModulator(maxBright).start();
-      addModulator(brightness).start();
-      pickStar();
-    }
+  //   private StarLayer(LX lx) { 
+  //     super(lx);
+  //     addModulator(maxBright).start();
+  //     addModulator(brightness).start();
+  //     pickStar();
+  //   }
     
-    private void pickStar() {
-      index = (int) random(0, model.size-1);
-    }
+  //   private void pickStar() {
+  //     index = (int) random(0, model.size-1);
+  //   }
     
-    public void run(double deltaMs) {
-      if (brightness.getValuef() <= 0) {
-        pickStar();
-      } else {
-        addColor(index, LXColor.hsb(lx.getBaseHuef(), 50, brightness.getValuef()));
-      }
-    }
-  }
+  //   public void run(double deltaMs) {
+  //     if (brightness.getValuef() <= 0) {
+  //       pickStar();
+  //     } else {
+  //       addColor(index, LXColor.hsb(lx.getBaseHuef(), 50, brightness.getValuef()));
+  //     }
+  //   }
+  // }
 }
 /**
  * Here's a simple extension of a camera component. This will be
@@ -397,7 +399,7 @@ class UIComponentsDemo extends UIWindow {
 
 public void buildOutputs()
 {
-	lx.addOutput(new FadecandyOutput(lx, "127.0.0.1", 7890));
+	lx.addOutput(new FadecandyOutput(lx, "192.168.2.2", 7890));
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "DreamlandDemo" };
