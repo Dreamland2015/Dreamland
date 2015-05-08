@@ -1,36 +1,24 @@
-#!/usr/bin/env python
 
-import os
-import sys
+
+#   Hello World server in Python
+#   Binds REP socket to tcp://*:5555
+#   Expects b"Hello" from client, replies with b"World"
+#
+
 import time
-
 import zmq
 
-# ZMQ context, only need one per application
 context = zmq.Context()
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:5555")
 
-# for sending messages
-z_send = context.socket(zmq.PUB)
-z_send.bind("tcp://*:5555")
-
-# for receiving messages
-z_recv = context.socket(zmq.SUB)
-z_recv.bind("tcp://*:5556")
-z_recv.setsockopt(zmq.SUBSCRIBE, b'')  # subscribe to everything
-
-print("ZMQ server started.")
 while True:
-    message = None
+    #  Wait for next request from client
+    message = socket.recv()
+    print("Received request: %s" % message)
 
-    # wait for incoming message
-    try:
-        message = z_recv.recv()
-    except zmq.ZMQError as err:
-        print("Receive error: " + str(err))
+    #  Do some 'work'
+    time.sleep(1)
 
-    # replay message to all subscribers
-    if message:
-        try:
-            z_send.send(message)
-        except zmq.ZMQError as err:
-            print("Send error: " + str(err))
+    #  Send reply back to client
+    socket.send(b"World")

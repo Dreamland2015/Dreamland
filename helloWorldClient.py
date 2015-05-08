@@ -1,37 +1,28 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import time
+#
+#   Hello World client in Python
+#   Connects REQ socket to tcp://localhost:5555
+#   Sends "Hello" to server, expects "World" back
+#
 
 import zmq
+import time
 
+sendMessage = b"Hello"
 context = zmq.Context()
 
-z_recv = context.socket(zmq.SUB)
-z_recv.connect("tcp://localhost:5555")
+#  Socket to talk to server
+print("Connecting to hello world server…")
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://localhost:5555")
 
-z_send = context.socket(zmq.PUB)
-z_send.connect("tcp://localhost:5556")
-# z_recv.setsockopt(zmq.SUBSCRIBE, 'KEYBOARD:')
-z_recv.setsockopt(zmq.SUBSCRIBE, b'')  # subscribe to everything
-
-print("ZMQ Client Started!")
-
+#  Do 10 requests, waiting each time for a response
 while True:
-    sys.stdout.write("Message: ")
-    message = Hello World
+    print("Sending request…")
+    socket.send(sendMessage)
 
-    if message:
-        try:
-            print('SEND:' + message)
-            z_send.send(message)
-        except zmq.ZMQError as err:
-            print('Send error: ' + str(err))
-
-    try:
-        # don't block if no message waiting
-        in_message = z_recv.recv(zmq.DONTWAIT)
-        print('RECV:' + in_message)
-    except zmq.ZMQError as err:
-        print('Receive error: ' + str(err))
+    #  Get the reply.
+    message = socket.recv()
+    print("Received reply [ %s ]" % message.decode())
+    time.sleep(1)
