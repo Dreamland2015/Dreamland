@@ -14,17 +14,17 @@ z_recv.connect("tcp://localhost:5555")
 z_send = context.socket(zmq.PUB)
 z_send.connect("tcp://localhost:5556")
 # z_recv.setsockopt(zmq.SUBSCRIBE, 'KEYBOARD:')
-z_recv.setsockopt(zmq.SUBSCRIBE, '')  # subscribe to everything
+z_recv.setsockopt(zmq.SUBSCRIBE, b'')  # subscribe to everything
 
-print "ZMQ Client Started!"
+print("ZMQ Client Started!")
 
 while True:
     sys.stdout.write("Message: ")
-    message = raw_input().strip()
+    message = Hello World
 
     if message:
         try:
-            print 'SEND:' + message
+            print('SEND:' + message)
             z_send.send(message)
         except zmq.ZMQError as err:
             print('Send error: ' + str(err))

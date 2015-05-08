@@ -16,7 +16,7 @@ z_send.bind("tcp://*:5555")
 # for receiving messages
 z_recv = context.socket(zmq.SUB)
 z_recv.bind("tcp://*:5556")
-z_recv.setsockopt(zmq.SUBSCRIBE, '')  # subscribe to everything
+z_recv.setsockopt(zmq.SUBSCRIBE, b'')  # subscribe to everything
 
 print("ZMQ server started.")
 while True:
