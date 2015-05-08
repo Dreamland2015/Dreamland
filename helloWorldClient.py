@@ -1,23 +1,37 @@
-#
-#   Hello World client in Python
-#   Connects REQ socket to tcp://localhost:5555
-#   Sends "Hello" to server, expects "World" back
-#
+#!/usr/bin/env python
+
+import os
+import sys
+import time
 
 import zmq
 
 context = zmq.Context()
 
-#  Socket to talk to server
-print("Connecting to hello world server…")
-socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
+z_recv = context.socket(zmq.SUB)
+z_recv.connect("tcp://localhost:5555")
 
-#  Do 10 requests, waiting each time for a response
-for request in range(10):
-    print("Sending request %s …" % request)
-    socket.send(b"Hello")
+z_send = context.socket(zmq.PUB)
+z_send.connect("tcp://localhost:5556")
+# z_recv.setsockopt(zmq.SUBSCRIBE, 'KEYBOARD:')
+z_recv.setsockopt(zmq.SUBSCRIBE, '')  # subscribe to everything
 
-    #  Get the reply.
-    message = socket.recv()
-    print("Received reply %s [ %s ]" % (request, message))
+print "ZMQ Client Started!"
+
+while True:
+    sys.stdout.write("Message: ")
+    message = raw_input().strip()
+
+    if message:
+        try:
+            print 'SEND:' + message
+            z_send.send(message)
+        except zmq.ZMQError as err:
+            print('Send error: ' + str(err))
+
+    try:
+        # don't block if no message waiting
+        in_message = z_recv.recv(zmq.DONTWAIT)
+        print('RECV:' + in_message)
+    except zmq.ZMQError as err:
+        print('Receive error: ' + str(err))
