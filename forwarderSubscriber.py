@@ -11,7 +11,7 @@ print("Collecting updates from Dreamland servers...")
 
 socket.connect("tcp://localhost:%s" % port)
 
-socket.setsockopt(zmq.SUBSCRIBE, dreamlandObject)
+socket.setsockopt_string(zmq.SUBSCRIBE, dreamlandObject)
 
 while True:
 	recievedString = socket.recv_string()
