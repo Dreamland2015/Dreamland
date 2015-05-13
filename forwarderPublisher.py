@@ -13,5 +13,5 @@ while True:
     topic = "9"
     messagedata = "server#%s" % publisher_id
     print("%s %s" % (topic, messagedata))
-    socket.send_string("%d %s" % (topic, messagedata))
+    socket.send_string("%s %s" % (topic, messagedata))
     time.sleep(1)
