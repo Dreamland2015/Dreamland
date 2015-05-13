@@ -2,7 +2,7 @@ import sys
 import zmq
 
 port = "5560"
-dreamlandObject = b"9"
+dreamlandObject = "9"
 
 # Socket to talk to server
 context = zmq.Context()
@@ -14,6 +14,6 @@ socket.connect("tcp://localhost:%s" % port)
 socket.setsockopt(zmq.SUBSCRIBE, dreamlandObject)
 
 while True:
-	recievedString = socket.recv()
+	recievedString = socket.recv_string()
 	subscribed, command = recievedString.split()
 	print(command)
