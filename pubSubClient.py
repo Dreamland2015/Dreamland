@@ -13,7 +13,7 @@ context = zmq.Context()
 socket = context.socket(zmq.SUB)
 
 
-ip = "192.168.1.141"
+ip = "192.168.1.193"
 port = 5556
 string = "tcp://" + ip + ":" + str(port)
 
