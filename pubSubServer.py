@@ -18,4 +18,5 @@ while True:
 
 	for number in range(10):
 		socket.send_string("%s %i " % (dreamLandObject, number))
+		print(str(number))
 		time.sleep(1)
