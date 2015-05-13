@@ -31,4 +31,4 @@ while True:
 	string = socket.recv_string()
 	subcribedObject, number = string.split()
 	print("Recieved: %s, from %s" % (number, subcribedObject))
-	time.sleep(1.5)
+	# time.sleep(1.5)
