@@ -11,6 +11,7 @@ import time
 #  Socket to talk to server
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
+print("testing")
 
 
 ip = sys.argv[1]
