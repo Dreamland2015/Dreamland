@@ -14,7 +14,7 @@ socket = context.socket(zmq.SUB)
 
 
 ip = sys.argv[1]
-port = 5556
+port = 5432
 string = "tcp://" + ip + ":" + str(port)
 
 print("Connecting to Dreamland server at %s : %d" % (ip, port))

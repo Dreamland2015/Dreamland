@@ -11,7 +11,7 @@ import time
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5556")
+socket.bind("tcp://*:5432")
 
 while True:
 	dreamLandObject = "bench1"
