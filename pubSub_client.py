@@ -26,12 +26,14 @@ while True:
         try:
             print("Sending value : " + message)
             zmq_send.send_string(message)
+            break
         except zmq.ZMQError as err:
             print("Error while trying to send the value " + message + " : " + str(err))
 
         try:
             incoming_message = zmq_recv.recv_string()
             print("Value received from the server : " + incoming_message)
+            break
         except zmq.ZMQError as err:
             print(' Receive error: ' + str(err))
 

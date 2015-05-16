@@ -7,14 +7,8 @@
 import sys
 import zmq
 import time
-import git
 
 
-def PullRepo():
-	g = git.cmd.Git('/Users/geethree/Documents/Repo/Dreamland')
-	g.pull()
-
-PullRepo()
 #  Socket to talk to server
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
