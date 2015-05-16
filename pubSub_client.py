@@ -9,12 +9,12 @@ context = zmq.Context()
 # Configure ZeroMQ to send messages
 zmq_recv = context.socket(zmq.SUB)
 # The communication is made on socket 1111
-zmq_recv.connect("tcp://127.0.0.1:1111")
+zmq_recv.connect("tcp://10.0.1.165:1111")
 
 # Configure ZeroMQ to receive messages
 zmq_send = context.socket(zmq.PUB)
 # The communication is made on socket 1112
-zmq_send.connect("tcp://127.0.0.1:1112")
+zmq_send.connect("tcp://10.0.1.195:1112")
 zmq_recv.setsockopt_string(zmq.SUBSCRIBE, '')
 
 print("Pi Home Server ZeroMQ client running !")
