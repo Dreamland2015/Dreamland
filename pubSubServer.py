@@ -1,22 +1,36 @@
 #!/usr/bin/env python
-
-#   Dreamland output server
-#   Binds PUB socket to tcp://*:5556
-#   Publishes effect outputs to network
-#
-
-import zmq
+import os
+import sys
 import time
-
+import zmq
 
 context = zmq.Context()
-socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5432")
+
+# Configure ZeroMQ to send messages
+zmq_recv = context.socket(zmq.SUB)
+# The communication is made on socket 1111
+zmq_recv.connect("tcp://192.168.1.33:1111")
+
+# Configure ZeroMQ to receive messages
+zmq_send = context.socket(zmq.PUB)
+# The communication is made on socket 1112
+zmq_send.connect("tcp://192.168.1.33:1112")
+zmq_recv.setsockopt(zmq.SUBSCRIBE, '')
+
+print("Pi Home Server ZeroMQ client running !")
 
 while True:
-	dreamLandObject = "bench1"
+    print "Input value to send : "
+    message = raw_input().strip()
 
-	for number in range(10):
-		socket.send_string("%s %i " % (dreamLandObject, number))
-		print(str(number))
-		time.sleep(1)
+    if message:
+        try:
+            print("Sending value : " + message zmq_send.send(message))
+        except zmq.ZMQError as err:
+            print("Error while trying to send the value " + message + " : " + str(err))
+
+    try:
+        incoming_message = zmq_recv.recv()
+        print("Value received from the server : " + incoming_message)
+    except zmq.Zmqerror as err:
+        print(' Receive error: ' + str(err))
