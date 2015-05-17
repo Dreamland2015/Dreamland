@@ -10,7 +10,7 @@ import zmq
 import time
 import sys
 
-sendMessage = b"Hello"
+sendMessage = "Hello"
 context = zmq.Context()
 
 ip = sys.argv[1]
@@ -25,9 +25,9 @@ socket.connect(string)
 #  Do 10 requests, waiting each time for a response
 while True:
     print("Sending request…")
-    socket.send(sendMessage)
+    socket.send_string(sendMessage)
 
     #  Get the reply.
-    message = socket.recv()
-    print("Received reply [ %s ]" % message.decode())
+    message = socket.recv_string()
+    print("Received reply [ %s ]" % message)
     time.sleep(1)
