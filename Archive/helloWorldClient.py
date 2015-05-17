@@ -8,14 +8,19 @@
 
 import zmq
 import time
+import sys
 
 sendMessage = b"Hello"
 context = zmq.Context()
 
+ip = sys.argv[1]
+port = 5555
+string = "tcp://" + ip + ":" + str(port)
+
 #  Socket to talk to server
 print("Connecting to hello world server…")
 socket = context.socket(zmq.REQ)
-socket.connect("tcp://192.168.2.3:5555")
+socket.connect(string)
 
 #  Do 10 requests, waiting each time for a response
 while True:
