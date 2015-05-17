@@ -1,51 +1,27 @@
 #!/usr/bin/env python
-import os
+
+# Import basic packages
+# import os
+# import time
 import sys
-import time
 import zmq
 
+# Take in IP from commandline, build string to connect to
+ip = sys.argv[1]
+port = 1111
+string = "tcp://" + ip + ":" + str(port)
+
+# Initialize the ZeroMQ Conext
 context = zmq.Context()
 
-# Configure ZeroMQ to send messages
-# zmq_recv = context.socket(zmq.SUB)
-# The communication is made on socket 1111
-# zmq_recv.connect("tcp://10.0.1.165:1111")
+# Configure ZeroMQ to recieve messages
+zmq_recv = context.socket(zmq.SUB)
 
-# Configure ZeroMQ to receive messages
-zmq_send = context.socket(zmq.PUB)
-# The communication is made on socket 1112
-zmq_send.connect("tcp://10.0.1.165:1112")
-# zmq_recv.setsockopt_string(zmq.SUBSCRIBE, '')
+
+# Configure zmq connection
+zmq_recv.connect(string)
+zmq_recv.setsockopt_string(zmq.SUBSCRIBE, '')  # recieve string, subscribe to all
+
+print("Connecting to Dreamland server at %s : %d" % (ip, port))
 
 print("Pi Home Server ZeroMQ client running !")
-
-while True:
-    message = input("Input value to send : ")
-
-    if message:
-        try:
-            print("Sending value : " + message)
-            zmq_send.send_string(message)
-            break
-        except zmq.ZMQError as err:
-            print("Error while trying to send the value " + message + " : " + str(err))
-
-        # try:
-        #     incoming_message = zmq_recv.recv_string()
-        #     print("Value received from the server : " + incoming_message)
-        #     break
-        # except zmq.ZMQError as err:
-        #     print(' Receive error: ' + str(err))
-
-
-# if message:
-#  try:
-#      print("Sending value : " + message zmq_send.send(message))
-#  except zmq.ZMQError as err:
-#      print("Error while trying to send the value " + message + " : " + str(err))
-
-#  try:
-#      incoming_message = zmq_recv.recv()
-#      print("Value received from the server : " + incoming_message)
-#  except zmq.Zmqerror as err:
-#      print(' Receive error: ' + str(err))
