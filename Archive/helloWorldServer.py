@@ -2,7 +2,7 @@
 
 #   Hello World server in Python
 #   Binds REP socket to tcp://*:5555
-#   Expects b"Hello" from client, replies with b"World"
+#   Expects "Hello" from client, replies with "World"
 #
 
 import time
@@ -14,11 +14,11 @@ socket.bind("tcp://*:5555")
 
 while True:
     #  Wait for next request from client
-    message = socket.recv()
+    message = socket.recv_string()
     print("Received request: %s" % message)
 
     #  Do some 'work'
     time.sleep(1)
 
     #  Send reply back to client
-    socket.send(b"World")
+    socket.send_string("World")

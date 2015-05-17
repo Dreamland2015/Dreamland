@@ -29,5 +29,5 @@ while True:
 
     #  Get the reply.
     message = socket.recv_string()
-    print("Received reply [ %s ]" % message)
+    print(" %s %s " % (sendMessage, message))
     time.sleep(1)
