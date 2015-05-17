@@ -25,3 +25,7 @@ zmq_recv.setsockopt_string(zmq.SUBSCRIBE, '')  # recieve string, subscribe to al
 print("Connecting to Dreamland server at %s : %d" % (ip, port))
 
 print("Pi Home Server ZeroMQ client running !")
+
+while True:
+    string = zmq_recv.recv_string()
+    print(string)

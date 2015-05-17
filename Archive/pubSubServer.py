@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#   Dreamland output server
+#   Dreamland object output server
 #   Binds PUB socket to tcp://*:5556
 #   Publishes effect outputs to network
 #
@@ -13,6 +13,8 @@ context = zmq.Context()
 
 zmq_send = context.socket(zmq.PUB)
 zmq_send.bind("tcp://*:1111")
+
+zmq_recv = context.
 
 while True:
     dreamLandObject = "bench1"

@@ -3,7 +3,7 @@
 # Import basic packages
 # import os
 # import sys
-# import time
+import time
 import zmq
 
 # Initialize the ZeroMQ context
@@ -17,3 +17,7 @@ zmq_send.bind("tcp://*:1111")
 print ("Sending messages on tcp://*:1111")
 
 print ("Pi Home Server ZeroMQ server running !")
+
+while True:
+    zmq_send.send_string("Hello World")
+    time.sleep(1)
