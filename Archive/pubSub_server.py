@@ -19,5 +19,7 @@ print ("Sending messages on tcp://*:1111")
 print ("Pi Home Server ZeroMQ server running !")
 
 while True:
-    zmq_send.send_string("Hello World")
+    stringToSend = "Hellow World"
+    zmq_send.send_string(stringToSend)
+    print(stringToSend)
     time.sleep(1)
