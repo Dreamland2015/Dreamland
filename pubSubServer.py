@@ -10,13 +10,14 @@ import time
 
 
 context = zmq.Context()
-socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5432")
+
+zmq_send = context.socket(zmq.PUB)
+zmq_send.bind("tcp://*:1111")
 
 while True:
     dreamLandObject = "bench1"
 
     for number in range(10):
-        socket.send_string("%s %i " % (dreamLandObject, number))
+        zmq_send.send_string("%s %i " % (dreamLandObject, number))
         print(str(number))
         time.sleep(1)
