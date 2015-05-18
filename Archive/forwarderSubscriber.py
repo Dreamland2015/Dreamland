@@ -1,6 +1,6 @@
 import zmq
 
-port = "1111"
+port = "5560"
 # Socket to talk to server
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
