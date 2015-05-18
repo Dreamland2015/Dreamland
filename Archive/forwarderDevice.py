@@ -9,7 +9,7 @@ def main():
         frontend = context.socket(zmq.SUB)
         frontend.bind("tcp://*:2222")
 
-        frontend.setsockopt(zmq.SUBSCRIBE, "")
+        frontend.setsockopt_string(zmq.SUBSCRIBE, "")
 
         # Socket facing services
         backend = context.socket(zmq.PUB)
