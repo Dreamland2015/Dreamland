@@ -19,7 +19,7 @@ final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
 // Top-level, we have a model and a P2LX instance
-Model model;
+stripModel model;
 P2LX lx;
 
 // Setup establishes the windowing and LX constructs

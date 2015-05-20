@@ -1,27 +1,28 @@
-import sys
 import zmq
+import sys
+import time
 
-port = "5556"
-ip = sys.argv[1]
-addressString = "tcp://" + ip + ":" + port
+# Configure ports
+send_port = "5560"
+recv_port = "5559"
 
-# Socket to talk to server
+# Configure client ip
+ip_string = "tcp://" + sys.argv[1] + ":" + recv_port
+
+# Initialize ZMQ
 context = zmq.Context()
-socket = context.socket(zmq.SUB)
 
-print("Collecting updates from weather server...")
-socket.connect(addressString)
+# Configure publisher socket
+zmq_send = context.socket(zmq.PUB)
+zmq_send.bind("tcp://*:" + send_port)
 
-# Subscribe to zipcode, default is NYC, 10001
-topicfilter = b"10001"
-socket.setsockopt(zmq.SUBSCRIBE, topicfilter)
+# Configure subscriber socket
+print("Connecting to : " + ip_string)
+zmq_recv = context.socket(zmq.SUB)
+zmq_recv.connect(ip_string)
+zmq_recv.setsockopt_string(zmq.SUBSCRIBE, "")  # subscribe to all
 
-# Process 5 updates
-total_value = 0
-for update_nbr in range(5):
-    string = socket.recv()
-    topic, messagedata = string.split()
-    total_value += int(messagedata)
-    print(topic, messagedata)
-
-print("Average messagedata value for topic '%s' was %dF" % (topicfilter, total_value / update_nbr))
+while True:
+	message_send = "Hello from server"
+	zmq_send.send_string(message_send)
+	time.sleep(1)

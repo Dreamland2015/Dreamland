@@ -70,7 +70,7 @@ final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
 // Top-level, we have a model and a P2LX instance
-Model model;
+stripModel model;
 P2LX lx;
 
 // Setup establishes the windowing and LX constructs
@@ -401,6 +401,44 @@ public void buildOutputs()
 {
 	lx.addOutput(new FadecandyOutput(lx, "192.168.2.2", 7890));
 }
+/* Build a simple model of Dreamlands LED layout 
+*/
+static class stripModel extends LXModel 
+{
+  
+  public stripModel() 
+  {
+    super(new Fixture());
+  }
+  
+  private static class Fixture extends LXAbstractFixture 
+  {
+    private static final int OFFSET = 2 * FEET;
+    private static final int NUMBER_OF_LEGS = 9;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 16;
+    
+    private Fixture() 
+    {
+      // Here's the core loop where we generate the positions
+      // of the points in our model
+      // for (int n = 0; n < NUMBER_OF_LEGS; ++n)
+      for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
+      {
+        int ledLocation = ledPoint * FEET + OFFSET;
+        // for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
+        for (int n = 0; n < NUMBER_OF_LEGS; ++n)
+        {
+          // int ledLocation = ledPoint * FEET + OFFSET;
+          float rx = ledLocation * cos( 2 * PI * n / NUMBER_OF_LEGS);
+          float ry = ledLocation * sin(2 * PI * n / NUMBER_OF_LEGS);
+            // Add point to the fixtuure
+            addPoint(new LXPoint(rx,ry));
+        }
+      }
+    }
+  }
+}
+
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "DreamlandDemo" };
     if (passedArgs != null) {
