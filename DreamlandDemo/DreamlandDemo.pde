@@ -21,9 +21,7 @@ final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
 // Top-level, we have a model and a P2LX instance
-Bench bench;
-Carousel carousel;
-ModelFusion model;
+Model model;
 
 P2LX lx;
 
@@ -33,11 +31,12 @@ void setup()
 	// Dimension of the window
 	size(1200, 800, OPENGL); 
 
-    model = new ModelFusion();
+    model = new Model();
 
 	// Create the P2LX engine for Dreamland
 	lx = new P2LX(this, model);
 
+if (false) {
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
@@ -46,6 +45,7 @@ void setup()
 		new SolidColorPattern(lx, 100),
 		new BaseHuePattern(lx)
 	});
+}
 
 	// Add pieces of the UI
 	lx.ui.addLayer(
