@@ -36,16 +36,19 @@ void setup()
 	// Create the P2LX engine for Dreamland
 	lx = new P2LX(this, model);
 
-if (false) {
+
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
 		new LayerDemoPattern(lx),
 		new IteratorTestPattern(lx),
 		new SolidColorPattern(lx, 100),
-		new BaseHuePattern(lx)
+		new TestHuePattern(lx),
+		new TestXPattern(lx),
+		new TestYPattern(lx),
+		new TestZPattern(lx)
 	});
-}
+
 
 	// Add pieces of the UI
 	lx.ui.addLayer(
@@ -65,7 +68,7 @@ if (false) {
 		.setRotateAcceleration(3 * PI)
 
 		// Add a point cloud representing the LEDs
-		.addComponent(new UIPointCloud(lx,model).setPointWeight(10))
+		.addComponent(new UIPointCloud(lx,model).setPointWeight(6))
 	);
 
 	// Basic 2-D contorol for channel with draggable windows

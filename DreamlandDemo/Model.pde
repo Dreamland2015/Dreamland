@@ -76,18 +76,20 @@ public static class Model extends LXModel
   }
 
   private static class CarouselFixture extends Component {
+    private static final int HEIGHT_OF_CAROUSEL = -10 * FEET;
+
     public CarouselFixture(int nbars) {
       BarFixture prototype = new BarFixture();
       for (int i = 0; i < nbars; i++)
-        addComponent(prototype.rotate(2*PI*i / nbars));
-      // addPoint(new LXPoint(i, i, 0));
+        addComponent(prototype.translate(0, 0, HEIGHT_OF_CAROUSEL).rotate(2 * PI * i / nbars));
     }
   }
 
   private static class WingFixture extends Component {
-    private static int WX = 5;
-    private static int WY = 2;
-    private static int NLEDS = 20;
+    private static float WX = 4;
+    private static float WY = 3;
+    private static int NLEDS = 60;
+
     public WingFixture() {
       for (int i = 0; i < NLEDS; i++) {
         float x = WX * ((i + 0.5f) / NLEDS) * FEET;
@@ -106,6 +108,17 @@ public static class Model extends LXModel
     }
   }
 
+  private static class LampPostFixture extends Component{
+    private static float HEIGHT_OF_POST = -10 * FEET;
+    private static int NLEDS = 60;
+    
+    public LampPostFixture(){
+      for (int i = 0; i < NLEDS; i++)
+        addPoint( new Point(0, 0, (i + 0.5f) / NLEDS * HEIGHT_OF_POST));
+      
+    }
+  }
+
   private static class WorldFixture extends Component {
     public WorldFixture() {
       // carousel
@@ -114,131 +127,18 @@ public static class Model extends LXModel
       BenchFixture bench = new BenchFixture();
       // inner benches
       for (int i = 0; i < 3; i++) {
-       addComponent(bench.translate(0, -15 * FEET, 0).rotate(2 * PI * i / 3f));
+       addComponent(bench.translate(0, -10 * FEET, 0).rotate(2 * PI * i / 3f));
       }
       // outer benches
       for (int i = 0; i < 3; i++) {
-        addComponent(bench.translate(0, -20 * FEET, 0).rotate(2 * PI * (i + 0.5) / 3f));
+        addComponent(bench.translate(0, -15 * FEET, 0).rotate(2 * PI * (i + 0.5) / 3f));
       }
 
+      LampPostFixture post = new LampPostFixture();
+      // lamp posts
+      for (int i = 0; i <3; i++) {
+        addComponent(post.translate(0, -20 * FEET, 0).rotate(2 * PI * i / 3f));
+      }
     }
   }
-
-  // private static class Fixture extends LXAbstractFixture 
-  // {
-
-  //   private Fixture() 
-  //   {
-  //   // Here's the core loop where we generate the positions
-  //   // of the points in our model
-  //   // for (int n = 0; n < NUMBER_OF_LEGS; ++n)
-  //     for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
-  //     {
-  //       int ledLocation = ledPoint * FEET + OFFSET;
-  //       // for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
-  //       for (int n = 0; n < NUMBER_OF_LEGS; ++n)
-  //       {
-  //         // int ledLocation = ledPoint * FEET + OFFSET;
-  //         float rx = ledLocation * cos(2 * PI * n / NUMBER_OF_LEGS);
-  //         float ry = ledLocation * sin(2 * PI * n / NUMBER_OF_LEGS);
-  //         // Add point to the fixtuure
-  //         addPoint(new LXPoint(rx,ry, 5));
-  //       }
-  //     }
-  //   }
-  // }
 }
-
-
-// public static class Carousel extends LXModel 
-// {
-//   public Carousel() 
-//   {
-//     super(new Fixture());
-//   }
-
-//   private static class Fixture extends LXAbstractFixture 
-//   {
-//     private static final int OFFSET = 2 * FEET;
-//     private static final int NUMBER_OF_LEGS = 9;
-//     private static final int NUMBER_OF_LEDS_PER_LEG = 16;
-
-//     private Fixture() 
-//     {
-//     // Here's the core loop where we generate the positions
-//     // of the points in our model
-//     // for (int n = 0; n < NUMBER_OF_LEGS; ++n)
-//       for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
-//       {
-//         int ledLocation = ledPoint * FEET + OFFSET;
-//         // for (int ledPoint = 0; ledPoint < NUMBER_OF_LEDS_PER_LEG; ++ledPoint) 
-//         for (int n = 0; n < NUMBER_OF_LEGS; ++n)
-//         {
-//           // int ledLocation = ledPoint * FEET + OFFSET;
-//           float rx = ledLocation * cos(2 * PI * n / NUMBER_OF_LEGS);
-//           float ry = ledLocation * sin(2 * PI * n / NUMBER_OF_LEGS);
-//           // Add point to the fixtuure
-//           addPoint(new LXPoint(rx, ry, 0));
-//         }
-//       }
-//     }
-//   }
-// }
-
-
-// public static class CarouselBench extends LXModel 
-// {
-//   public CarouselBench() 
-//   {
-//     super(new Fixture());
-//   }
-
-//   private static class Fixture extends LXAbstractFixture 
-//   {
-//     Carousel c;
-//     Bench b;
-
-//     private Fixture() 
-//     {
-//        c = new Carousel();
-//        b = new Bench();
-
-//        for (LXPoint point : c.points) { 
-//          addPoint(point); 
-//        }
-//        for (LXPoint point : b.points) { 
-//          addPoint(point); 
-//        }
-//     }
-//   }
-// }
-
-
-// public static class ModelFusion extends LXModel 
-// {
-
-//   public ModelFusion() 
-//   {
-//     super(new Fixture());
-//   }
-
-//   private static class Fixture extends LXAbstractFixture 
-//   {
-//     Carousel c;
-//     Bench b;
-//     private Fixture() 
-//     {
-//       b = new Bench();
-//       c = new Carousel();
-//       for (LXPoint pt : b.points)
-//       {
-//         addPoint(pt);
-//       }
-
-//       for (LXPoint pt : c.points)
-//       {
-//         addPoint(pt);
-//       } 
-//     }
-//   }
-// }
