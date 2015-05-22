@@ -13,13 +13,18 @@ import heronarts.p2lx.ui.*;
 import heronarts.p2lx.ui.control.*;
 import ddf.minim.*;
 import processing.opengl.*;
+import java.util.*;
+
 
 // Let's work in feet and inches
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
 // Top-level, we have a model and a P2LX instance
-Model model;
+Bench bench;
+Carousel carousel;
+ModelFusion model;
+
 P2LX lx;
 
 // Setup establishes the windowing and LX constructs
@@ -28,8 +33,7 @@ void setup()
 	// Dimension of the window
 	size(1200, 800, OPENGL); 
 
-	//Create the model of Dreamland
-	model = new Model();
+    model = new ModelFusion();
 
 	// Create the P2LX engine for Dreamland
 	lx = new P2LX(this, model);
