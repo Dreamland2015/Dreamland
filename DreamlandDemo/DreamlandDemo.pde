@@ -8,6 +8,7 @@ import heronarts.lx.output.*;
 import heronarts.lx.parameter.*;
 import heronarts.lx.pattern.*;
 import heronarts.lx.transition.*;
+import heronarts.lx.transform.*;
 import heronarts.p2lx.*;
 import heronarts.p2lx.ui.*;
 import heronarts.p2lx.ui.control.*;
@@ -29,7 +30,7 @@ P2LX lx;
 void setup() 
 {
 	// Dimension of the window
-	size(1200, 800, OPENGL); 
+	size(800, 600, OPENGL); 
 
     model = new Model();
 
@@ -46,7 +47,8 @@ void setup()
 		new TestHuePattern(lx),
 		new TestXPattern(lx),
 		new TestYPattern(lx),
-		new TestZPattern(lx)
+		new TestZPattern(lx),
+		new MoveTheZPosition(lx)
 	});
 
 
@@ -68,7 +70,7 @@ void setup()
 		.setRotateAcceleration(3 * PI)
 
 		// Add a point cloud representing the LEDs
-		.addComponent(new UIPointCloud(lx,model).setPointWeight(6))
+		.addComponent(new UIPointCloud(lx,model).setPointWeight(3))
 	);
 
 	// Basic 2-D contorol for channel with draggable windows

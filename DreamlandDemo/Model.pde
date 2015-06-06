@@ -67,7 +67,7 @@ public static class Model extends LXModel
 
   private static class BarFixture extends Component {
     private static final int BAR_LENGTH = 10 * FEET;
-    private static final int NUMBER_OF_LEDS_PER_LEG = 16;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 10;
 
     public BarFixture() {
       for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++)
@@ -86,15 +86,21 @@ public static class Model extends LXModel
   }
 
   private static class WingFixture extends Component {
-    private static float WX = 4;
-    private static float WY = 3;
-    private static int NLEDS = 60;
+    private static float BENCH_LENGTH = 5;
+    private static float BENCH_ANGLE = 120;
+    private static float WX = BENCH_LENGTH * cos((BENCH_ANGLE - 90) * PI / 180);
+    private static float WY = BENCH_LENGTH * sin((BENCH_ANGLE - 90) * PI / 180);
+    private static int NLEDS = 10;
 
     public WingFixture() {
-      for (int i = 0; i < NLEDS; i++) {
+      for (int i = NLEDS; i > 0; i--) {
         float x = WX * ((i + 0.5f) / NLEDS) * FEET;
         float y = WY * ((i + 0.5f) / NLEDS) * FEET;
         addPoint(new Point(x, y, 0));
+      }
+      for (int i = 0; i < NLEDS; i++) {
+        float x = WX * ((i + 0.5f) / NLEDS) * FEET;
+        float y = WY * ((i + 0.5f) / NLEDS) * FEET;
         addPoint(new Point(-x, y, 0));
       }
     }
@@ -110,7 +116,7 @@ public static class Model extends LXModel
 
   private static class LampPostFixture extends Component{
     private static float HEIGHT_OF_POST = -10 * FEET;
-    private static int NLEDS = 60;
+    private static int NLEDS = 10;
     
     public LampPostFixture(){
       for (int i = 0; i < NLEDS; i++)
