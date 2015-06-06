@@ -2,13 +2,13 @@ import zmq
 import time
 import sys
 import socket
-from random import randrange
 from multiprocessing import Process
 
 # structureName = sys.argv[1]
 # serverIp = 'tcp://%s:' % sys.argv[2]
 serverIp = 'tcp://%s:' % sys.argv[1]
 structureName = socket.gethostname()
+print(structureName)
 
 recv_port = '5560'
 send_port = '5559'
