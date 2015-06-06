@@ -1,11 +1,14 @@
 import zmq
 import time
 import sys
+import socket
 from random import randrange
 from multiprocessing import Process
 
-structureName = sys.argv[1]
-serverIp = 'tcp://%s:' % sys.argv[2]
+# structureName = sys.argv[1]
+# serverIp = 'tcp://%s:' % sys.argv[2]
+serverIp = 'tcp://%s:' % sys.argv[1]
+structureName = socket.gethostname()
 
 recv_port = '5560'
 send_port = '5559'
@@ -34,9 +37,8 @@ def sendMessageToServer():
 
 	message = 'hello world'
 	while True:
-		topic = randrange(4, 10)
-		print('Sending ' + str(topic))
-		send_zmq.send_string('%i, %s' % (topic, message))
+		print('Sending ' + message)
+		send_zmq.send_string('%s, %s' % (structureName, message))
 		time.sleep(1)
 
 

@@ -22,16 +22,16 @@ def sendMessageToClients():
 
 
 def recieveMessageFromClients():
-	topicFilter = '9'
+	# topicFilter = '9'
 
 	zmq_recv = context.socket(zmq.SUB)
 	zmq_recv.bind('tcp://*:' + recv_port)
-	zmq_recv.setsockopt_string(zmq.SUBSCRIBE, topicFilter)
+	zmq_recv.setsockopt_string(zmq.SUBSCRIBE, "")
 	counter = 1
 	while True:
 		stringRecv = zmq_recv.recv_string()
-		topic, messageRecv = stringRecv.split(',')
-		print('Received : ' + messageRecv + ' ' + str(counter) + ' times')
+		structureName, messageRecv = stringRecv.split(',')
+		print('Received : ' + messageRecv + ' from ' + structureName)
 		counter += 1
 
 if __name__ == '__main__':
