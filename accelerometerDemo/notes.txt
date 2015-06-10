@@ -1,0 +1,5 @@
+Currently the RPi runs python 2.
+One issue with python 3 is that installation of the smbbus is not easy (in python 2 one can just use apt-get), and a bit more involved (manual download and compilation). We need smbbus to read values from the MPU-6050 gyro/accelerometer.
+
+To install the zmq messaging system, run:
+sudo apt-get install python-zmq

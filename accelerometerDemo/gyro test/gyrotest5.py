@@ -7,12 +7,13 @@ import smbus
 import math
 import time
 import numpy as np
-import web
 import thread
+import zmq
+from multiprocessing import Process
  
-urls = (
-    '/', 'index'
-)
+# Configure ports
+send_port = "5560"
+recv_port = "5559"
  
 i2caddress = 0x68  # This is the address value read via the i2cdetect command
 # Power management register (only first one is needed)
