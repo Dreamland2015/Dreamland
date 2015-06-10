@@ -2,14 +2,18 @@
 
 # Reads accelerometer values from a web page (presented by a web server
 # running on the Raspberry Pi) and displays them using openGL. It displays
-# the tip + tilt of the accelerometer as a 3d tilting platform. 
+# the tip + tilt of the MPU-6050 accelerometer as a 3d tilting platform.
+#
 # This program should be run in python3 on a computer that can access the
 # Raspberry Pi via ethernet. Python needs to have the OpenGL and pygame
 # modules installed for this to work.
-# THe Raspberry Pi needs be running a web server that presents the
-# accelerometer values to a web request. (see web link below on how to do that)
 #
-# modified from 
+# The Raspberry Pi needs to have a MPU-6050 accelerometer/gyro connected
+# to it, and running the "accelerometer_server.py" web server that presents
+# the accelerometer values to a web request. (see web link below for
+# details on how to do that)
+#
+# Modified from 
 # http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
 # with modifications to use python3
 
@@ -21,6 +25,7 @@ from OpenGL.GLU import *
 from math import radians
 from pygame.locals import *
 
+SERVERADDRESS = "http://192.168.0.3:8080"  # Change this address to your settings
 SCREEN_SIZE = (800, 600)
 SCALAR = .5
 SCALAR2 = 0.2
@@ -49,7 +54,7 @@ def init():
     glLightfv(GL_LIGHT0, GL_AMBIENT, (0.3, 0.3, 0.3, 1.0));
 
 def read_values():
-    link = "http://192.168.0.7:8080" # Change this address to your settings
+    link = SERVERADDRESS
     # code below modified so it works with python3
     #f = urllib.urlopen(link)
     #myfile = f.read()
