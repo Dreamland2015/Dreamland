@@ -13,9 +13,6 @@ import web
 import smbus
 import math
  
-urls = (
-    '/', 'index'
-)
  
 # Power management registers
 power_mgmt_1 = 0x6b
@@ -24,6 +21,9 @@ power_mgmt_2 = 0x6c
 bus = smbus.SMBus(1) # or bus = smbus.SMBus(1) for Revision 2 boards
 address = 0x68       # This is the address value read via the i2cdetect command
  
+urls = (
+    '/', 'index'
+)
  
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
@@ -62,10 +62,23 @@ class index:
         accel_xout_scaled = accel_xout / 16384.0
         accel_yout_scaled = accel_yout / 16384.0
         accel_zout_scaled = accel_zout / 16384.0
+        
+        x_rot = get_x_rotation(accel_xout_scaled, accel_yout_scaled, 
+                               accel_zout_scaled)
+        y_rot = get_y_rotation(accel_xout_scaled, accel_yout_scaled, 
+                               accel_zout_scaled)
+        
+        gyro_xout = read_word_2c(0x43)
+        gyro_yout = read_word_2c(0x45)
+        gyro_zout = read_word_2c(0x47)
+
+        gyro_xout_scaled = gyro_xout / 131
+        gyro_yout_scaled = gyro_yout / 131
+        gyro_zout_scaled = gyro_zout / 131
+
  
-        return str(get_x_rotation(accel_xout_scaled, accel_yout_scaled, accel_z
-out_scaled))+" "+str(get_y_rotation(accel_xout_scaled, accel_yout_scaled, accel
-_zout_scaled))
+        return str(x_rot) + " " + str(y_rot) + " " + \
+               str(gyro_zout_scaled)
  
  
 if __name__ == "__main__":
