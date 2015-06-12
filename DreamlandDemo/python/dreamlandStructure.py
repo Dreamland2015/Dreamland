@@ -4,11 +4,11 @@ import sys
 import socket
 from multiprocessing import Process
 
-# structureName = sys.argv[1]
-# serverIp = 'tcp://%s:' % sys.argv[2]
-serverIp = 'tcp://%s:' % sys.argv[1]
-structureName = socket.gethostname()
-print(structureName)
+structureName = sys.argv[1]
+serverIp = 'tcp://%s:' % sys.argv[2]
+# serverIp = 'tcp://%s:' % sys.argv[1]
+# structureName = socket.gethostname()
+# print(structureName)
 
 recv_port = '5560'
 send_port = '5559'
