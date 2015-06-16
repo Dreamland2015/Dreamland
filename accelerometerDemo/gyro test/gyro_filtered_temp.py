@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-
+#
+# Demo code to read the tilt from an MPU-6050 accelerometer & gyro
+# using a filter to process input data
+#
+# Copied and modified from:
+# http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
+ 
 #!/usr/bin/python
 
 import smbus
