@@ -1,11 +1,10 @@
-import socket
-import sys
+from config.py import structureConfig
+from multiprocessing import Process
 import time
 import zmq
-from multiprocessing import Process
 
-structureName = sys.argv[1]
-serverIp = 'tcp://%s:' % sys.argv[2]
+structureName = structureConfig["structureName"]
+serverIp = structureConfig["serverIp"]
 # serverIp = 'tcp://%s:' % sys.argv[1]
 # structureName = socket.gethostname()
 # print(structureName)
