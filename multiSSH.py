@@ -3,6 +3,8 @@ import sys
 import time
 from threading import Thread
 
+serverIp = "10.0.1.165"
+
 login = "pi"
 password = "raspberry"
 
@@ -11,6 +13,13 @@ config = [
     {"hostname": "pi1.local", "structureName": "bench1"},
     {"hostname": "pi2.local", "structureName": "bench2"}
 ]
+
+config2 = {
+    "Carousel": {"hostname": "pi.local",
+                 "serverIp": serverIp},
+    "Bench": {"hostname": "pi.local",
+              "serverIp": serverIp}
+}
 
 
 def doSomethingHere():
@@ -53,8 +62,8 @@ class SSHConnection():
         # If no connection in the allowed time.
         raise RuntimeError("Could not connect to " + self.structureName + ". Giving up")
 
-    def runCommand(self):
-        pass
+    def runCommand(self, commandToRun):
+        stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
 
 
 class MultiSSH:
@@ -63,19 +72,19 @@ class MultiSSH:
         self.sshConnections = []
         for structure in listOfStructures:
             self.sshConnections.append(SSHConnection(structure["hostname"], structure["structureName"]))
-            # self.sshConnections.append([SSHConnection(structure["hostname"], strucuture["structureName"]) for hostname, structureName in structure.items()])
+        # self.runOnAll()
 
     def runOnAll(self, commandToRun):
         running = []
         for connection in self.sshConnections:
             # Arbitraily complicated stuff
-            th = Thread(target=connection.runCommand, args=commandToRun)
+            th = Thread(target=connection.connectToSSH.runCommand(commandToRun))
             running.append(th)
 
         for r in running:
             r.join()
 
-    def runOnGroup(self, groupDesc, commandToRun):
+    def runOnGroup(self, groupDescriptor, commandToRun):
         pass
 
     def runMultipleCommandsOnAll(self, commandList):

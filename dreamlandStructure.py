@@ -1,7 +1,7 @@
-import zmq
-import time
-import sys
 import socket
+import sys
+import time
+import zmq
 from multiprocessing import Process
 
 structureName = sys.argv[1]
