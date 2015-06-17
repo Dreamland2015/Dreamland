@@ -6,18 +6,36 @@
 # Runs on RPi
 # Gets values from MPU-6050 sensor and presents them via a web server
 #
-# I think this works.
+# This is not working.
+# We need 3 processes: One on the RPi to acquire, average, and filter the raw
+# data from the gyro. Maybe another one running separately on the RPi that
+# presents that data on a socket. And a third one running on the PC,
+# requesting that data and doing whatever with it.
+# The attempt was to use multithreading & a web server (for demo only).
+#
+# One thread is a process collecting, averaging and processing input data,
+# and another thread would be the web server presenting that data on the web
+# (just for demo purposes). Problem is that the two processes can't share
+# data simply, e.g. through global variables (each process gets their own
+# independent global variable set). We need to do real communication between
+# the processes. But then we can do away with the web server altogether
+# anyway (which wasn't meant to be the final solution) and recode this
+# to use zmq messaging between processes.
+# Maybe we can do acquiring and socket communication in one process, but
+# then the socket process can't be blocking since data is coming in at all
+# times.
  
 import smbus
 import math
 import time
 import numpy as np
-import web
 import thread
+import zmq
+from multiprocessing import Process
  
-urls = (
-    '/', 'index'
-)
+# Configure ports
+send_port = "5560"
+recv_port = "5559"
  
 i2caddress = 0x68  # This is the address value read via the i2cdetect command
 # Power management register (only first one is needed)
@@ -26,7 +44,7 @@ power_mgmt_1 = 0x6b
 # and accelerometer values:
 data_register = 0x3b
 data_length = 14    # data block length
- 
+# scaling factors
 gyro_scale = 131.0
 accel_scale = 16384.0
 temp_scale = 1 # 340.0	# temperature
@@ -34,7 +52,7 @@ gyro_x_offset = 0.0
 gyro_y_offset = 0.0
 gyro_z_offset = 0.0
 temp_offset = 0 # -521.0  # temperature
-# raw data values
+# raw data starting values
 (rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT) = 5,0,0,0,0,0,0
 
  
@@ -53,7 +71,7 @@ def read_sensor():
  
     return (rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT)
 
-def get_value(datablock, offset):
+def get_datavalue(datablock, offset):
     """ return two's complement of two-byte data within data block"""
     high = datablock[offset]
     low = datablock[offset+1]
@@ -75,47 +93,11 @@ class index:
         output += str(rT)
         return output
         
-def printglobal():
-    global rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT
-    print("inside printglobal: %s" % rgyro_x)
-    
-        
-def change_rx():
-    global rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT
-    rgyro_x = 789
- 
-if __name__ == "__main__":
-    bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
- 
-    # Now wake the 6050 up as it starts in sleep mode
-    bus.write_byte_data(i2caddress, power_mgmt_1, 0)
-     
-    app = web.application(urls, globals())
-    thread.start_new_thread( app.run, () )
-    
-#    c = raw_input("Type something to quit.")  # python 2
-#    print("done")
- 
-#    print(read_all())
-#    print("Determining offsets: Don't move sensor")
-#    readings_sum = np.array([0,0,0,0,0,0,0])
-#    startt = time.time()
-#    for i in range(1000):
-#        readings = np.array(read_sensor())
-#        readings_sum = readings_sum + readings
-#    readings_avg = readings_sum / 1000
-#    (gyro_xoffset, gyro_yoffset, gyro_zoffset) = readings_avg[0:3] * gyro_scale
-#     print(read_all())
-#     print(readings_sum)
-#    print(readings_avg)
-#    print("time diff: %f" % (time.time() - startt))
-#    print("done calibrating")
-     
+def sensordata_server():
     angle = 0
-     
     running=1
     startt = lasttime = lastprint = time.time()
-    print("inside main: %d" % rgyro_x)
+    print("started sensor server" % rgyro_x)
     while running:
         now = time.time()
         deltat = now-lasttime
@@ -137,3 +119,53 @@ if __name__ == "__main__":
         if now-startt > 20:
             running = False
             print("done after 20 seconds")
+
+
+if __name__ == "__main__":
+    bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
+ 
+    # Now wake the 6050 up as it starts in sleep mode
+    bus.write_byte_data(i2caddress, power_mgmt_1, 0)
+     
+    app = web.application(urls, globals())
+    thread.start_new_thread( app.run, () )
+    
+def worker():
+    name = multiprocessing.current_process().name
+    print(name, 'Starting')
+    time.sleep(2)
+    print(name, 'Exiting')
+
+def my_service():
+    name = multiprocessing.current_process().name
+    print(name, 'Starting')
+    time.sleep(3)
+    print(name, 'Exiting')
+
+if __name__ == '__main__':
+    service = multiprocessing.Process(name='my_service', target=my_service)
+    worker_1 = multiprocessing.Process(name='worker 1', target=worker)
+    worker_2 = multiprocessing.Process(target=worker) # use default name
+
+    worker_1.start()
+    worker_2.start()
+    service.start()
+    
+#    c = raw_input("Type something to quit.")  # python 2
+#    print("done")
+ 
+#    print(read_all())
+#    print("Determining offsets: Don't move sensor")
+#    readings_sum = np.array([0,0,0,0,0,0,0])
+#    startt = time.time()
+#    for i in range(1000):
+#        readings = np.array(read_sensor())
+#        readings_sum = readings_sum + readings
+#    readings_avg = readings_sum / 1000
+#    (gyro_xoffset, gyro_yoffset, gyro_zoffset) = readings_avg[0:3] * gyro_scale
+#     print(read_all())
+#     print(readings_sum)
+#    print(readings_avg)
+#    print("time diff: %f" % (time.time() - startt))
+#    print("done calibrating")
+     

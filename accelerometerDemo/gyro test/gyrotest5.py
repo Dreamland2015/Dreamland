@@ -2,6 +2,12 @@
 #
 # Copied and modified from:
 # http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
+#
+# Runs on RPi
+# Gets values from MPU-6050 sensor and presents them via a web server
+#
+# Not sure if this works.
+ 
  
 import smbus
 import math

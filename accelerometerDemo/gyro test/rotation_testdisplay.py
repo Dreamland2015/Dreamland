@@ -1,6 +1,10 @@
-"""
-Drawing an arrow and bar depending on on gyro values
-"""
+# 
+# Draw an arrow and bar depending on readback valued from the MPU-6050 gyro
+# 
+# In progress. Currently, there's only the drawing routines. Still need
+# to add reading from the gyro.
+# 
+
 import numpy as np
 from math import *
 import pygame

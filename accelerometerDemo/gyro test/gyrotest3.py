@@ -2,6 +2,11 @@
 #
 # Copied and modified from:
 # http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
+#
+# First test of reading gyro & accelerometer values from the MPU-6050
+# Runs on Raspberry Pi, outputs values to stdout.
+#
+# I think this works.
  
 import smbus
 import math
