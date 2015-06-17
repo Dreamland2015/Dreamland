@@ -1,13 +1,10 @@
-from config.py import structureConfig
 from multiprocessing import Process
+from structureConfig import structureConfig
 import time
 import zmq
 
 structureName = structureConfig["structureName"]
-serverIp = structureConfig["serverIp"]
-# serverIp = 'tcp://%s:' % sys.argv[1]
-# structureName = socket.gethostname()
-# print(structureName)
+serverIp = 'tcp://%s:' % structureConfig["serverIp"]
 
 recv_port = '5560'
 send_port = '5559'
