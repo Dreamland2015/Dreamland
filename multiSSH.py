@@ -9,9 +9,9 @@ login = "pi"
 password = "raspberry"
 
 config = [
-    {"hostname": "pi.local", "structureName": "carousel"},
-    {"hostname": "pi1.local", "structureName": "bench1"},
-    {"hostname": "pi2.local", "structureName": "bench2"}
+    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "carousel"},
+    {"hostname": "pi1.local", "serverIp": serverIp, "structureName": "bench1"},
+    {"hostname": "pi2.local", "serverIp": serverIp, "structureName": "bench2"}
 ]
 
 config2 = {
@@ -26,23 +26,14 @@ def doSomethingHere():
     pass
 
 
-def writeConfigFile():
-    f = open("config.py", "w")
-
-    var = {"structureName": "yourMom",
-           "hotname": "pi@pi.local",
-           "serverIP": "8.8.8.8"}
-
-    for k, v in var.items():
-        f.write('{} = "{}"\n'.format(k, v))
-
-
+# simple class that creates an SSH connection to a single computer.
 class SSHConnection():
     def __init__(self, hostname, structureName):
         self.hostname = hostname
         self.structureName = structureName
         self.connectToSSH()
 
+    # create an SSH connection, while passing errors if they arise.
     def connectToSSH(self):
         for x in range(10):
             try:
@@ -51,9 +42,11 @@ class SSHConnection():
                 self.ssh.connect(self.hostname, username=login, password=password)
                 print ("Connected to " + self.structureName)
                 break
+
             except paramiko.AuthenticationException:
                 print ("Authentication failed when connecting to " + self.structureName)
                 sys.exit(1)
+
             except:
                 print ("Could not SSH to " + self.structureName + ", waiting for it to start")
                 time.sleep(1)
@@ -62,6 +55,7 @@ class SSHConnection():
         # If no connection in the allowed time.
         raise RuntimeError("Could not connect to " + self.structureName + ". Giving up")
 
+    # once an SSH connection is created, then it is time to issue commands over the tubes
     def runCommand(self, commandToRun):
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
 
@@ -94,7 +88,7 @@ class MultiSSH:
         self.runOnAll("echo SOME TERRIBLE STRING I MAKE IN CODE > config.py")
 
 
-class echo():
+class echo:
     def __init__(self, fileName):
         self.fileName = fileName
 
