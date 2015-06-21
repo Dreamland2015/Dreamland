@@ -55,7 +55,7 @@ def server_pub(port="5558"):
     publisher_id = random.randrange(0,9999)
     print("Running PUB server on port: ", port, flush=True)
     # serves only 5 request and dies
-    for reqnum in range(3):
+    for reqnum in range(5):
         # Wait for next request from client
         topic = random.randrange(8,10)
         messagedata = "server#%s" % publisher_id
@@ -85,29 +85,30 @@ def client(port_push, port_sub):
         socks = dict(poller.poll())
         print("Client -- done polling", flush=True)
         if socket_pull in socks and socks[socket_pull] == zmq.POLLIN:
-            print("Client -- got push msg (pull)", flush=True)
+            print("Client -- PULL: msg from push server", flush=True)
             message = socket_pull.recv_string()
-            print("Client -- Recieved control command: %s" % message, flush=True)
+            print("Client -- PULL: Recieved control command: %s" % message, flush=True)
             if message == 'Exit': 
                 print("Recieved exit command, client will stop recieving messages", flush=True)
                 should_continue = False
             else:
-                print("message %s isn't Exit" % message, flush=True)
+                print("          message %s isn't Exit" % message, flush=True)
 
         if socket_sub in socks and socks[socket_sub] == zmq.POLLIN:
-            print("Client -- got pub msg (sub)", flush=True)
+            print("Client -- SUB: got pub msg from pub server", flush=True)
             string = socket_sub.recv_string()
             topic, messagedata = string.split()
             print("Client -- Processing ... ", topic, messagedata, flush=True)
-    print("Client -- done", flush=True)
+    print("Client is done", flush=True)
 
 
 if __name__ == "__main__":
     # Now we can run a few servers 
-    print("Starting")
+    print("*** Starting main")
     server_push_port = "5556"
     server_pub_port = "5558"
     Process(target=server_push, args=(server_push_port,)).start()
     Process(target=server_pub, args=(server_pub_port,)).start()
     Process(target=client, args=(server_push_port,server_pub_port,)).start()
-    print("main is done", flush=True)
+    print("*** main is done", flush=True)
+    # notice that main exits before the servers/clients are done

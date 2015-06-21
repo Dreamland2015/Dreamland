@@ -1,12 +1,13 @@
 #!/usr/bin/python
 #
-# Copied and modified from:
-# http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
-#
 # Runs on RPi
 # Gets values from MPU-6050 sensor and presents them via a web server
 #
- 
+# This is a dummy version of the program, to test process data sharing.
+# It doesn't actually read from the accelerometer, and can be run on
+# any computer for testing.
+# 
+
 # import smbus
 import math
 import time
@@ -45,10 +46,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class Gyrodata(object):
-    """ Gyro data shared between processes """
+    """ Class for (gyro) data shared between processes """
     def __init__(self, initraw=None, initspeed=None, initangle=None):
         self.lock = mp_Lock()
-#        initraw=[1,2,3,4,5,6,7] if initraw==None
         if initraw == None: initraw==[1, 2, 3, 4, 5, 6, 7]
         if initspeed == None: initspeed==123
         if initangle == None: initangle==499
@@ -58,7 +58,6 @@ class Gyrodata(object):
         self.speed = mp_Value('d', initspeed)
         self.angle = mp_Value('d', initangle)
         print("Gyrodata says: angle value is: ", self.angle.value, flush=True)
-        self.angle.value = 1010
         print("Gyrodata says: init changed angle value to: ", self.angle.value, flush=True)
         
     def getdata(self, whichdata):
@@ -66,7 +65,7 @@ class Gyrodata(object):
             if whichdata == 'angle':
                 return self.angle.value
             elif whichdata == 'speed':
-                return self.angle.value
+                return self.speed.value
             elif whichdata == 'rawdata':
                 return self.rawdata.value
             else:
@@ -85,7 +84,7 @@ class Gyrodata(object):
 
  
 def read_sensor():
-    """ Read & return all relevant data in one block, from MPU-6050 chip. """
+    """ Read & return all relevant data from MPU-6050 chip, in one block. """
     datablock = bus.read_i2c_block_data(i2caddress, data_register, data_length)
     # parse data
     raccel_x = get_datavalue(datablock, 0) / accel_scale
@@ -125,10 +124,10 @@ def sensordata_process_loop(gyrodata):
     other process threads can read the values.
     """
     # the smb communication bus (i2c) for talking to the MPU-6050
-    #bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
+    bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
  
     # Now wake the 6050 up as it starts in sleep mode
-    #bus.write_byte_data(i2caddress, power_mgmt_1, 0)
+    bus.write_byte_data(i2caddress, power_mgmt_1, 0)
 
     print("started sensordata_process_loop", flush=True)
     startt = lasttime = lastprint = lastset = time.time()

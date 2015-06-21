@@ -2,11 +2,13 @@ Dreamland
 =========
 ## Accelerometer connection demos for Raspberry Pi
 
-We're trying to set up an accelerometer / gyro to sense rotation in the dreamland wheel.
+We're trying to set up an accelerometer / gyro to sense rotation in the dreamland wheel, and making this value available to client processes. This code was an attempt to do this via a web server (following the example on the web site below) but that doesn't work for reasons explained below.
 
 ### Write sensor values to web
 
+File:
 gyrotest5.py  
+
 This code runs on the Raspberry Pi.
 
 This is an early example that runs, but doesn't work as intended. But parts of that code are useful for reuse.
@@ -17,9 +19,9 @@ The raspberry pi needs to read the accelerometer/gyro often and quickly, so that
 
 So we need to put that in a separate process thread. The problem is that the web server is also running in its own thread. How is it supposed to get the current data from the accelerometer thread?
 
-I (foolishly) thought that the web server could just read a global variable that the accelerometer thread writes. That doesn't work, because each new thread gets its own personal set of global variables, so they aren't shared. So the web server happily writes its own global values to the web, which don't change.
+As a beginner, I thought that the web server could just read a global variable that the accelerometer thread writes. That doesn't work, because each new thread gets its own personal set of global variables, so they aren't shared. So the web server happily writes its own global values to the web, which don't change.
 
-How to solve this next time? Use zmq to do messaging between processes, and between Raspberry Pis or PCs.
+How to solve this next time? Use zmq to do messaging between processes, and between Raspberry Pis or PCs, or use zmq shared variables, which the next demo uses.
 
 The program uses code taken from:  
 http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html

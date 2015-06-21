@@ -21,7 +21,7 @@ def sendMessageToClients():
 		time.sleep(1)
 
 
-def recieveMessageFromClients():
+def receiveMessageFromClients():
 	# topicFilter = '9'
 
 	zmq_recv = context.socket(zmq.SUB)
@@ -36,4 +36,4 @@ def recieveMessageFromClients():
 
 if __name__ == '__main__':
 	Process(target=sendMessageToClients).start()
-	Process(target=recieveMessageFromClients).start()
+	Process(target=receiveMessageFromClients).start()
