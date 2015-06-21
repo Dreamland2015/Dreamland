@@ -27,6 +27,9 @@ import zmq
 import time
 import random
 from  multiprocessing import Process
+import signal
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)	# so we can interrupt w ctrl-C
 
 def server_push(port="5556"):
     context = zmq.Context()
@@ -83,9 +86,9 @@ def client(port_push, port_sub):
         print("Client -- done polling", flush=True)
         if socket_pull in socks and socks[socket_pull] == zmq.POLLIN:
             print("Client -- got push msg (pull)", flush=True)
-            message = socket_pull.recv()
+            message = socket_pull.recv_string()
             print("Client -- Recieved control command: %s" % message, flush=True)
-            if message == b'Exit': 
+            if message == 'Exit': 
                 print("Recieved exit command, client will stop recieving messages", flush=True)
                 should_continue = False
             else:
@@ -93,7 +96,7 @@ def client(port_push, port_sub):
 
         if socket_sub in socks and socks[socket_sub] == zmq.POLLIN:
             print("Client -- got pub msg (sub)", flush=True)
-            string = socket_sub.recv()
+            string = socket_sub.recv_string()
             topic, messagedata = string.split()
             print("Client -- Processing ... ", topic, messagedata, flush=True)
     print("Client -- done", flush=True)

@@ -3,3 +3,7 @@ One issue with python 3 is that installation of the smbbus is not easy (in pytho
 
 To install the zmq messaging system, run:
 sudo apt-get install python-zmq
+or with anaconda distro on windows:
+conda install pyzmq
+
+
