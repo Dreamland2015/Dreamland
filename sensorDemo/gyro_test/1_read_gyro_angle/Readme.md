@@ -13,7 +13,9 @@ This code runs on the RPi connected to the MPU-6050 accelerometer/gyro chip.
 
 The code reads angular speed data from the MPU-6050 gyros and integrates the values over time to calculate the carousel angle. The code prints the numbers to stdout every 2 seconds.
 
-This code runs on the RPi, and communicates with the chip via i2c. Here's an image on how to do that:  
+This code runs on the RPi, and communicates with the chip via i2c. 
+
+Here's an image showing how to connect the MPU-6050 to the RPi:  
 
 local image copy:  
 ![MPU-6050 pin connections](IIC-to-6050.png)

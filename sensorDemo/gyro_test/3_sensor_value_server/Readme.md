@@ -8,7 +8,4 @@ Example code I wrote using ideas from ([this website](http://eli.thegreenplace.n
 
 There are several files here, use the latest version.
 
-Here we set up several things:
-
-- a process
- 
+This code is still in development, and may not work.

@@ -1,0 +1,92 @@
+Enabling i2c communications for talking to sensors
+
+It's a little bit easier to install i2c for python2. It turns out that i2c for the Raspberry Pi is broken for python3, but it can be fixed (using info found on the web). Either way, it's a bit involved.
+
+What is i2c:
+
+In order to talk to the sensors, we need to enable the I2C bus on the Raspberry Pi. (I2C is pronounced i-squared-c or i-two-c or even i-i-c, and stands for inter-integrated circuit.) After we enable the bus, we can connect any device that understands that protocol to the i2c pins on the RPi, and then use software to talk to the device. i2c is popularly used to connect chips to microprocessors, and only needs two wires (besides ground and supply voltage).
+
+Some quotes:
+"The I²C bus and the SMBus™ are popular 2-wire buses that are essentially compatible with each other. [...] The buses operate at the same speed, up to 100kHz, but the I²C bus has both 400kHz and 2MHz versions. Complete compatibility between both buses is ensured only below 100kHz."
+"The Two-Wire interface is extremely useful for connecting multiple devices, as they can all share the same two pins (plus a ground return). This is because the devices are "addressable". Each device needs to have a unique address in the range 8 to 119. Address 0 is reserved as a "broadcast" address, addresses 1 to 7 are reserved for other purposes, and addresses 120 to 127 are reserved for future use." (quote from [Maxim](http://www.maximintegrated.com/en/app-notes/index.mvp/id/476))
+
+"The Two-Wire interface is extremely useful for connecting multiple devices, as they can all share the same two pins (plus a ground return). This is because the devices are "addressable". Each device needs to have a unique address in the range 8 to 119. Address 0 is reserved as a "broadcast" address, addresses 1 to 7 are reserved for other purposes, and addresses 120 to 127 are reserved for future use." (quote from some web site)
+
+First, we need to enable i2c in the Raspberry Pi raspbian kernel. Then we also need to install the software packages for python for that. The software is a package for SMBus (System Management Bus), which is based on the i2c protocol; for our purposes we can ignore the difference between the two. Nitty-gritty detail on differences at [Maxim](http://www.maximintegrated.com/en/app-notes/index.mvp/id/476). Nitty-gritty detail on how messages get exchanged can be found in [I2C - Two-Wire Peripheral Interface - for Arduino](http://www.gammon.com.au/i2c)
+
+
+Making i2c work on Raspberry Pi, i.e. enabling it in the kernel:
+
+1. Enable i2c in the RPi raspbian kernel:
+	a. sudo raspi-config
+		- 8: Advanced Options -> 7: I2C
+		- Would you like the ARM I2C interface to be enabled? -> Yes
+		- Would you like the I2C kernel module to be loaded by default? -> Yes
+		- <Finish>. If told to do so, reboot the RPi.
+	a. Remove i2c from the modules blacklist
+		- sudo nano /etc/modprobe.d/raspi-blacklist.conf
+		- comment out (by placing a '#' in front of the lines) the line that has the letters i2c in it. (e.g.: # blacklist i2c-bcm2708)
+	b. Add i2c to the list of kernel modules:
+		- sudo nano /etc/modules
+		- if not already there, add (to the end of the file) the lines
+			i2c-bcm2708
+			i2c-dev
+	c. Install i2c kernel modules
+		sudo apt-get install i2c-tools
+	d. Reboot:
+		sudo reboot
+
+2. Check that i2c works
+	a. i2cdetect -y 1
+		- If this gives an error, such as 
+		  "Could not open file '/dev/i2c-1' or '/dev/i2c/1': No such file or directory"
+		  then i2c is not correctly installed. Make sure that all steps above have been followed, and the RPi was rebooted afterwards.
+		- If the command works, it should give a table of addresses of connected i2c devices. If the MPU-6050 accelerometer is connected, the table should look like this:
+		
+pi@raspberrypi:~$ i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- 68 -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --           
+			
+			meaning that the MPU-6050 is listening on the i2c bus at address 68. If there's nothing connected there will be a "--" in that place of course.
+
+Enabling i2c in python3:
+
+The above steps will make i2c work. All modules required for using i2c with python2 should already be installed and working now. However, it doesn't seem to work with python3! For that, we need additional hackery: (Instructions adapted from [JTech](http://jtecheng.com/?p=959)
+
+1. Update libi2c:
+	- sudo apt-get install libi2c-dev
+	- In my tests, this was already the latest version, i.e. not necessary
+2. Go to our distro, and compile a working version of the i2c library from there:
+	a. cd ~/repo/Dreamland/sensorDemo/i2c4python3/i2c-tools-3.1.0/py-smbus
+	b. sudo python3 setup.py build
+	c. sudo python3 setup.py install
+3. Test i2c with our code:
+	a. cd ~/repo/Dreamland/sensorDemo/gyro_test/1_read_gyro_angle
+	b. python3 gyrotest3.py
+	c. Check that the program works without errors. Use ctrl-C to stop program.
+	d. Optional: test it also with python2: python2 gyrotest3.py
+	
+Details:
+The working i2c library for python3 was built using instructions from [JTech](http://jtecheng.com/?p=959), although they are not compiled in a simple list. Here is what was done to build the i2c library:
+	1. sudo apt-get install libi2c-dev
+	2. sudo apt-get install python3-dev
+	3. sudo wget http://ftp.de.debian.org/debian/pool/main/i/i2c-tools/i2c-tools_3.1.0.orig.tar.bz2
+	   This gets a (non-working) distro of i2c for python3.
+	4. tar xvf i2c-tools_3.1.0.orig.tar.bz2
+	5. cd i2c-tools-3.1.0/py-smbus
+	6. mv smbusmodule.c smbusmodule.c.old
+	7. Get a working version of smbusmodule.c:
+		copy the code from this blog post: http://www.spinics.net/lists/linux-i2c/msg08427.html
+		This needs to be done manually, copying and pasting the code from text.
+	8. sudo python3 setup.py build
+	9. sudo python3 setup.py install
+	
+Phew! That should be it. Check that it works with step 3 from the simplified steps above.
+	

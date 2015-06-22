@@ -18,7 +18,7 @@ from multiprocessing import Process as mp_Process, Array as mp_Array
 from multiprocessing import Value as mp_Value, Lock as mp_Lock
 
 
-# Port numbers we'll use
+# IP and port numbers we'll use for zmq communication
 ip_addr = "127.0.0.1"
 pub_port = "5600"
  
