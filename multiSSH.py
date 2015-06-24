@@ -28,9 +28,11 @@ def doSomethingHere():
 
 # simple class that creates an SSH connection to a single computer.
 class SSHConnection():
-    def __init__(self, hostname, structureName):
+    def __init__(self, hostname, structureName, login, password):
         self.hostname = hostname
         self.structureName = structureName
+        self.login = login
+        self.password = password
         self.connectToSSH()
 
     # create an SSH connection, while passing errors if they arise.
@@ -39,7 +41,7 @@ class SSHConnection():
             try:
                 self.ssh = paramiko.SSHClient()
                 self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                self.ssh.connect(self.hostname, username=login, password=password)
+                self.ssh.connect(self.hostname, username=self.login, password=self.password)
                 print ("Connected to " + self.structureName)
                 break
 
@@ -60,6 +62,7 @@ class SSHConnection():
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
 
 
+# Now lets make multiple ssh connections to a list of computers
 class MultiSSH:
     def __init__(self, listOfStructures):
         self.listOfStructures = listOfStructures
@@ -72,6 +75,7 @@ class MultiSSH:
         running = []
         for connection in self.sshConnections:
             # Arbitraily complicated stuff
+            # multiple threads because Gerald is a masochist
             th = Thread(target=connection.connectToSSH.runCommand(commandToRun))
             running.append(th)
 
@@ -88,6 +92,7 @@ class MultiSSH:
         self.runOnAll("echo SOME TERRIBLE STRING I MAKE IN CODE > config.py")
 
 
+# Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 class echo:
     def __init__(self, fileName):
         self.fileName = fileName
