@@ -16,6 +16,7 @@ def receiveMessageFromServer():
 	topicFilter = '9'
 
 	zmq_recv = context.socket(zmq.SUB)
+	zmq_recv.setsockopt(zmq.RCVHWM, 2)
 	zmq_recv.connect(serverIp + recv_port)
 	zmq_recv.setsockopt_string(zmq.SUBSCRIBE, topicFilter)
 
@@ -29,6 +30,7 @@ def receiveMessageFromServer():
 
 def sendMessageToServer():
 	send_zmq = context.socket(zmq.PUB)
+	send_zmq.setsockopt(zmq.SNDHWM, 2)
 	send_zmq.connect(serverIp + send_port)
 
 	message = 'hello world'

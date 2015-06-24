@@ -11,6 +11,7 @@ context = zmq.Context()
 
 def sendMessageToClients():
 	send_zmq = context.socket(zmq.PUB)
+	send_zmq.setsockopt(zmq.SNDHWM, 2)
 	send_zmq.bind('tcp://*:' + send_port)
 
 	message = 'hello world'
@@ -25,6 +26,7 @@ def receiveMessageFromClients():
 	# topicFilter = '9'
 
 	zmq_recv = context.socket(zmq.SUB)
+	zmq_recv.setsockopt(zmq.RCVHWM, 2)
 	zmq_recv.bind('tcp://*:' + recv_port)
 	zmq_recv.setsockopt_string(zmq.SUBSCRIBE, "")
 	counter = 1
