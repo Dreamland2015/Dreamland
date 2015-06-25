@@ -11,6 +11,8 @@ send_port = '5559'
 
 context = zmq.Context()
 
+#hello world
+
 
 def receiveMessageFromServer():
 	topicFilter = '9'
