@@ -30,7 +30,7 @@ P2LX lx;
 void setup() 
 {
 	// Dimension of the window
-	size(800, 600, OPENGL); 
+	size(1200, 800, OPENGL); 
 
     model = new Model();
 
@@ -82,9 +82,9 @@ void setup()
 	lx.ui.addLayer(new UIEngineControl(lx.ui, 4, 326)); 
 	
 	// Various sliders, knobs and buttons
-	lx.ui.addLayer(new UIComponentsDemo(lx.ui, width-144, 4)); 
+	// lx.ui.addLayer(new UIComponentsDemo(lx.ui, width-144, 4)); 
 
-	buildOutputs();
+	// buildOutputs();
 }
 
 void draw() 
