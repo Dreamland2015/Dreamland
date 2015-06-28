@@ -44,7 +44,8 @@ void setup()
 		new TestHuePattern(lx),
 		new TestXPattern(lx),
 		new TestYPattern(lx),
-		new TestZPattern(lx)
+		new TestZPattern(lx),
+		new MoveXPosition(lx)
 	});
 
 
