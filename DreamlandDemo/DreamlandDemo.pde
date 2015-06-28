@@ -41,14 +41,10 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
-		new LayerDemoPattern(lx),
-		new IteratorTestPattern(lx),
-		new SolidColorPattern(lx, 100),
 		new TestHuePattern(lx),
 		new TestXPattern(lx),
 		new TestYPattern(lx),
-		new TestZPattern(lx),
-		new MoveTheZPosition(lx)
+		new TestZPattern(lx)
 	});
 
 
