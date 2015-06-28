@@ -3,13 +3,11 @@ class MoveXPosition extends DLPattern
 	private final float modelMin = model.xMin - 50;
 	private final float modelMax = model.xMax + 50;
 	private final BasicParameter xPos = new BasicParameter("XPos", 100, modelMin, modelMax);
-	private final BasicParameter falloff = new BasicParameter("Width", 20, 0, 100);
 
 	public MoveXPosition(LX lx)
 	{
 		super(lx);
     	addParameter(xPos);
-    	addParameter(falloff);
 	}
 
 	public void run(double deltaMs) 
@@ -17,7 +15,7 @@ class MoveXPosition extends DLPattern
 		float hueValue = lx.getBaseHuef();
 		for (LXPoint p : model.points)
 		{
-			float brightnessValue = dist(0, p.x, 0, xPos.getValuef()) * falloff.getValuef()/100;
+			float brightnessValue = max(0, 100 - abs(p.x - xPos.getValuef()));
 			colors[p.index] = lx.hsb(hueValue, 100, brightnessValue);
 		}	
 	}
