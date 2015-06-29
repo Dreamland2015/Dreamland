@@ -1,7 +1,7 @@
 import paramiko
 import sys
 import time
-from threading import Thread
+import threading
 
 serverIp = "10.0.1.165"
 
@@ -10,15 +10,17 @@ password = "raspberry"
 
 config = [
     {"hostname": "pi.local", "serverIp": serverIp, "structureName": "carousel"},
-    {"hostname": "pi1.local", "serverIp": serverIp, "structureName": "bench1"},
-    {"hostname": "pi2.local", "serverIp": serverIp, "structureName": "bench2"}
+    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "bench1"},
+    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "bench2"}
 ]
 
 config2 = {
     "Carousel": {"hostname": "pi.local",
                  "serverIp": serverIp},
     "Bench": {"hostname": "pi.local",
-              "serverIp": serverIp}
+              "serverIp": serverIp},
+    "Bench1": {"hostname": "pi.local",
+               "serverIp": "192.68.1.1"}
 }
 
 
@@ -28,7 +30,7 @@ def doSomethingHere():
 
 # simple class that creates an SSH connection to a single computer.
 class SSHConnection():
-    def __init__(self, hostname, structureName, login, password):
+    def __init__(self, hostname, structureName):
         self.hostname = hostname
         self.structureName = structureName
         self.login = login
@@ -41,7 +43,7 @@ class SSHConnection():
             try:
                 self.ssh = paramiko.SSHClient()
                 self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                self.ssh.connect(self.hostname, username=self.login, password=self.password)
+                self.ssh.connect(self.hostname, username=login, password=password)
                 print ("Connected to " + self.structureName)
                 break
 
@@ -57,6 +59,9 @@ class SSHConnection():
         # If no connection in the allowed time.
         raise RuntimeError("Could not connect to " + self.structureName + ". Giving up")
 
+    def connectToSSHThreaded(self, threadName):
+        threading.Thread(target=self.connectToSSH(), name=threadName).start()
+
     # once an SSH connection is created, then it is time to issue commands over the tubes
     def runCommand(self, commandToRun):
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
@@ -64,19 +69,22 @@ class SSHConnection():
 
 # Now lets make multiple ssh connections to a list of computers
 class MultiSSH:
-    def __init__(self, listOfStructures):
-        self.listOfStructures = listOfStructures
+    def __init__(self, configDict):
+        self.configDict = configDict
+        self.structureNames = list(self.configDict.keys())
         self.sshConnections = []
-        for structure in listOfStructures:
-            self.sshConnections.append(SSHConnection(structure["hostname"], structure["structureName"]))
+        for structure in self.structureNames:
+            self.sshConnections.append(SSHConnection(self.configDict[structure]["hostname"], structure))
         # self.runOnAll()
+
+    # def connectToSSHThreaded(self):
 
     def runOnAll(self, commandToRun):
         running = []
         for connection in self.sshConnections:
             # Arbitraily complicated stuff
             # multiple threads because Gerald is a masochist
-            th = Thread(target=connection.connectToSSH.runCommand(commandToRun))
+            th = threading.Thread(target=connection.connectToSSH.runCommand(commandToRun))
             running.append(th)
 
         for r in running:
@@ -88,27 +96,36 @@ class MultiSSH:
     def runMultipleCommandsOnAll(self, commandList):
         pass
 
-    def setupConfigFile(self, stuffIWantInThere):
-        self.runOnAll("echo SOME TERRIBLE STRING I MAKE IN CODE > config.py")
+    def setupConfigFile(self):
+        for connection in self.sshConnections:
+            e = echo("test.py", self.configDict[connection.structureName])
+            commandsToWrite = e.writeConfig()
+
+            for index in range(len(commandsToWrite)):
+                command = commandsToWrite[index]
+                connection.runCommand(command)
 
 
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 class echo:
-    def __init__(self, fileName):
+    def __init__(self, fileName, configDict):
         self.fileName = fileName
+        self.configDict = configDict
 
-    def writeConfig(self, configDict):
-        keys = list(configDict.keys())
+    def writeConfig(self):
+        fileLocation = '~/repo/Dreamland/'
+
+        keys = list(self.configDict.keys())
 
         configToWrite = []
 
         for index, key in enumerate(keys):
             if index == 0:
-                string = """echo {"'%s'": "'%s'",  >> %s""" % (key, configDict[key], self.fileName)
+                string = """echo {"'%s'": "'%s'",  > %s""" % (key, self.configDict[key], fileLocation + self.fileName)
             elif index == len(keys) - 1:
-                string = """echo "'%s'": "'%s'"}  > %s""" % (key, configDict[key], self.fileName)
+                string = """echo "'%s'": "'%s'"}  >> %s""" % (key, self.configDict[key], fileLocation + self.fileName)
             else:
-                string = """echo "'%s'": "'%s'",  > %s""" % (key, configDict[key], self.fileName)
+                string = """echo "'%s'": "'%s'",  >> %s""" % (key, self.configDict[key], fileLocation + self.fileName)
 
             configToWrite.append(string)
 
