@@ -84,15 +84,15 @@ class MultiSSH:
         pass
 
     def setupConfigFile(self):
-        configName = "structureConfig.py"
+        configName = "structureConfig"
         for connection in self.sshConnections:
             name = connection.structureName
             e = echo(configName, self.configDict[name], name)
             commandsToWrite = e.writeConfig()
 
             for index in range(len(commandsToWrite)):
-                print(commandsToWrite)
                 command = commandsToWrite[index]
+                print(command)
                 connection.runCommand(command)
 
 
@@ -104,19 +104,19 @@ class echo:
         self.structureName = name
 
     def writeConfig(self):
-        fileLocation = '~/repo/Dreamland/'
+        fileLocation = '~/repo/Dreamland/' + self.fileName + '.py'
 
         keys = list(self.configDict.keys())
 
         configToWrite = []
+        string = """echo %s = {"'%s'": "'%s'",  > %s""" % (self.fileName, "structureName", self.structureName, fileLocation)
+        configToWrite.append(string)
 
         for index, key in enumerate(keys):
-            if index == 0:
-                string = """echo {"'%s'": "'%s'",  > %s""" % ("structureName", self.structureName, fileLocation + self.fileName)
-            elif index == len(keys) - 1:
-                string = """echo "'%s'": "'%s'"}  >> %s""" % (key, self.configDict[key], fileLocation + self.fileName)
+            if index == len(keys) - 1:
+                string = """echo "'%s'": "'%s'"}  >> %s""" % (key, self.configDict[key], fileLocation)
             else:
-                string = """echo "'%s'": "'%s'",  >> %s""" % (key, self.configDict[key], fileLocation + self.fileName)
+                string = """echo "'%s'": "'%s'",  >> %s""" % (key, self.configDict[key], fileLocation)
 
             configToWrite.append(string)
 
