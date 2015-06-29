@@ -63,6 +63,10 @@ class SSHConnection():
     def runCommand(self, commandToRun):
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
 
+    def runMultipleCommands(self, commandList):
+        for string in commandList:
+            self.runCommand(string)
+
 
 # Now lets make multiple ssh connections to a list of computers
 class MultiSSH:
@@ -75,13 +79,20 @@ class MultiSSH:
 
     def runOnAll(self, commandToRun):
         for connection in self.sshConnections:
-            connection.connectToSSH.runCommand(commandToRun)
+            connection.runCommand(commandToRun)
 
     def runOnGroup(self, groupDescriptor, commandToRun):
         pass
 
     def runMultipleCommandsOnAll(self, commandList):
-        pass
+        for string in commandList:
+            self.runOnAll(string)
+
+    def killAllPythonScripts(self):
+        self.runOnAll("sudo pkill python")
+
+    def restartDreamlandStructures(self):
+        self.runOnAll("sudo python3 ~/repo/Dreamland/dreamlandStructure.py")
 
     def setupConfigFile(self):
         configName = "structureConfig"
@@ -89,11 +100,19 @@ class MultiSSH:
             name = connection.structureName
             e = echo(configName, self.configDict[name], name)
             commandsToWrite = e.writeConfig()
+            connection.runMultipleCommands(commandsToWrite)
 
-            for index in range(len(commandsToWrite)):
-                command = commandsToWrite[index]
-                print(command)
-                connection.runCommand(command)
+            # for index in range(len(commandsToWrite)):
+            #     command = commandsToWrite[index]
+            #     print(command)
+            #     connection.runCommand(command)
+
+    def killSetupRestart(self):
+        self.killAllPythonScripts()
+        time.sleep(1)
+        self.setupConfigFile()
+        time.sleep(1)
+        self.restartDreamlandStructures()
 
 
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
