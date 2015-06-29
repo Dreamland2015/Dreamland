@@ -20,6 +20,9 @@ import threading
 login = "pi"
 password = "raspberry"
 
+# location of dreamlandStructure.py on RPI's
+dreamlandStructureFileLocation = "sudo python3 ~/repo/Dreamland/dreamlandStructure.py"
+
 
 #####################################################################################################################################
 # simple class that creates an SSH connection to a single computer.
@@ -94,7 +97,7 @@ class MultiSSH:
 
     # Restart the python script for each structure
     def restartDreamlandStructures(self):
-        self.runOnAll("sudo python3 ~/repo/Dreamland/dreamlandStructure.py")
+        self.runOnAll(dreamlandStructureFileLocation)
 
     # For the entire piece, kill python scripts, reset config files and restart the piece
     def killSetupRestart(self):
@@ -115,7 +118,7 @@ class MultiSSH:
 
 
 #####################################################################################################################################
-# G3 Note: this is super hacky, but works.
+# G3 Note: this is super hacky, but works. The formatting was tricky to get correct.
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 #####################################################################################################################################
 class echo:
