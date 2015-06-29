@@ -63,12 +63,13 @@ class SSHConnection():
     def runCommand(self, commandToRun):
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
 
+    # take a list of commands and send those over SSH
     def runMultipleCommands(self, commandList):
         for string in commandList:
             self.runCommand(string)
 
 
-# Now lets make multiple ssh connections to a list of computers
+# Now lets make multiple ssh connections and store those in a list
 class MultiSSH:
     def __init__(self, configDict):
         self.configDict = configDict
@@ -77,23 +78,33 @@ class MultiSSH:
         for structure in self.structureNames:
             self.sshConnections.append(SSHConnection(self.configDict[structure]["hostname"], structure))
 
+    # Run a single command on all SSH connections
     def runOnAll(self, commandToRun):
         for connection in self.sshConnections:
             connection.runCommand(commandToRun)
 
-    def runOnGroup(self, groupDescriptor, commandToRun):
-        pass
-
+    # Run a list of commands on all SSH connections
     def runMultipleCommandsOnAll(self, commandList):
         for string in commandList:
             self.runOnAll(string)
 
+    # Kill python scripts running on each connection
     def killAllPythonScripts(self):
         self.runOnAll("sudo pkill python")
 
+    # Restart the python script for each structure
     def restartDreamlandStructures(self):
         self.runOnAll("sudo python3 ~/repo/Dreamland/dreamlandStructure.py")
 
+    # For the entire piece, kill python scripts, reset config files and restart the piece
+    def killSetupRestart(self):
+        self.killAllPythonScripts()
+        time.sleep(1)
+        self.setupConfigFile()
+        time.sleep(1)
+        self.restartDreamlandStructures()
+
+    # Create a configuration file on the appropriate strucutre RPI
     def setupConfigFile(self):
         configName = "structureConfig"
         for connection in self.sshConnections:
@@ -102,19 +113,8 @@ class MultiSSH:
             commandsToWrite = e.writeConfig()
             connection.runMultipleCommands(commandsToWrite)
 
-            # for index in range(len(commandsToWrite)):
-            #     command = commandsToWrite[index]
-            #     print(command)
-            #     connection.runCommand(command)
 
-    def killSetupRestart(self):
-        self.killAllPythonScripts()
-        time.sleep(1)
-        self.setupConfigFile()
-        time.sleep(1)
-        self.restartDreamlandStructures()
-
-
+# G3 Note: this is super hacky, but works.
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 class echo:
     def __init__(self, fileName, configDict, name):
