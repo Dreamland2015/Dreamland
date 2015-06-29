@@ -80,15 +80,8 @@ class MultiSSH:
     # def connectToSSHThreaded(self):
 
     def runOnAll(self, commandToRun):
-        running = []
         for connection in self.sshConnections:
-            # Arbitraily complicated stuff
-            # multiple threads because Gerald is a masochist
-            th = threading.Thread(target=connection.connectToSSH.runCommand(commandToRun))
-            running.append(th)
-
-        for r in running:
-            r.join()
+            connection.connectToSSH.runCommand(commandToRun)
 
     def runOnGroup(self, groupDescriptor, commandToRun):
         pass
@@ -97,20 +90,24 @@ class MultiSSH:
         pass
 
     def setupConfigFile(self):
+        configName = "structureConfig.py"
         for connection in self.sshConnections:
-            e = echo("test.py", self.configDict[connection.structureName])
+            name = connection.structureName
+            e = echo(configName, self.configDict[name], name)
             commandsToWrite = e.writeConfig()
 
             for index in range(len(commandsToWrite)):
+                print(commandsToWrite)
                 command = commandsToWrite[index]
                 connection.runCommand(command)
 
 
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 class echo:
-    def __init__(self, fileName, configDict):
+    def __init__(self, fileName, configDict, name):
         self.fileName = fileName
         self.configDict = configDict
+        self.structureName = name
 
     def writeConfig(self):
         fileLocation = '~/repo/Dreamland/'
@@ -121,7 +118,7 @@ class echo:
 
         for index, key in enumerate(keys):
             if index == 0:
-                string = """echo {"'%s'": "'%s'",  > %s""" % (key, self.configDict[key], fileLocation + self.fileName)
+                string = """echo {"'%s'": "'%s'",  > %s""" % ("structureName", self.structureName, fileLocation + self.fileName)
             elif index == len(keys) - 1:
                 string = """echo "'%s'": "'%s'"}  >> %s""" % (key, self.configDict[key], fileLocation + self.fileName)
             else:
