@@ -3,29 +3,27 @@ import sys
 import time
 import threading
 
-serverIp = "10.0.1.165"
+#####################################################################################################################################
+#####################################################################################################################################
+# This file creates several classes:
 
+# - SSHConnection handles all of the details establishing a SSH connection to a single host, as well as issuing commands to the host
+# - MultiSSH expands SSHConnection by creating a list of SSHConnection objects and passing them commands
+# - Echo is frankly rather hacky, but it allows for the creation of the structureConfig.py on each RPI,
+#   this allows the dreamlandStructure.py scripts to pull the serverIp, that structures name and the structures hostname
+
+#####################################################################################################################################
+#####################################################################################################################################
+
+
+# Raspberry Pi login information
 login = "pi"
 password = "raspberry"
 
-config = [
-    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "carousel"},
-    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "bench1"},
-    {"hostname": "pi.local", "serverIp": serverIp, "structureName": "bench2"}
-]
 
-config2 = {
-    "Carousel": {"hostname": "pi.local", "serverIp": serverIp},
-    "Bench": {"hostname": "pi.local", "serverIp": serverIp},
-    "Bench1": {"hostname": "pi.local", "serverIp": serverIp}
-}
-
-
-def doSomethingHere():
-    pass
-
-
+#####################################################################################################################################
 # simple class that creates an SSH connection to a single computer.
+#####################################################################################################################################
 class SSHConnection():
     def __init__(self, hostname, structureName):
         self.hostname = hostname
@@ -69,7 +67,9 @@ class SSHConnection():
             self.runCommand(string)
 
 
+#####################################################################################################################################
 # Now lets make multiple ssh connections and store those in a list
+#####################################################################################################################################
 class MultiSSH:
     def __init__(self, configDict):
         self.configDict = configDict
@@ -114,8 +114,10 @@ class MultiSSH:
             connection.runMultipleCommands(commandsToWrite)
 
 
+#####################################################################################################################################
 # G3 Note: this is super hacky, but works.
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
+#####################################################################################################################################
 class echo:
     def __init__(self, fileName, configDict, name):
         self.fileName = fileName
