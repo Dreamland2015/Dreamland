@@ -15,12 +15,9 @@ config = [
 ]
 
 config2 = {
-    "Carousel": {"hostname": "pi.local",
-                 "serverIp": serverIp},
-    "Bench": {"hostname": "pi.local",
-              "serverIp": serverIp},
-    "Bench1": {"hostname": "pi.local",
-               "serverIp": "192.68.1.1"}
+    "Carousel": {"hostname": "pi.local", "serverIp": serverIp},
+    "Bench": {"hostname": "pi.local", "serverIp": serverIp},
+    "Bench1": {"hostname": "pi.local", "serverIp": serverIp}
 }
 
 
@@ -75,9 +72,6 @@ class MultiSSH:
         self.sshConnections = []
         for structure in self.structureNames:
             self.sshConnections.append(SSHConnection(self.configDict[structure]["hostname"], structure))
-        # self.runOnAll()
-
-    # def connectToSSHThreaded(self):
 
     def runOnAll(self, commandToRun):
         for connection in self.sshConnections:
