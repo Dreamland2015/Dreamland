@@ -20,8 +20,8 @@ import threading
 login = "pi"
 password = "raspberry"
 
-# location of dreamlandStructure.py on RPI's
-dreamlandStructureFileLocation = "sudo python3 ~/repo/Dreamland/dreamlandStructure.py"
+# Comand to run dreamlandStructure.py on RPI's
+startDreamlandStructure = "sudo python3 ~/repo/Dreamland/dreamlandStructure.py"
 
 
 #####################################################################################################################################
@@ -97,7 +97,7 @@ class MultiSSH:
 
     # Restart the python script for each structure
     def restartDreamlandStructures(self):
-        self.runOnAll(dreamlandStructureFileLocation)
+        self.runOnAll(startDreamlandStructure)
 
     # For the entire piece, kill python scripts, reset config files and restart the piece
     def killSetupRestart(self):
