@@ -5,7 +5,7 @@ import threading
 
 #####################################################################################################################################
 #####################################################################################################################################
-# This file creates several classes:
+# This file creates several classes used in the management of Dreamland 2015, which are the following:
 
 # - SSHConnection handles all of the details establishing a SSH connection to a single host, as well as issuing commands to the host
 # - MultiSSH expands SSHConnection by creating a list of SSHConnection objects and passing them commands
