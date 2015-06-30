@@ -25,7 +25,8 @@ Making i2c work on Raspberry Pi, i.e. enabling it in the kernel:
 		- <Finish>. If told to do so, reboot the RPi.
 	a. Remove i2c from the modules blacklist
 		- sudo nano /etc/modprobe.d/raspi-blacklist.conf
-		- comment out (by placing a '#' in front of the lines) the line that has the letters i2c in it. (e.g.: # blacklist i2c-bcm2708)
+		- If the file is not empty, comment out (by placing a '#' in front of the line) any lines that have the letters i2c in it. 
+			(e.g.: # blacklist i2c-bcm2708)
 	b. Add i2c to the list of kernel modules:
 		- sudo nano /etc/modules
 		- if not already there, add (to the end of the file) the lines
@@ -74,17 +75,24 @@ The above steps will make i2c work. All modules required for using i2c with pyth
 	d. Optional: test it also with python2: python2 gyrotest3.py
 	
 Details:
-The working i2c library for python3 was built using instructions from [JTech](http://jtecheng.com/?p=959), although they are not compiled in a simple list. Here is what was done to build the i2c library:
+The working i2c library for python3 was built using instructions from [JTech](http://jtecheng.com/?p=959), although the relevant steps are not compiled in a simple list.
+Actually, good instructions are here:
+		http://www.linuxcircle.com/2015/05/03/how-to-install-smbus-i2c-module-for-python-3/
+Here is what was done to build the i2c library:
 	1. sudo apt-get install libi2c-dev
 	2. sudo apt-get install python3-dev
 	3. sudo wget http://ftp.de.debian.org/debian/pool/main/i/i2c-tools/i2c-tools_3.1.0.orig.tar.bz2
-	   This gets a (non-working) distro of i2c for python3.
-	4. tar xvf i2c-tools_3.1.0.orig.tar.bz2
+	   This gets a distro of i2c for python2, which doesn't work for python3.
+	4. Uncompress/extract the distro:
+		tar xvf i2c-tools_3.1.0.orig.tar.bz2
 	5. cd i2c-tools-3.1.0/py-smbus
-	6. mv smbusmodule.c smbusmodule.c.old
+	6. Rename the non-working source file in the distro:
+		mv smbusmodule.c smbusmodule.c.old
 	7. Get a working version of smbusmodule.c:
 		copy the code from this blog post: http://www.spinics.net/lists/linux-i2c/msg08427.html
 		This needs to be done manually, copying and pasting the code from text.
+		Or actually, the file can be gotten from here:
+		wget https://gist.githubusercontent.com/sebastianludwig/c648a9e06c0dc2264fbd/raw/2b74f9e72bbdffe298ce02214be8ea1c20aa290f/smbusmodule.c # download patched (Python 3) source
 	8. sudo python3 setup.py build
 	9. sudo python3 setup.py install
 	

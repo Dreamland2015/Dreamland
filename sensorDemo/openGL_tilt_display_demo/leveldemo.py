@@ -25,7 +25,7 @@ from OpenGL.GLU import *
 from math import radians
 from pygame.locals import *
 
-SERVERADDRESS = "http://192.168.0.3:8080"  # Change this address to your settings
+SERVERADDRESS = "http://192.168.0.6:8080"  # Change this address to your settings
 SCREEN_SIZE = (800, 600)
 SCALAR = .5
 SCALAR2 = 0.2
