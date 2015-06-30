@@ -153,27 +153,30 @@ def sensordata_process_loop(gyrodata):
     while running:
         now = time.time()
         deltat = now-lasttime
-        rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT = read_sensor()
+        rawdata = read_sensor()
+        rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT = rawdata
 #        rgyro_x, rgyro_y, rgyro_z = read_sensor()[0:3]
 #        rgyro_z = 10 + random.random()  # for testing
         current_angle += deltat * rgyro_z
         loop += 1  # loop
         if now-lastset > 0.5:
             lastset = now
-            print("--- --- Sensordata process loop says: gyrodata was:", gyrodata.getdata('angle'))  #, flush=True)
+            #print("--- --- Sensordata process loop says: gyrodata was:", gyrodata.getdata('angle'))  #, flush=True)
             gyrodata.setdata('angle', current_angle)
-            print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
-            print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
-        if now-lastprint > 2:
+            gyrodata.setdata('rawdata', rawdata)
+            #print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
+            #print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
+        if now-lastprint > 1:
             lastprint=now
-            print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
-            print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
-            print("--- --- Sensordata process loop says: #{loopnum:d}: Angle is {ang:f}".format(
-                  loopnum=loop, ang=gyrodata.getdata('angle')))  #, flush=True)
+            #print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
+            #print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
+            #print("--- --- Sensordata process loop says: #{loopnum:d}: Angle is {ang:f}".format(
+                  #loopnum=loop, ang=gyrodata.getdata('angle')))  #, flush=True)
+            #print("--- --- Sens_ploop: #{loopnum:d}: Angle is {ang:f}".format(
         if now-lastwrite > 0.1:
-            data = ("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n" % now, 
-                    rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z,
-                    rT, current_angle)
+            data = ("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n" % (now,
+                    rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y,
+                    raccel_z, rT, current_angle))
             f.write(data)
             lastwrite=now
         if now-startt > 20:
@@ -255,6 +258,9 @@ def test_client():
 if __name__ == "__main__":
     initraw=[0,0,0,0,0,0,0]
     gyro = Gyrodata(initraw, 0, 0)
+
+    global bus
+    bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
      
     sensor_loop = mp_Process(name='sensordataloop1',
                              target=sensordata_process_loop, args=(gyro,))
