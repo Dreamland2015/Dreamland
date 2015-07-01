@@ -1,0 +1,237 @@
+How to create Raspberry Pi Raspbian image for Dreamland:
+
+1. Download and copy the latest version of wheezy onto an sd card
+2. Insert SD card to the RPi, boot up, and ssh into the RPi.
+3. Uncomment line "hdmi_force_hotplug=1" in /boot/config.txt
+   (so the hdmi connector doesn't get disabled when nothing's plugged in)
+4. In /etc/default/keyboard, change XKBLAYOUT="gb" to XKBLAYOUT="us"
+   (useful when using a USB keyboard plugged into the RPi)
+5. On the RPi: "sudo raspi-config"
+	Select (8)Advanced options -> (A7)I2C
+	    Would you like the ARM I2C interface to be enabled? -> <Yes>
+	    Would you like the I2C kernel module to be loaded by default? -> <Yes>
+6. Select <Finish>, Reboot -> <Yes>
+   After reboot ssh back into the RPi.
+7. Update, then upgrade operation system: 
+  (the RPi needs to be connected to the internet)
+	sudo apt-get update
+	sudo apt-get upgrade
+8. Update other packages:
+	sudo apt-get install -y avahi-daemon python3-pip python-zmq make autoconf automake libtool cython
+9. sudo pip-3.2 install distribute --upgrade
+10. sudo pip-3.2 install pyzmq  (this takes a while)
+11. sudo apt-get install python-webpy (this also takes a while)
+	Installs webpy for python2. Can't be installed for python3.
+	(This is used for running some test demos.)
+12. Check version of packages:
+    pi@raspberrypi:~$ pip-3.2 freeze
+	RPi.GPIO==0.5.11
+	distribute==0.7.3
+	mcpi==0.1.1
+	numpy==1.6.2
+	picamera==1.10
+	pifacecommon==4.1.2
+	pifacedigitalio==3.0.4
+	pygame==1.9.2a0
+	pyserial==2.5
+	pyzmq==14.7.0
+	wsgiref==0.1.2
+   (Update as necessary: sudo pip-3.2 install XXXXX --upgrade)
+14. Add to the end of /etc/modules: (e.g. "sudo nano /etc/modules")
+			i2c-bcm2708
+			i2c-dev
+15. sudo reboot
+16. sudo apt-get install i2c-tools
+17. Verify that the RPi can talk the i2c protocol:
+	pi@raspberrypi:~$ i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- 68 -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+	(The 68 will appear if the MPU-6050 chip is connected, otherwise "--")
+
+18. sudo apt-get install python-smbus
+	(This will install smbus for python2. Installation for python3 is below.)
+19. cd ~
+    mkdir repo
+    cd repo
+    git clone https://github.com/Dreamland2015/Dreamland.git
+20. cd ~/repo/Dreamland/sensorDemo/i2c4python3/i2c-tools-3.1.0/py-smbus
+21. sudo python3 setup.py build
+22. sudo python3 setup.py install
+23. Check that smbus is properly installed (note 2nd to last line):
+	pi@raspberrypi:~$ pip-3.2 freeze
+	RPi.GPIO==0.5.11
+	distribute==0.7.3
+	mcpi==0.1.1
+	numpy==1.6.2
+	picamera==1.10
+	pifacecommon==4.1.2
+	pifacedigitalio==3.0.4
+	pygame==1.9.2a0
+	pyserial==2.5
+	pyzmq==14.7.0
+	smbus==1.1
+	wsgiref==0.1.2
+	
+
+===============================================================
+This is a good place to stop & make an image of the system, if desired.
+To add wireless functionality, also add steps below:
+===============================================================
+
+Setting up wireless. Change the files below so their contents are like this:
+
+W1. cat /etc/network/interfaces
+
+	auto lo
+	iface lo inet loopback
+	
+	auto eth0
+	allow-hotplug eth0
+	iface eth0 inet manual
+	
+	auto wlan0
+	allow-hotplug wlan0
+	iface wlan0 inet manual
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+	
+	auto wlan1
+	allow-hotplug wlan1
+	iface wlan1 inet manual
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+	
+W2. sudo cat /etc/wpa_supplicant/wpa_supplicant.conf
+
+	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+	update_config=1
+	 
+	network={
+	        id_str="mhomenet"
+	        ssid="mhomenet"
+	        psk="MarcsWirelessNID"
+	}
+	
+	network={
+	        id_str="Flux Container"
+	        ssid="Flux Container"
+	        psk="Dreamland2015"
+	        priority=5
+	}
+
+
+===============================================================
+This is a good place to stop & make an image of the system.
+After that, run step Opt3 below, expanding the file system.
+Steps A24-A27 below that don't all work.
+===============================================================
+
+
+Now installing python3.4 (up to now it's only 3.2), following instructions at: 
+http://sowingseasons.com/blog/building-python-3-4-on-raspberry-pi-2.html
+
+First, expand file system if not done yet (otherwise we run out of space:
+A24. sudo raspi-config
+	Select option (1) Expand Filesystem
+
+A25. Following the web site above:
+    sudo apt-get update
+    sudo apt-get upgrade -y
+    sudo apt-get install build-essential libncursesw5-dev libgdbm-dev libc6-dev 
+    sudo apt-get install zlib1g-dev libsqlite3-dev tk-dev
+    sudo apt-get install libssl-dev openssl
+    cd ~
+    wget https://www.python.org/ftp/python/3.4.2/Python-3.4.2.tgz
+    tar -zxvf Python-3.4.2.tgz
+    cd Python-3.4.2
+    ./configure
+    make
+    sudo make install
+A26. Get pip for this version:
+    cd ~
+    wget https://bootstrap.pypa.io/get-pip.py
+    sudo python3.4 get-pip.py
+    
+A27. Install smbus for this version too:
+    No success yet - step 21 gives compile errors...
+
+===============================================================
+
+That's it (so far)!
+Still need to add: fadecandy ?
+
+===============================================================
+
+Additional options at the end:
+
+Opt1. Test accelerometer/gyro:
+	1. cd ~/repo/Dreamland/sensorDemo/gyro_test/1_read_gyro_angle
+	2. python3 gyrotest3.py
+		(stop program with ctrl-C)
+
+Opt2. Clone SD card image so it can be used on other RPis (see notes below)
+   - good to do before expanding the file system (see option C below). 
+     Use gzip or zip7 to compress image after cloning (so it takes less space).
+   
+Opt3. sudo raspi-config
+	Select option (1) Expand Filesystem
+	(so partition fills all of available SD card space)
+
+Opt4. Setup hostname of RPi to distinguish it from other RPis:
+    sudo raspi-config
+    advanced options
+    hostname - change to name of choice
+    tab, tab, enter
+    tab, tab, enter to save
+
+
+
+=======
+Notes:
+=======
+Useful software 
+---------------
+(Windows):
+- Win32DiskImager (http://sourceforge.net/projects/win32diskimager/)
+	Used to write Raspbian image to SD card
+- Paragon ExtFS (https://www.paragon-software.com/home/extfs-windows/)
+	Allows Windows to read and write disk partitions in ext format.
+	The SD card has one small FAT32 partition with a small number of boot files, and a larger ext partition with all other files
+- Angry IP scanner (http://angryip.org/download/#windows)
+	Useful to check the local network for IP addresses of connected devices
+	(requires installing Java)
+[MacOS]
+- Angry IP scanner (http://angryip.org/download/#windows)
+	Useful to check the local network for IP addresses of connected devices
+
+	
+Notes on step 1:
+----------------
+	a. Raspbian can be downloaded at https://www.raspberrypi.org/downloads/
+	b. Using a laptop to write Raspbian image to SD card:
+			Windows: use Win32DiskImager (http://sourceforge.net/projects/win32diskimager/)
+			Mac: Follow instructions at (https://www.raspberrypi.org/documentation/installation/installing-images/mac.md):
+				If you are comfortable with the command line, you can image a card without any additional software. Run:
+				diskutil list
+				Identify the disk (not partition) of your SD card e.g. disk4 (not disk4s1):
+				diskutil unmountDisk /dev/<disk# from diskutil>
+				e.g. diskutil unmountDisk /dev/disk4
+				sudo dd bs=1m if=image.img of=/dev/<disk# from diskutil>
+				e.g. sudo dd bs=1m if=2015-05-05-raspbian-wheezy.img of=/dev/disk4
+				This may result in an dd: invalid number '1m' error if you have GNU coreutils installed. In that case you need to use 1M:
+				sudo dd bs=1M if=image.img of=/dev/<disk# from diskutil>
+				This will take a few minutes, depending on the image file size. You can check the progress by sending a SIGINFO signal pressing Ctrl+T.
+				
+Networking conf files:
+----------------------
+Files that may need to be changed to set up networking:
+- /etc/networking/interfaces
+- /etc/wpa_supplicant/wpa_supplicant.conf
+- /etc/rc.local
+
+
