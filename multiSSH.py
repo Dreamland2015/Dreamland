@@ -68,6 +68,8 @@ class SSHConnection():
     def runMultipleCommands(self, commandList):
         for string in commandList:
             self.runCommand(string)
+            print(string)
+            time.sleep(0.5)
 
 
 #####################################################################################################################################

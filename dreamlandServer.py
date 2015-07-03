@@ -15,11 +15,11 @@ def sendMessageToClients():
 	send_zmq.bind('tcp://*:' + send_port)
 
 	message = 'hello world'
-	while True:
-		topic = randrange(4, 10)
-		print('Sending ' + str(topic))
-		send_zmq.send_string('%i, %s' % (topic, message))
-		time.sleep(1)
+	# while True:
+	# 	topic = randrange(4, 10)
+	# 	print('Sending ' + str(topic))
+	# 	send_zmq.send_string('%i, %s' % (topic, message))
+	# 	time.sleep(1)
 
 
 def receiveMessageFromClients():

@@ -81,7 +81,7 @@ void setup()
 	// Various sliders, knobs and buttons
 	// lx.ui.addLayer(new UIComponentsDemo(lx.ui, width-144, 4)); 
 
-	// buildOutputs();
+	buildOutputs();
 }
 
 void draw() 

@@ -135,16 +135,16 @@ public static class Model extends LXModel
       for (int i = 0; i < 3; i++) {
        addComponent(bench.translate(0, -10 * FEET, 0).rotate(2 * PI * i / 3f));
       }
-      // // outer benches
-      // for (int i = 0; i < 3; i++) {
-      //   addComponent(bench.translate(0, -15 * FEET, 0).rotate(2 * PI * (i + 0.5) / 3f));
-      // }
+      // outer benches
+      for (int i = 0; i < 3; i++) {
+        addComponent(bench.translate(0, -15 * FEET, 0).rotate(2 * PI * (i + 0.5) / 3f));
+      }
 
-      // LampPostFixture post = new LampPostFixture();
-      // // lamp posts
-      // for (int i = 0; i <3; i++) {
-      //   addComponent(post.translate(0, -20 * FEET, 0).rotate(2 * PI * i / 3f));
-      // }
+      LampPostFixture post = new LampPostFixture();
+      // lamp posts
+      for (int i = 0; i <3; i++) {
+        addComponent(post.translate(0, -20 * FEET, 0).rotate(2 * PI * i / 3f));
+      }
     }
   }
 }
