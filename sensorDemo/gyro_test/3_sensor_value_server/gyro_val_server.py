@@ -8,7 +8,7 @@
 # any computer for testing.
 # 
 
-# import smbus
+import smbus
 import math
 import time
 import zmq
@@ -56,13 +56,13 @@ class Gyrodata(object):
         if initraw == None: initraw==[1, 2, 3, 4, 5, 6, 7]
         if initspeed == None: initspeed==123
         if initangle == None: initangle==499
-        print("Gyrodata says: initializing data", flush=True)
+        print("Gyrodata says: initializing data")  #, flush=True)
         # raw values: rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT
         self.rawdata = mp_Array('i', initraw)
         self.speed = mp_Value('d', initspeed)
         self.angle = mp_Value('d', initangle)
-        print("Gyrodata says: angle value is: ", self.angle.value, flush=True)
-        print("Gyrodata says: init changed angle value to: ", self.angle.value, flush=True)
+        print("Gyrodata says: angle value is: ", self.angle.value)  #, flush=True)
+        print("Gyrodata says: init changed angle value to: ", self.angle.value)  #, flush=True)
         
     def getdata(self, whichdata):
         with self.lock:
@@ -128,7 +128,9 @@ def sensordata_process_loop(gyrodata):
     other process threads can read the values.
     """
 
-    print("starting sensordata_process_loop", flush=True)
+    print("starting sensordata_process_loop")  #, flush=True)
+    running = True
+
     try:
         # the smb communication bus (i2c) for talking to the MPU-6050
         bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
@@ -136,43 +138,62 @@ def sensordata_process_loop(gyrodata):
         bus.write_byte_data(i2caddress, power_mgmt_1, 0)
     except:
         print("sensordata_process_loop: can't control SMBus")
+        running = False
 
-    startt = lasttime = lastprint = lastset = time.time()
+    try:
+        f = open('sens_values.txt', 'w')
+    except:
+        print("Can't open file sens_values.txt")
+        running = False
+        
+    startt = lasttime = lastprint = lastset = lastwrite = time.time()
     loop = 0    # for debugging
     current_angle = 0
-    running = True
 
     while running:
         now = time.time()
         deltat = now-lasttime
+        rawdata = read_sensor()
+        rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT = rawdata
 #        rgyro_x, rgyro_y, rgyro_z = read_sensor()[0:3]
-        rgyro_z = 10 + random.random()  # for testing
+#        rgyro_z = 10 + random.random()  # for testing
         current_angle += deltat * rgyro_z
         loop += 1  # loop
         if now-lastset > 0.5:
             lastset = now
-            print("--- --- Sensordata process loop says: gyrodata was:", gyrodata.getdata('angle'), flush=True)
+            #print("--- --- Sensordata process loop says: gyrodata was:", gyrodata.getdata('angle'))  #, flush=True)
             gyrodata.setdata('angle', current_angle)
-            print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle, flush=True)
-            print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'), flush=True)
-        if now-lastprint > 2:
+            gyrodata.setdata('rawdata', rawdata)
+            #print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
+            #print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
+        if now-lastprint > 1:
             lastprint=now
-            print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle, flush=True)
-            print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'), flush=True)
-            print("--- --- Sensordata process loop says: #{loopnum:d}: Angle is {ang:f}".format(
-                  loopnum=loop, ang=gyrodata.getdata('angle')), flush=True)
-        lasttime=now
-     
+            #print("--- --- Sensordata process loop says: resetting lastset: current_angle is now:", current_angle)  #, flush=True)
+            #print("--- ---                                                  gyrodata is now:", gyrodata.getdata('angle'))  #, flush=True)
+            #print("--- --- Sensordata process loop says: #{loopnum:d}: Angle is {ang:f}".format(
+                  #loopnum=loop, ang=gyrodata.getdata('angle')))  #, flush=True)
+            #print("--- --- Sens_ploop: #{loopnum:d}: Angle is {ang:f}".format(
+        if now-lastwrite > 0.1:
+            data = ("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n" % (now,
+                    rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y,
+                    raccel_z, rT, current_angle))
+            f.write(data)
+            lastwrite=now
         if now-startt > 20:
-            print("--- --- Sensordata process loop done after 20 seconds", flush=True)
+            print("--- --- Sensordata process loop done after 20 seconds")  #, flush=True)
             running = False
+        time.sleep(0.1)
+        lasttime=now
+    
+    if f is not None:
+        f.close()
 
 
 def sensordata_server(gyrodata):
     """ Server that transmits sensor data to other processes that request it.
     """
     
-    print("--- sensordata_server says: started", flush=True)
+    print("--- sensordata_server says: started")  #, flush=True)
     
     # set up the gyro value server socket
     context = zmq.Context()
@@ -192,7 +213,7 @@ def sensordata_server(gyrodata):
     poller = zmq.Poller()
     poller.register(gserver, zmq.POLLIN)
     
-    print("--- sensordata_server says: Sockets started", flush=True)
+    print("--- sensordata_server says: Sockets started")  #, flush=True)
     running = True
     while running:
         # check whether there's a request on the socket(s)
@@ -200,15 +221,15 @@ def sensordata_server(gyrodata):
         # if it does, process request
         if gserver in sockets:
             request = gserver.recv_string()
-            print("--- sensordata_server says: someone requested ", request, flush=True)
+            print("--- sensordata_server says: someone requested ", request)  #, flush=True)
             if request == "End":
                 running = False
             else:
                 reply_data = gyrodata.getdata(request)
-                print("--- sensordata_server says: I'm sending back ", reply_data, flush=True)
+                print("--- sensordata_server says: I'm sending back ", reply_data)  #, flush=True)
                 gserver.send_pyobj(reply_data)
         time.sleep(0.01)
-    print("--- sensordata_server says: Ending", flush=True)
+    print("--- sensordata_server says: Ending")  #, flush=True)
 
 
 def test_client():
@@ -222,21 +243,24 @@ def test_client():
     gserver.setsockopt(zmq.LINGER, 0)
     gserver.connect("tcp://" + ip_addr + ":" + pub_port)
     
-    print("  test_client says: Sockets started", flush=True)
+    print("  test_client says: Sockets started")  #, flush=True)
     for i in range(0,10):
-        print("  test_client says: sending angle request ", i, flush=True)
+        print("  test_client says: sending angle request ", i)  #, flush=True)
         gserver.send_string("angle")  # send request to get angle from server
         angle = gserver.recv_pyobj()
-        print("  test_client sayd: got answer angle: ", angle, flush=True)
+        print("  test_client sayd: got answer angle: ", angle)  #, flush=True)
         time.sleep(3)
-    print("  test_client sayd: Sending end request", flush=True)
+    print("  test_client sayd: Sending end request")  #, flush=True)
     gserver.send_string("End")  # tell gyro data server to shut down
-    print("  test_client sayd: Ending", flush=True)
+    print("  test_client sayd: Ending")  #, flush=True)
         
 
 if __name__ == "__main__":
     initraw=[0,0,0,0,0,0,0]
     gyro = Gyrodata(initraw, 0, 0)
+
+    global bus
+    bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
      
     sensor_loop = mp_Process(name='sensordataloop1',
                              target=sensordata_process_loop, args=(gyro,))
@@ -254,7 +278,7 @@ if __name__ == "__main__":
     sensor_loop.join()
     
 #    c = raw_input("Type something to quit.")  # python 2
-#    print("done", flush=True)
+#    print("done")  #, flush=True)
  
 #    print(read_all())
 #    print("Determining offsets: Don't move sensor")
