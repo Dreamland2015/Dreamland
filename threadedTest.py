@@ -1,6 +1,5 @@
 import threading
 import zmq
-
 ###################################################################################################
 ###################################################################################################
 # This file is the backbone of the communication for this project, it allows for a publisher or
@@ -11,12 +10,12 @@ import zmq
 ###################################################################################################
 ###################################################################################################
 
+
 ###################################################################################################
 # Creates a subscription socket that, depending on the state of isServer, will either: Connect to
 # a socket and filter messages that reach the output, or bind to a socket and subscribe to all
 # messages that reach it.
-
-
+##################################################################################################
 class Subscriber(threading.Thread):
 	def __init__(self, hostname, port, subscribtionFilter, isServer=False):
 		threading.Thread.__init__(self)
@@ -71,8 +70,7 @@ class Subscriber(threading.Thread):
 ##################################################################################################
 # Creates a publishing socket that binds to a socket and send messages with a topic filter for the
 # subscriber to listen for. It inherenits some simple methods from the subscriber class.
-
-
+##################################################################################################
 class Publisher(Subscriber):
 	def __init__(self, hostname, port, isServer=True):
 		threading.Thread.__init__(self)
