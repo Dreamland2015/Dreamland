@@ -3,6 +3,7 @@ from structureConfig import structureConfig
 import time
 import zmq
 
+
 structureName = structureConfig["structureName"]
 serverIp = 'tcp://%s:' % structureConfig["serverIp"]
 
