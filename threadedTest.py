@@ -1,8 +1,20 @@
-# from structureConfig import structureConfig
 import threading
-# import sys
-import time
 import zmq
+
+###################################################################################################
+###################################################################################################
+# This file is the backbone of the communication for this project, it allows for a publisher or
+# subscriber to be instantiated as a server or a device. The key difference being that the server's
+# hostname/IP will always be known and therefore it will bind to the sockets presented to it. For
+# the structures, will connect to the servers hostname/IP since they are allowed to float around
+# the network.
+###################################################################################################
+###################################################################################################
+
+###################################################################################################
+# Creates a subscription socket that, depending on the state of isServer, will either: Connect to
+# a socket and filter messages that reach the output, or bind to a socket and subscribe to all
+# messages that reach it.
 
 
 class Subscriber(threading.Thread):
@@ -15,6 +27,7 @@ class Subscriber(threading.Thread):
 		self.subscribtionFilter = subscribtionFilter
 		self.start()
 
+	# Checks to see if this instance is a server, if so it binds to the socket
 	def bindOrConnect(self):
 		if self.serverOrNot is True:
 			self.hostname = '*'
@@ -22,6 +35,7 @@ class Subscriber(threading.Thread):
 		else:
 			self.zmqObject.connect(self.parseIpAndPort())
 
+	# Checks to see if this instance is a server, if so it subscribes to everything
 	def subcribeTo(self):
 		if self.serverOrNot is True:
 			subscribtion = ""
@@ -29,23 +43,34 @@ class Subscriber(threading.Thread):
 			subscribtion = self.subscribtionFilter
 		self.zmqObject.setsockopt_string(zmq.SUBSCRIBE, subscribtion)
 
+	# Parses the hostname and port into the string required by zmq
 	def parseIpAndPort(self):
 		return 'tcp://%s:%s' % (self.hostname, self.port)
 
+	# Called to start listening on the socket for messages
 	def recvMessage(self):
 		while True:
 			stringRecv = self.zmqObject.recv_string()
 			topic, messageRecv = stringRecv.split(',')
 			print('Received : ' + messageRecv + ' from ' + topic)
 
+	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):
+		# setup zmq subscription socket for either a server or structure
 		self.context = zmq.Context()
 		self.zmqObject = self.context.socket(zmq.SUB)
-		self.zmqObject.setsockopt(zmq.RCVHWM, 1)
+		self.zmqObject.setsockopt(zmq.RCVHWM, 1)  # set the high water mark to 1, so messages are the most recent
 		self.bindOrConnect()
 		self.subcribeTo()
+
+		# notify that the service has started, and start receiving commands
 		print('Publisher started')
 		self.recvMessage()
+
+
+##################################################################################################
+# Creates a publishing socket that binds to a socket and send messages with a topic filter for the
+# subscriber to listen for. It inherenits some simple methods from the subscriber class.
 
 
 class Publisher(Subscriber):
@@ -57,38 +82,21 @@ class Publisher(Subscriber):
 		self.serverOrNot = isServer
 		self.start()
 
-	def sendMessage(self, structureName, message):
-		messageToSend = '%s, %s' % (structureName, message)
-		print("Sending : " + message + ' to ' + structureName)
+	# Parse our the string for the publisher to send, prepending the topicFilter to the start
+	def sendMessage(self, topicFilter, message):
+		messageToSend = '%s, %s' % (topicFilter, message)
+		print("Sending : " + message + ' to ' + topicFilter)
 		self.zmqObject.send_string(messageToSend)
 
-	def sendMessageToMultiple(self, structureNames, message):
-		for structureName in structureNames:
-			self.sendMessage(structureName, message)
+	# expand the sendMessage method to send a single message to a list of topicFilters
+	def sendMessageToMultiple(self, listOfTopicFilters, message):
+		for topicFilter in listOfTopicFilters:
+			self.sendMessage(topicFilter, message)
 
+	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):
 		self.context = zmq.Context()
 		self.zmqObject = self.context.socket(zmq.PUB)
 		self.zmqObject.setsockopt(zmq.SNDHWM, 1)
 		self.bindOrConnect()
 		print('Subscriber started')
-
-
-if __name__ == '__main__':
-	r1 = Subscriber('localhost', '2345', 'carousel', False)
-	r2 = Subscriber('localhost', '2345', 'bench_1', False)
-	r3 = Subscriber('localhost', '2345', 'bench_2', False)
-	s1 = Publisher('localhost', '2345', True)
-	time.sleep(2)
-	for thread in threading.enumerate():
-		print(thread)
-
-	# for x in range(1):
-	# 	message = input()
-	# 	topic, message = message.split(',')
-	# 	print(message)
-	# 	s1.sendMessage(topic, message)
-
-	s1.sendMessageToMultiple(['carousel', 'bench_1', 'bench_2'], 'Hello World')
-
-
