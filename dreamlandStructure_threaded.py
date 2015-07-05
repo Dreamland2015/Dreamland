@@ -1,15 +1,16 @@
-r1 = Subscriber('localhost', '2345', 'carousel', False)
-r2 = Subscriber('localhost', '2345', 'bench_1', False)
-r3 = Subscriber('localhost', '2345', 'bench_2', False)
-s1 = Publisher('localhost', '2345', True)
-time.sleep(2)
-for thread in threading.enumerate():
-	print(thread)
+from structureConfig import structureConfig
+import pubSubDreamland as psdl
 
-# for x in range(1):
-# 	message = input()
-# 	topic, message = message.split(',')
-# 	print(message)
-# 	s1.sendMessage(topic, message)
+structureName = structureConfig["structureName"]
+serverIp = structureConfig["serverIp"]
 
-s1.sendMessageToMultiple(['carousel', 'bench_1', 'bench_2'], 'Hello World')
+recv_port = '5560'
+send_port = '5559'
+
+r = psdl.Subscriber(serverIp, recv_port, structureName, isServer=False)
+s = psdl.Publisher(serverIp, send_port, structureName, isServer=False)
+
+while True:
+	message = input('Send structures name, command: ')
+	structureName, message = message.split(',')
+	s.sendMessage(structureName, message)

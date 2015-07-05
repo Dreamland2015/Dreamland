@@ -50,8 +50,8 @@ class Subscriber(threading.Thread):
 	def recvMessage(self):
 		while True:
 			stringRecv = self.zmqObject.recv_string()
-			topic, messageRecv = stringRecv.split(',')
-			print('Received : ' + messageRecv + ' from ' + topic)
+			topic, publisherId, messageRecv = stringRecv.split(',')
+			print('Received : ' + messageRecv + ' from ' + publisherId)
 
 	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):
@@ -72,17 +72,18 @@ class Subscriber(threading.Thread):
 # subscriber to listen for. It inherenits some simple methods from the subscriber class.
 ##################################################################################################
 class Publisher(Subscriber):
-	def __init__(self, hostname, port, isServer=True):
+	def __init__(self, hostname, port, publisherId, isServer=True):
 		threading.Thread.__init__(self)
 		self.name = 'publisher'
 		self.hostname = hostname
 		self.port = port
+		self.publisherId = publisherId
 		self.serverOrNot = isServer
 		self.start()
 
 	# Parse our the string for the publisher to send, prepending the topicFilter to the start
 	def sendMessage(self, topicFilter, message):
-		messageToSend = '%s, %s' % (topicFilter, message)
+		messageToSend = '%s, %s, %s' % (topicFilter, self.publisherId, message)
 		print("Sending : " + message + ' to ' + topicFilter)
 		self.zmqObject.send_string(messageToSend)
 
