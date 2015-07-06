@@ -1,17 +1,19 @@
-from gpioDreamland import gpioOut
+import gpioDreamland as ioDL
+import random
 import time
 
-pins = [7, 13, 11, 15]
+ioDL.setmode()
 
-pins = [gpioOut(pin) for pin in pins]
+relays = [7, 13, 11, 15]
+
+for i, relay in enumerate(relays):
+	relays[i] = ioDL.Relay(relay)
 
 time.sleep(1)
 
 for x in range(3):
-	for pin in pins:
-		pin.high()
-		time.sleep(1)
-		pin.low()
-		time.sleep(1)
+	for relay in relays:
+		relay.fireRelay(random.uniform(0.01, 0.5))
+		time.sleep(random.uniform(0.01, 0.5))
 
-[pin.cleanup() for pin in pins]
+ioDL.cleanup()
