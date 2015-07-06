@@ -8,10 +8,10 @@ class gpioOut(threading.Thread):
 		self.pinNum = pinNum
 
 	def high(self):
-		GPIO.output(self, self.pinNum, GPIO.HIGH)
+		GPIO.output(self.pinNum, GPIO.HIGH)
 
 	def low(self):
-		GPIO.output(self, self.pinNum, GPIO.LOW)
+		GPIO.output(self.pinNum, GPIO.LOW)
 
 	def cleanup(self):
 		GPIO.cleanup()
@@ -27,10 +27,10 @@ class gpioInput(threading.Thread):
 		self.pinNum = pinNum
 
 	def high(self):
-		GPIO.output(self, self.pinNum, GPIO.HIGH)
+		GPIO.input(self.pinNum, GPIO.HIGH)
 
 	def low(self):
-		GPIO.output(self, self.pinNum, GPIO.LOW)
+		GPIO.input(self.pinNum, GPIO.LOW)
 
 	def run(self):
 		GPIO.setmode(GPIO.board)
