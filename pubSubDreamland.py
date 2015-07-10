@@ -40,6 +40,7 @@ class Subscriber(threading.Thread):
 			subscribtion = ""
 		else:
 			subscribtion = self.subscribtionFilter
+
 		self.zmqObject.setsockopt_string(zmq.SUBSCRIBE, subscribtion)
 
 	# Parses the hostname and port into the string required by zmq
@@ -52,6 +53,10 @@ class Subscriber(threading.Thread):
 			stringRecv = self.zmqObject.recv_string()
 			topic, publisherId, messageRecv = stringRecv.split(',')
 			print('Received : ' + messageRecv + ' from ' + publisherId)
+			self.passMessage('test')
+
+	def passMessage(self, message):
+		print(message)
 
 	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):
@@ -69,7 +74,7 @@ class Subscriber(threading.Thread):
 
 ##################################################################################################
 # Creates a publishing socket that binds to a socket and send messages with a topic filter for the
-# subscriber to listen for. It inherenits some simple methods from the subscriber class.
+# subscriber to listen for. It inherits some simple methods from the subscriber class.
 ##################################################################################################
 class Publisher(Subscriber):
 	def __init__(self, hostname, port, publisherId, isServer=True):
@@ -91,6 +96,8 @@ class Publisher(Subscriber):
 	def sendMessageToMultiple(self, listOfTopicFilters, message):
 		for topicFilter in listOfTopicFilters:
 			self.sendMessage(topicFilter, message)
+
+	# def sendMessageToType(self, )
 
 	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):

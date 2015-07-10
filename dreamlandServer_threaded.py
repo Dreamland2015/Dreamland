@@ -1,4 +1,4 @@
-from structureConfig import structureConfig
+from testConfig import structureConfig
 import pubSubDreamland as psdl
 
 structureName = structureConfig["structureName"]
