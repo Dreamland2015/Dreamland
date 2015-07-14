@@ -13,6 +13,12 @@ def cleanup():
 	print('GPIO pins cleaned up')
 
 
+# Converts a string of a list '1,2,3,...,n' into a list of ints [1,2,3,....,n]
+# used to convert the string of pins from the config file to use for gpio
+def stringToList(stringOfInterest):
+	return [int(s) for s in stringOfInterest.split(',')]
+
+
 class ThreadedGPIOOut(threading.Thread):
 	def __init__(self, pinNum):
 		threading.Thread.__init__(self)
@@ -35,10 +41,7 @@ class ThreadedGPIOOut(threading.Thread):
 		print('Setup pin # ' + str(self.pinNum) + ' as output')
 
 
-class Relay(ThreadedGPIOOut):
+class Poofer(ThreadedGPIOOut):
 	def __init__(self, pinNum):
 		self.pinNum = pinNum
 		ThreadedGPIOOut.__init__(self, self.pinNum)
-
-	def fireRelay(self, timePeriod):
-		self.highForPeriod(timePeriod)

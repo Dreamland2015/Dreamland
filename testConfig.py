@@ -1,5 +1,5 @@
 structureConfig = {'structureName': 'carousel',
                    'hostname': 'pi.local',
                    'serverIp': 'localhost',
-                   'outputPins': '[3, 4]',
+                   'outputPins': '7, 11, 13, 15',
                    'inputPins': '[1, 2]'}

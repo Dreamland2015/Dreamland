@@ -1,6 +1,7 @@
 from testConfig import structureConfig
 import pubSubDreamland as psdl
 
+
 structureName = structureConfig["structureName"]
 serverIp = structureConfig["serverIp"]
 

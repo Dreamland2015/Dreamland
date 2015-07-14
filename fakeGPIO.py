@@ -2,7 +2,7 @@ import threading
 import time
 
 
-def setmode():
+def setMode():
 	print('GPIO layout set to board')
 
 
@@ -10,11 +10,18 @@ def cleanup():
 	print('GPIO pins cleaned up')
 
 
+# Converts a string of a list '1,2,3,...,n' into a list of ints [1,2,3,....,n]
+# used to convert the string of pins from the config file to use for gpio
+def stringToList(stringOfInterest):
+	print('Converted pins: ' + stringOfInterest)
+	return [int(s) for s in stringOfInterest.split(',')]
+
+
 class ThreadedGPIOOut(threading.Thread):
 	def __init__(self, pinNum):
 		threading.Thread.__init__(self)
 		self.pinNum = pinNum
-		self.setDaemon('True')
+		# self.setDaemon('True')
 		self.start()
 
 	def high(self):
@@ -41,26 +48,3 @@ class Poofer(ThreadedGPIOOut):
 	def firePoofer(self, timePeriod):
 		print('Firing relay on pin ' + str(self.pinNum) + ' for ' + str(self.timePeriod))
 		self.highForPeriod(timePeriod)
-
-
-# class PooferTimings(Relay):
-# 	def __init__(self, ListOfPoofers):
-
-def timingTest(listOfPoofers, durations):
-	startTime = time.time()
-	duration = 1
-	for poofer in listOfPoofers:
-		poofer.high()
-
-	for index, poofer in enumerate(listOfPoofers):
-		duration = durations[index]
-		while time.time() - startTime < duration:
-			pass
-		poofer.low()
-		timeElapsed = time.time() - startTime
-		print(timeElapsed)
-
-if __name__ == '__main__':
-	pins = [1, 2, 3, 4]
-	pins = [Poofer(pin) for pin in pins]
-	timingTest(pins, [1, 2.2, 1, 4])

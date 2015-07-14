@@ -49,14 +49,11 @@ class Subscriber(threading.Thread):
 
 	# Called to start listening on the socket for messages
 	def recvMessage(self):
-		while True:
-			stringRecv = self.zmqObject.recv_string()
-			topic, publisherId, messageRecv = stringRecv.split(',')
-			print('Received : ' + messageRecv + ' from ' + publisherId)
-			self.passMessage('test')
+		stringRecv = self.zmqObject.recv_string()
+		topic, publisherId, messageRecv = stringRecv.split(',')
+		print('Received : ' + messageRecv + ' from ' + publisherId)
 
-	def passMessage(self, message):
-		print(message)
+		return messageRecv
 
 	# Overrides threading.Thread's run. Allows a new thread to be created for this class instance
 	def run(self):
@@ -69,7 +66,6 @@ class Subscriber(threading.Thread):
 
 		# notify that the service has started, and start receiving commands
 		print('Publisher started')
-		self.recvMessage()
 
 
 ##################################################################################################
