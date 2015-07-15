@@ -3,7 +3,7 @@ import threading
 import time
 
 
-def setmode():
+def setMode():
 	GPIO.setmode(GPIO.BOARD)
 	print('GPIO layout set to board')
 

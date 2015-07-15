@@ -1,5 +1,4 @@
 import threading
-import time
 
 
 def setMode():
@@ -30,12 +29,6 @@ class ThreadedGPIOOut(threading.Thread):
 	def low(self):
 		print('Pin ' + str(self.pinNum) + ' low')
 
-	def highForPeriod(self, timePeriod):
-		self.high()
-		print('sleeping for ' + str(timePeriod))
-		time.sleep(timePeriod)
-		self.low()
-
 	def run(self):
 		print('Setup pin # ' + str(self.pinNum) + ' as output')
 
@@ -44,7 +37,3 @@ class Poofer(ThreadedGPIOOut):
 	def __init__(self, pinNum):
 		self.pinNum = pinNum
 		ThreadedGPIOOut.__init__(self, self.pinNum)
-
-	def firePoofer(self, timePeriod):
-		print('Firing relay on pin ' + str(self.pinNum) + ' for ' + str(self.timePeriod))
-		self.highForPeriod(timePeriod)
