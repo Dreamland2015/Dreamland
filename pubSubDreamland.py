@@ -56,7 +56,7 @@ class Subscriber(threading.Thread):
         topic, publisherId, messageRecv = stringRecv.split(',')
         logging.info('Received : ' + messageRecv + ' from ' + publisherId)
 
-        return messageRecv
+        return publisherId, messageRecv
 
     # Overrides threading.Thread's run. Allows a new thread to be created for this class instance
     def run(self):
