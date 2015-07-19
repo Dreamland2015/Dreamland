@@ -1,3 +1,4 @@
+import logging
 import threading
 import zmq
 ###################################################################################################
@@ -9,6 +10,8 @@ import zmq
 # the network.
 ###################################################################################################
 ###################################################################################################
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s  %(message)s', datefmt='%m-%d %H:%M:%S', filename='serverLogs.log')
 
 
 ###################################################################################################
@@ -51,7 +54,7 @@ class Subscriber(threading.Thread):
 	def recvMessage(self):
 		stringRecv = self.zmqObject.recv_string()
 		topic, publisherId, messageRecv = stringRecv.split(',')
-		print('Received : ' + messageRecv + ' from ' + publisherId)
+		logging.info('Received : ' + messageRecv + ' from ' + publisherId)
 
 		return messageRecv
 
@@ -65,7 +68,7 @@ class Subscriber(threading.Thread):
 		self.subcribeTo()
 
 		# notify that the service has started, and start receiving commands
-		print('Publisher started')
+		logging.info('Subscriber started')
 
 
 ##################################################################################################
@@ -85,7 +88,7 @@ class Publisher(Subscriber):
 	# Parse our the string for the publisher to send, prepending the topicFilter to the start
 	def sendMessage(self, topicFilter, message):
 		messageToSend = '%s, %s, %s' % (topicFilter, self.publisherId, message)
-		print("Sending : " + message + ' to ' + topicFilter)
+		logging.info("Sending : " + message + ' to ' + topicFilter)
 		self.zmqObject.send_string(messageToSend)
 
 	# expand the sendMessage method to send a single message to a list of topicFilters
@@ -101,4 +104,4 @@ class Publisher(Subscriber):
 		self.zmqObject = self.context.socket(zmq.PUB)
 		self.zmqObject.setsockopt(zmq.SNDHWM, 1)
 		self.bindOrConnect()
-		print('Subscriber started')
+		logging.info('Publisher started')
