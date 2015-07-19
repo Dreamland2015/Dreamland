@@ -12,7 +12,7 @@ import time
 
 context = zmq.Context()
 
-# create publisher socket, 
+# create publisher socket,
 publisher = context.socket(zmq.PUB)
 # set high water mark = max # of msg to buffer
 # needs to be zmq.SNDHWM or zmq.RCVHWM in zmq 3, not zmq.HWM

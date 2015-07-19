@@ -4,7 +4,7 @@ import sys
 import time
 
 import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)	# so we can interrupt w ctrl-C
+signal.signal(signal.SIGINT, signal.SIG_DFL)    # so we can interrupt w ctrl-C
 
 port = "5556"
 context = zmq.Context()

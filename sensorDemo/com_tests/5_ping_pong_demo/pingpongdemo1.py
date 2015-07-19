@@ -44,4 +44,3 @@ if __name__ == '__main__':
     ping()
 
     pong_proc.join()
-    

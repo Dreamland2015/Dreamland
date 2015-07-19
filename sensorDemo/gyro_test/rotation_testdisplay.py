@@ -1,16 +1,16 @@
-# 
+#
 # Draw an arrow and bar depending on readback valued from the MPU-6050 gyro
-# 
+#
 # In progress. Currently, there's only the drawing routines. Still need
 # to add reading from the gyro.
-# 
+#
 
 import numpy as np
 from math import *
 import pygame
 import sys
 import time
- 
+
 if sys.platform == 'win32':
     # On Windows, the best timer is time.clock
     default_timer = time.clock
@@ -29,7 +29,7 @@ def rotate2D(point, center, angledeg):
     M = np.array([[cos(radians(angledeg)), -sin(radians(angledeg))] ,
                   [sin(radians(angledeg)),  cos(radians(angledeg))]])
     return( np.dot(M,(point-center)) + center )
-     
+
 def rotate2D_points(points, center, angledeg):
     """ rotates a list of points around the point center, by given angle """
     result=np.empty(points.shape)
@@ -42,14 +42,14 @@ class Arrow:
         self.color = (255, 0, 255)
         self.center = center
         self.length = length
-        
+
     def display(self, angle):
         x, y = self.center
         L=self.length
         points = np.array([[x+0, y-0.75*L], [x+0.25*L, y+0.25*L],
                   [x,y], [x-0.25*L, y+0.25*L]])
-        newpts = rotate2D_points(points,self.center, angle)                  
-        pygame.draw.aalines(screen, self.color, True, 
+        newpts = rotate2D_points(points,self.center, angle)
+        pygame.draw.aalines(screen, self.color, True,
                             newpts, 0) # closed=True, blend=0
 
 class Speedbar:
@@ -58,7 +58,7 @@ class Speedbar:
         self.width = width
         self.scale = scale          # size of bar is value*scale
         self.color = color
-        
+
     def display(self, value):
         x0, y0 = self.position
         rect = (x0-self.width/2, y0, self.width, -value*self.scale)
@@ -71,7 +71,7 @@ class TArc:
         self.size=size
         self.scale = scale          # size of bar is value*scale
         self.color = color
-        
+
     def display(self, value):
         x0, y0 = self.position
         rect = (x0-self.size/2, y0-self.size/2, self.size, self.size)
@@ -83,7 +83,7 @@ class TArc:
         print(startangle, stopangle)
         pygame.draw.arc(screen, self.color, rect, startangle, stopangle, 10)     # width 5
 
-pygame.init()                      
+pygame.init()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Gyro / Accelerometer test')
 screen.fill(background_color)
@@ -131,6 +131,5 @@ while running:
 #        rotation_arrow.display(angle)
 #        pygame.display.flip()
 #        tlast = tnow
-            
-pygame.quit()
 
+pygame.quit()
