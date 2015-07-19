@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 """
  Demo program for zmq
- 
+
  Tests zmq messaging between different processes.
  This works, but is only a genera demo. We need something more specific.
  Might need nonblocking socket calls.
 
- Starts two servers (a push server, and a publish server) using 
+ Starts two servers (a push server, and a publish server) using
  multiprocessing. Then starts a client which listens to messages
  from the servers.
  Normally of course we would run these on different machines connected via
  ethernet, and this code allows the machines to communicate via zmq. Here
  we're running them from the same file for test purposes.
 
- Code copied from 
+ Code copied from
  https://learning-0mq-with-pyzmq.readthedocs.org/en/latest/pyzmq/multisocket/zmqpoller.html
  and modified so it works on python 3
 
@@ -29,7 +29,7 @@ import random
 from  multiprocessing import Process
 import signal
 
-signal.signal(signal.SIGINT, signal.SIG_DFL)	# so we can interrupt w ctrl-C
+signal.signal(signal.SIGINT, signal.SIG_DFL)    # so we can interrupt w ctrl-C
 
 def server_push(port="5556"):
     context = zmq.Context()
@@ -61,7 +61,7 @@ def server_pub(port="5558"):
         messagedata = "server#%s" % publisher_id
         print("PUB server is sending: %s %s" % (topic, messagedata), flush=True)
         socket.send_string("%d %s" % (topic, messagedata))
-        time.sleep(1)    
+        time.sleep(1)
     print("pub server is done")
 
 def client(port_push, port_sub):
@@ -88,7 +88,7 @@ def client(port_push, port_sub):
             print("Client -- PULL: msg from push server", flush=True)
             message = socket_pull.recv_string()
             print("Client -- PULL: Recieved control command: %s" % message, flush=True)
-            if message == 'Exit': 
+            if message == 'Exit':
                 print("Recieved exit command, client will stop recieving messages", flush=True)
                 should_continue = False
             else:
@@ -103,7 +103,7 @@ def client(port_push, port_sub):
 
 
 if __name__ == "__main__":
-    # Now we can run a few servers 
+    # Now we can run a few servers
     print("*** Starting main")
     server_push_port = "5556"
     server_pub_port = "5558"

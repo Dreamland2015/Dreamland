@@ -6,7 +6,7 @@
 # This is a dummy version of the program, to test process data sharing.
 # It doesn't actually read from the accelerometer, and can be run on
 # any computer for testing.
-# 
+#
 
 import smbus
 import math
@@ -21,7 +21,7 @@ from multiprocessing import Value as mp_Value, Lock as mp_Lock
 # IP and port numbers we'll use for zmq communication
 ip_addr = "127.0.0.1"
 pub_port = "5600"
- 
+
 # This is the i2c address of the MPU-6050, which we can determine
 # via the i2cdetect command
 i2caddress = 0x68
@@ -63,7 +63,7 @@ class Gyrodata(object):
         self.angle = mp_Value('d', initangle)
         print("Gyrodata says: angle value is: ", self.angle.value)  #, flush=True)
         print("Gyrodata says: init changed angle value to: ", self.angle.value)  #, flush=True)
-        
+
     def getdata(self, whichdata):
         with self.lock:
             if whichdata == 'angle':
@@ -86,7 +86,7 @@ class Gyrodata(object):
             else:
                 pass
 
- 
+
 def read_sensor():
     """ Read & return all relevant data from MPU-6050 chip, in one block. """
     datablock = bus.read_i2c_block_data(i2caddress, data_register, data_length)
@@ -98,7 +98,7 @@ def read_sensor():
     rgyro_x = (get_datavalue(datablock, 8) - gyro_x_offset) / gyro_scale
     rgyro_y = (get_datavalue(datablock, 10) - gyro_y_offset) / gyro_scale
     rgyro_z = (get_datavalue(datablock, 12) - gyro_z_offset) / gyro_scale
- 
+
     return (rgyro_x, rgyro_y, rgyro_z, raccel_x, raccel_y, raccel_z, rT)
 
 
@@ -115,12 +115,12 @@ def get_datavalue(datablock, offset):
 
 def sensordata_process_loop(gyrodata):
     """ Process data from sensor and calculate relevant values.
-    
+
     Parameters:
     gyrodata - the Gyrodata class variable in whigh to store the processed
                sensor values. Gyrodata allows sharing of data between
                processes.
-    
+
     The routine periodically reads in data from the sensors (currently only
     the MPU-6050), and converts it to usable data, by filtering, averaging,
     integrating over time, etc, the usable data. This data, together with
@@ -145,7 +145,7 @@ def sensordata_process_loop(gyrodata):
     except:
         print("Can't open file sens_values.txt")
         running = False
-        
+
     startt = lasttime = lastprint = lastset = lastwrite = time.time()
     loop = 0    # for debugging
     current_angle = 0
@@ -184,7 +184,7 @@ def sensordata_process_loop(gyrodata):
             running = False
         time.sleep(0.1)
         lasttime=now
-    
+
     if f is not None:
         f.close()
 
@@ -192,9 +192,9 @@ def sensordata_process_loop(gyrodata):
 def sensordata_server(gyrodata):
     """ Server that transmits sensor data to other processes that request it.
     """
-    
+
     print("--- sensordata_server says: started")  #, flush=True)
-    
+
     # set up the gyro value server socket
     context = zmq.Context()
     gserver = context.socket(zmq.REP)
@@ -204,15 +204,15 @@ def sensordata_server(gyrodata):
     gserver.setsockopt(zmq.RCVHWM, 2)
     # set linger so no queued up messages remain when process exits
     gserver.setsockopt(zmq.LINGER, 0)
-    
+
     gserver.bind("tcp://" + ip_addr + ":" + pub_port)
-    
+
     # set up polling of sockets. We're only adding/registering one socket,
     # the gserver, to the sockets to be polled whether they have a request
     # waiting in them
     poller = zmq.Poller()
     poller.register(gserver, zmq.POLLIN)
-    
+
     print("--- sensordata_server says: Sockets started")  #, flush=True)
     running = True
     while running:
@@ -242,7 +242,7 @@ def test_client():
     # set linger so no queued up messages remain when process exits
     gserver.setsockopt(zmq.LINGER, 0)
     gserver.connect("tcp://" + ip_addr + ":" + pub_port)
-    
+
     print("  test_client says: Sockets started")  #, flush=True)
     for i in range(0,10):
         print("  test_client says: sending angle request ", i)  #, flush=True)
@@ -253,7 +253,7 @@ def test_client():
     print("  test_client sayd: Sending end request")  #, flush=True)
     gserver.send_string("End")  # tell gyro data server to shut down
     print("  test_client sayd: Ending")  #, flush=True)
-        
+
 
 if __name__ == "__main__":
     initraw=[0,0,0,0,0,0,0]
@@ -261,7 +261,7 @@ if __name__ == "__main__":
 
     global bus
     bus = smbus.SMBus(1) # using bus 1 for Revision 2 boards
-     
+
     sensor_loop = mp_Process(name='sensordataloop1',
                              target=sensordata_process_loop, args=(gyro,))
     server = mp_Process(name='sensordataserver1',
@@ -271,15 +271,15 @@ if __name__ == "__main__":
     sensor_loop.start()
     server.start()
     client.start()
-    
+
     # wait till all the processed have exited
     client.join()
     server.join()
     sensor_loop.join()
-    
+
 #    c = raw_input("Type something to quit.")  # python 2
 #    print("done")  #, flush=True)
- 
+
 #    print(read_all())
 #    print("Determining offsets: Don't move sensor")
 #    readings_sum = np.array([0,0,0,0,0,0,0])
@@ -294,4 +294,3 @@ if __name__ == "__main__":
 #    print(readings_avg)
 #    print("time diff: %f" % (time.time() - startt))
 #    print("done calibrating")
-     

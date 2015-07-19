@@ -14,7 +14,7 @@ import zmq
 import signal
 
 
-signal.signal(signal.SIGINT, signal.SIG_DFL)	# so we can interrupt w ctrl-C
+signal.signal(signal.SIGINT, signal.SIG_DFL)    # so we can interrupt w ctrl-C
 addr = 'tcp://127.0.0.1:5680'
 
 
@@ -40,7 +40,7 @@ def pong():
     # Create a poller and register the events we want to poll
     poller = zmq.Poller()
     poller.register(sock, zmq.POLLIN|zmq.POLLOUT)
-    
+
     for i in range(10):
         # Get all sockets that can do something
         socks = dict(poller.poll())
@@ -51,7 +51,7 @@ def pong():
         # Check if we cann send something
         if sock in socks and socks[sock] == zmq.POLLOUT:
             sock.send_unicode('pong %s' % (i // 2))
-        
+
     poller.unregister(sock)
 
 
@@ -61,7 +61,6 @@ if __name__ == '__main__':
     pong_proc.start()
 
     ping()
-    
+
     # wait until all pong processes have finished
     pong_proc.join()
-    

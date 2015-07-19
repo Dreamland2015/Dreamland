@@ -13,7 +13,7 @@
 # the accelerometer values to a web request. (see web link below for
 # details on how to do that)
 #
-# Modified from 
+# Modified from
 # http://blog.bitify.co.uk/2013/11/interfacing-raspberry-pi-and-mpu-6050.html
 # with modifications to use python3
 
@@ -40,7 +40,7 @@ def resize(width, height):
     gluLookAt(0.0, 1.0, -5.0,
               0.0, 0.0, 0.0,
               0.0, 1.0, 0.0)
-    
+
 def init():
     glEnable(GL_DEPTH_TEST)
     glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -74,7 +74,7 @@ def run():
     clock = pygame.time.Clock()
     cube = Cube((0.0, 0.0, 0.0), (.5, .5, .7))
     angle = 0
-    
+
     while True:
         then = pygame.time.get_ticks()
         for event in pygame.event.get():
@@ -98,11 +98,11 @@ def run():
         for x in range(-20, 22, 2):
             glVertex3f(x/10.,-1,-1)
             glVertex3f(x/10.,-1,1)
-        
+
         for x in range(-20, 22, 2):
             glVertex3f(x/10.,-1, 1)
             glVertex3f(x/10., 1, 1)
-        
+
         for z in range(-10, 12, 2):
             glVertex3f(-2, -1, z/10.)
             glVertex3f( 2, -1, z/10.)
@@ -118,15 +118,15 @@ def run():
         for y in range(-10, 12, 2):
             glVertex3f(-2, y/10., 1)
             glVertex3f( 2, y/10., 1)
-        
+
         for y in range(-10, 12, 2):
             glVertex3f(-2, y/10., 1)
             glVertex3f(-2, y/10., -1)
-        
+
         for y in range(-10, 12, 2):
             glVertex3f(2, y/10., 1)
             glVertex3f(2, y/10., -1)
-        
+
         glEnd()
         glPushMatrix()
         glRotate(float(x_angle), 1, 0, 0)

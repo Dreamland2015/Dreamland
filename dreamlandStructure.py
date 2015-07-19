@@ -19,11 +19,11 @@ ioDL.setMode()
 outputPins = [ioDL.Poofer(pin) for pin in outputPins]
 
 while True:
-		poofer, command = sub.recvMessage().split()
-		if command == 'high':
-			outputPins[int(poofer)].high()
-		elif command == 'low':
-			outputPins[int(poofer)].low()
-		else:
-			print('WHAT YOU SAY?!')
-			pass
+    poofer, command = sub.recvMessage().split()
+    if command == 'high':
+        outputPins[int(poofer)].high()
+    elif command == 'low':
+        outputPins[int(poofer)].low()
+    else:
+        print('WHAT YOU SAY?!')
+        pass

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Code to get the 
+Code to get the
 """
 
 import socket
@@ -9,7 +9,7 @@ import socket
 
 #def get_ip_address(ifname):
 #    """ get IP address associated with a network interface
-#    
+#
 #    Works on unix only
 #    Parameter:
 #       ifname - interface name, such as "eth0" or "lo"
@@ -26,7 +26,7 @@ import socket
 
 #def getHwAddr(ifname):
 #    """ get hardware/MAC address of interface
-#    
+#
 #    Works on unix only
 #    Parameter:
 #       ifname - interface name, such as "eth0" or "lo"
@@ -37,15 +37,15 @@ import socket
 
 
 def get_local_ip_address(target):
-    """ get local IP address ""
+    """ get local IP address """
     ipaddr = ''
-      try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect((target, 8000))
-        ipaddr = s.getsockname()[0]
-        s.close()
-      except:
-        pass
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect((target, 8000))
+            ipaddr = s.getsockname()[0]
+            s.close()
+        except:
+            pass
 
     return ipaddr
 

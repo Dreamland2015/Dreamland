@@ -19,7 +19,7 @@ class Gyrodata(object):
     def set_rawdata(self, rawdata):
         with self.lock:
             self.gyro_raw.value = rawdata
-            
+
     def set_data(self, data):
         with self.lock:
             self.gyro.value = data
@@ -27,7 +27,7 @@ class Gyrodata(object):
     def rawdata(self):
         with self.lock:
             return self.rawdata
-            
+
     def data(self):
         with self.lock:
             return self.data
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     for p in procs: p.start()
     for p in procs: p.join()
-    
+
     print("gd.data is: ", gd.rawdata[0])
 
     print(counter.value())
