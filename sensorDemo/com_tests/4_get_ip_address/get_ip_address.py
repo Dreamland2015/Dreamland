@@ -37,7 +37,7 @@ import socket
 
 
 def get_local_ip_address(target):
-    """ get local IP address ""
+    """ get local IP address """
     ipaddr = ''
       try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
