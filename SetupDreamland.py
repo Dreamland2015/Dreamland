@@ -44,4 +44,6 @@ config = {
 }
 
 conn = MultiSSH(config)
-conn.killSetupReboot()
+# conn.killSetupReboot()
+conn.killAllPythonScripts()
+conn.setupConfigFile()
