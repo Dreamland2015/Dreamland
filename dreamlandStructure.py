@@ -1,4 +1,4 @@
-from testConfig import structureConfig
+from structureConfig import structureConfig
 import pubSubDreamland as psdl
 # import gpioDreamland as ioDL
 import fakeGPIO as ioDL
