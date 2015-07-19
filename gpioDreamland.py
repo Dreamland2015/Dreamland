@@ -31,11 +31,6 @@ class ThreadedGPIOOut(threading.Thread):
 	def low(self):
 		GPIO.output(self.pinNum, GPIO.LOW)
 
-	def highForPeriod(self, timePeriod):
-		self.high()
-		time.sleep(timePeriod)
-		self.low()
-
 	def run(self):
 		GPIO.setup(self.pinNum, GPIO.OUT, GPIO.PUD_DOWN)
 		print('Setup pin # ' + str(self.pinNum) + ' as output')
