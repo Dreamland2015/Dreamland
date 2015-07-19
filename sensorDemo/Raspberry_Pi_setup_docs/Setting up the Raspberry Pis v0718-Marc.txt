@@ -9,7 +9,10 @@ How to create Raspberry Pi Raspbian image for Dreamland:
 5. On the RPi: "sudo raspi-config"
 	Select (8)Advanced options -> (A7)I2C
 	    Would you like the ARM I2C interface to be enabled? -> <Yes>
-	    Would you like the I2C kernel module to be loaded by default? -> <Yes>
+	    Would you like the I2C kernel module to be loaded by default? -> <Yes>  
+	Select option (1) Expand Filesystem
+	(so partition fills all of available SD card space)
+
 6. Select <Finish>, Reboot -> <Yes>
    After reboot ssh back into the RPi.
 7. Update, then upgrade operation system: 
@@ -63,7 +66,6 @@ How to create Raspberry Pi Raspbian image for Dreamland:
     git clone https://github.com/Dreamland2015/Dreamland.git
 20. cd ~/repo/Dreamland/sensorDemo/i2c4python3/i2c-tools-3.1.0/py-smbus
 21. sudo python3 setup.py build
-    (may take a long time, or not if files on github are already precompiled)
 22. sudo python3 setup.py install
 23. Check that smbus is properly installed (note 2nd to last line):
 	pi@raspberrypi:~$ pip-3.2 freeze
@@ -80,65 +82,111 @@ How to create Raspberry Pi Raspbian image for Dreamland:
 	smbus==1.1
 	wsgiref==0.1.2
 	
-===============
-This is a good place to stop & make an image of the system.
-After that, run step 24., expanding the file system.
-Steps below that don't work.
-===============
+24. sudo apt-get install supervisor exfat-fuse exfat-utils
 
-Now installing python3.4 (up to now it's only 3.2), following instructions at: 
-http://sowingseasons.com/blog/building-python-3-4-on-raspberry-pi-2.html
+25. sudo apt-get install vim
 
-First, expand file system if not done yet (otherwise we run out of space:
-24. sudo raspi-config
-	Select option (1) Expand Filesystem
+26. make sure inittab has this on end:
+	T0:23:respan:/sbin/getty -L ttyAMA0 115200 vt100
+	(this should already be uncommented)
 
-25. Following the web site above:
-    sudo apt-get update
-    sudo apt-get upgrade -y
-    sudo apt-get install build-essential libncursesw5-dev libgdbm-dev libc6-dev 
-    sudo apt-get install zlib1g-dev libsqlite3-dev tk-dev
-    sudo apt-get install libssl-dev openssl
-    cd ~
-    wget https://www.python.org/ftp/python/3.4.2/Python-3.4.2.tgz
-    tar -zxvf Python-3.4.2.tgz
-    cd Python-3.4.2
-    ./configure
-    make
-    sudo make install
-26. Get pip for this version:
-    cd ~
-    wget https://bootstrap.pypa.io/get-pip.py
-    sudo python3.4 get-pip.py
+27. change hostname to "DreamlandImage"
+
+28. sudo apt-get install oracle-java7-jdk
+    java -version
+
+29. wget http://download.processing.org/processing-2.2.1-linux64.tgz
+    tar xvzf processing-2.2.1-linux64.tgz
+    rm -rf ~/processing-2.2.1/java 
+    ln -s /usr/lib/jvm/jdk-7-oracle-armhf ~/processing-2.2.1/java
     
-27. Install smbus for this version too:
-    No success yet - step 21 gives compile errors...
+30. sudo rpi-update
+
+31. sudo apt-get install screen
+
+===============================================================
+Adding Fadecandy server:
+===============================================================
+
+F1. cd ~/repo
+    git clone git://github.com/scanlime/fadecandy
+    cd fadcandy/server
+    make submodules
+    make
+    sudo cp fcserver /usr/local/bin
+
+F2. sudo nano /etc/rc.local
+    Just above the final “exit 0” line, copy and paste the following:
+
+    /usr/local/bin/fcserver /usr/local/bin/fcserver.json >/var/log/fcserver.log 2>&1 &
+
+F3. sudo nano /usr/local/bin/fcserver.json
+    Paste in the code shown at:
+    https://learn.adafruit.com/1500-neopixel-led-curtain-with-raspberry-pi-fadecandy/fadecandy-server-setup
+
+    This file needs to be changed to include the serial numbers of the fadecandy boards used, and the pixel layout.
+
+
+===============================================================
+At this point, the RPi has basic functionality.
+Continue below to add wireless functionality:
+===============================================================
+
+Setting up wireless. Change the files below so their contents are like this:
+
+W1. cat /etc/network/interfaces
+
+	auto lo
+	iface lo inet loopback
+	
+	auto eth0
+	allow-hotplug eth0
+	iface eth0 inet manual
+	
+	auto wlan0
+	allow-hotplug wlan0
+	iface wlan0 inet manual
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+	
+	auto wlan1
+	allow-hotplug wlan1
+	iface wlan1 inet manual
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+	
+W2. sudo cat /etc/wpa_supplicant/wpa_supplicant.conf
+
+	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+	update_config=1
+	 
+	network={
+	        id_str="mhomenet"
+	        ssid="mhomenet"
+	        psk="MarcsWirelessNID"
+	}
+	
+	network={
+	        id_str="Flux Container"
+	        ssid="Flux Container"
+	        psk="Dreamland2015"
+	        priority=5
+	}
 
 
 
-That's it (so far)!
-Still need to add: fadecandy
+===============================================================
+Testing and cloning:
+===============================================================
 
+Additional options at the end:
 
-Options at the end:
-A. Test accelerometer/gyro:
+Opt1. Test accelerometer/gyro:
 	1. cd ~/repo/Dreamland/sensorDemo/gyro_test/1_read_gyro_angle
 	2. python3 gyrotest3.py
 		(stop program with ctrl-C)
 
-B. Clone SD card image so it can be used on other RPis (see notes below) - good to do before expanding the file system (see option B below). Use gzip or zip7 to compress image after cloning (so it takes less space).
-   
-C. sudo raspi-config
-	Select option (1) Expand Filesystem
-
-D. Setup hostname of RPi to distinguish it from other RPis:
-    sudo raspi-config
-    advanced options
-    hostname - change to name of choice
-    tab, tab, enter
-    tab, tab, enter to save
-
-
+Opt2. Clone SD card image so it can be used on other RPis (see notes below)
+   - good to do before expanding the file system (see option C below). 
+     Use gzip or zip7 to compress image after cloning (so it takes less space).
 
 =======
 Notes:
@@ -154,9 +202,6 @@ Useful software
 - Angry IP scanner (http://angryip.org/download/#windows)
 	Useful to check the local network for IP addresses of connected devices
 	(requires installing Java)
-[MacOS]
-- Angry IP scanner (http://angryip.org/download/#windows)
-	Useful to check the local network for IP addresses of connected devices
 
 	
 Notes on step 1:
@@ -184,4 +229,3 @@ Files that may need to be changed to set up networking:
 - /etc/rc.local
 
 
-      
