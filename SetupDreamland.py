@@ -1,17 +1,17 @@
 from multiSSH import MultiSSH
 
 
-serverIp = '10.0.1.165'
+serverIp = '192.168.2.45'
 
 config = {
-    'Carousel': {
-        'hostname': "pi1.local",
+    'carousel': {
+        'hostname': "pi2.local",
         'inputPins': '1, 2',
-        'outputPins': '3, 4',
+        'outputPins': '7, 11, 13, 15',
         'serverIp': serverIp
     },
     "Bench": {
-        'hostname': 'pi2.local',
+        'hostname': 'pi1.local',
         'inputPins': '1, 2',
         'outputPins': '3, 4',
         'serverIp': serverIp
@@ -19,4 +19,4 @@ config = {
 }
 
 conn = MultiSSH(config)
-conn.setupConfigFile()
+conn.killSetupReboot()

@@ -1,4 +1,4 @@
-structureConfig = {'structureName': 'carousel',
+structureConfig = {'structureName': 'Carousel',
                    'hostname': 'pi2.local',
                    'serverIp': 'localhost',
                    'outputPins': '7, 11, 13, 15',

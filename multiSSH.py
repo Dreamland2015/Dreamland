@@ -98,22 +98,28 @@ class MultiSSH:
         self.runOnAll("sudo pkill python")
 
     # Restart the python script for each structure
-    def restartDreamlandStructures(self):
+    def restartDreamlandStructureScript(self):
         self.runOnAll(startDreamlandStructure)
+        print('restarting ' + self.str)
+
+    def rebootRaspberryPis(self):
+        print('Rebooting RPIs')
+        self.runOnAll('sudo reboot')
 
     # For the entire piece, kill python scripts, reset config files and restart the piece
-    def killSetupRestart(self):
+    def killSetupReboot(self):
         self.killAllPythonScripts()
-        time.sleep(1)
+        time.sleep(0.5)
         self.setupConfigFile()
-        time.sleep(1)
-        self.restartDreamlandStructures()
+        time.sleep(0.5)
+        self.rebootRaspberryPis()
 
     # Create a configuration file on the appropriate strucutre RPI
     def setupConfigFile(self):
         configName = "structureConfig"
         for connection in self.sshConnections:
             name = connection.structureName
+            print('Setting up configuration file on ' + name)
             e = echo(configName, self.configDict[name], name)
             commandsToWrite = e.writeConfig()
             connection.runMultipleCommands(commandsToWrite)

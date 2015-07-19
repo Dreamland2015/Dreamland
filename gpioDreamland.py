@@ -26,9 +26,11 @@ class ThreadedGPIOOut(threading.Thread):
         self.start()
 
     def high(self):
+        print('Pin ' + str(self.pinNum) + ' high')
         GPIO.output(self.pinNum, GPIO.HIGH)
 
     def low(self):
+        print('Pin ' + str(self.pinNum) + ' low')
         GPIO.output(self.pinNum, GPIO.LOW)
 
     def run(self):
