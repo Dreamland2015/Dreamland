@@ -16,3 +16,5 @@ while True:
     # s.sendMessage(message)
     structureName, message = message.split(',')
     s.sendMessage(structureName, message)
+    rMessage = r.recvMessage()
+    print(rMessage)
