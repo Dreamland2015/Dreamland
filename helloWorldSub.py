@@ -19,5 +19,5 @@ ioDL.setMode()
 outputPins = [ioDL.Poofer(pin) for pin in outputPins]
 
 while True:
-    command = sub.recvMessage().split()
+    command = sub.recvMessage()
     print(command)
