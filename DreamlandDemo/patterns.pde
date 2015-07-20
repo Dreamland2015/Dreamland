@@ -203,3 +203,45 @@ class LayerDemoPattern extends LXPattern {
     }
   }
 }
+
+class TestProjectionPattern extends LXPattern {
+  
+  private final LXProjection projection;
+  private final SawLFO angle = new SawLFO(0, TWO_PI, 9000);
+  private final SinLFO yPos = new SinLFO(-20, 40, 5000);
+  
+  public TestProjectionPattern(LX lx) {
+    super(lx);
+    projection = new LXProjection(model);
+    addModulator(angle).trigger();
+    addModulator(yPos).trigger();
+  }
+  
+  public void run(double deltaMs) {
+    // For the same reasons described above, it may logically feel to you that
+    // some of these operations are in reverse order. Again, just keep in mind that
+    // the car itself is what's moving, not the object
+    projection.reset()
+    
+      // Translate so the center of the car is the origin, offset by yPos
+      .translateCenter(0, yPos.getValuef(), 0)
+
+      // Rotate around the origin (now the center of the car) about an X-vector
+      .rotate(angle.getValuef(), 1, 0, 0)
+
+      // Scale up the Y axis (objects will look smaller in that access)
+      .scale(1, 1.5f, 1);
+
+    float hv = lx.getBaseHuef();
+    for (LXVector c : projection) {
+      float d = sqrt(c.x*c.x + c.y*c.y + c.z*c.z); // distance from origin
+      // d = abs(d-60) + max(0, abs(c.z) - 20); // life saver / ring thing
+      d = max(0, abs(c.y) - 10 + .1f*abs(c.z) + .02f*abs(c.x)); // plane / spear thing
+      colors[c.index] = lx.hsb(
+        (hv + .6f*abs(c.x) + abs(c.z)) % 360,
+        100,
+        constrain(140 - 40*d, 0, 100)
+      );
+    }
+  } 
+}

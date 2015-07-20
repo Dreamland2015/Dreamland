@@ -11,6 +11,6 @@ sub = psdl.Subscriber(serverIp, recv_port, structureName, isServer=False)
 pub = psdl.Publisher(serverIp, send_port, structureName, isServer=False)
 
 while True:
-    command = sub.recvMessage()
+    publisherId, command = sub.recvMessage()
     print(command)
     pub.sendMessage('server', 'world')

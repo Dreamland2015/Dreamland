@@ -45,7 +45,8 @@ void setup()
 		new TestXPattern(lx),
 		new TestYPattern(lx),
 		new TestZPattern(lx),
-		new MoveXPosition(lx)
+		new MoveXPosition(lx),
+		new TestProjectionPattern(lx)
 	});
 
 
