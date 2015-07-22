@@ -79,6 +79,9 @@ void setup()
 	});
 
 
+  buildOutputs();
+
+
 	// Add pieces of the UI
 	lx.ui.addLayer(
 		// Add a 3D scene with a camera. Mouse movements control the camera
@@ -106,12 +109,15 @@ void setup()
 	lx.ui.addLayer(new UIChannelControl(lx.ui, lx.engine.getChannel(0), 4, 4)); 
 	
 	// Threaded control and FPS
-	lx.ui.addLayer(new UIEngineControl(lx.ui, 4, 326)); 
+	lx.ui.addLayer(new UIEngineControl(lx.ui, 4, 326));
+
+  // Output control
+  lx.ui.addLayer(new UIOutputControl(lx.ui, 4, 426));
+
 	
 	// Various sliders, knobs and buttons
 	// lx.ui.addLayer(new UIComponentsDemo(lx.ui, width-144, 4)); 
 
-//	buildOutputs();
 }
 
 void draw() 

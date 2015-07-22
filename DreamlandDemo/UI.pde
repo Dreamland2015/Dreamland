@@ -31,6 +31,21 @@ class UIEngineControl extends UIWindow {
   }
 }
 
+class UIOutputControl extends UIWindow {
+  
+  UIOutputControl(UI ui, float x, float y) {
+    super(ui, "LIVE OUTPUT", x, y, UIChannelControl.WIDTH, 50);
+        
+    y = UIWindow.TITLE_LABEL_HEIGHT;
+    new UIButton(4, y, width-8, 20)
+    .setActiveLabel("Enabled")
+    .setInactiveLabel("Disabled")
+    .setInactiveColor(#993333)
+    .setParameter(output.enabled)
+    .addToContainer(this);
+  }
+}
+
 class UIComponentsDemo extends UIWindow {
   
   static final int NUM_KNOBS = 4; 
