@@ -20,10 +20,8 @@ def get_config():
 
 class SubClient():
     def __init__(self, master, topic=''):
-        #ctx = zmq.Context.instance()
         self.sub = ctx.socket(zmq.SUB)
         self.sub.connect("tcp://%s:6000" % (master,) )
-        #self.sub.setsockopt(zmq.SUBSCRIBE, bytes(topic, encoding='ascii'))
         self.sub.setsockopt_string(zmq.SUBSCRIBE, topic)
 
     def recv(self, raw=False):
@@ -32,7 +30,7 @@ class SubClient():
         data = self.sub.recv_string()
         if raw:
             return data
-        return data.split('|')[1]
+        return data.split('|')[1].split('-')
         #return self.sub.recv().split('|')[1]
     
 class PubClient():
