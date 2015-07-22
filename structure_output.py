@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+"""
+Usage:
+    structure_output.py <config_file>
+"""
+import sys
+
+import docopt
+
+args = docopt.docopt(__doc__)
+
 import util
 import GPIO
 
