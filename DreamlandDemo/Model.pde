@@ -65,13 +65,19 @@ private static class Carousel extends LXModel {
     private List<Bar> bars = new ArrayList<Bar>();
     
     Fixture() {
-      LXTransform transform = new LXTransform();
-      transform.translate(0, CAROUSEL_HEIGHT, 0);
+      LXTransform transform1 = new LXTransform();
+      LXTransform transform2 = new LXTransform();
+      transform1.translate(0, CAROUSEL_HEIGHT, 0);
+      transform2.translate(0, CAROUSEL_HEIGHT, 0);
       for (int i = 0; i < NUMBER_OF_BARS; ++i) {
-        Bar bar = new Bar(transform);
-        addPoints(bar);
-        this.bars.add(bar);
-        transform.rotateY(TWO_PI / NUMBER_OF_BARS);
+        Bar bar1 = new Bar(transform1);
+        Bar bar2 = new Bar(transform2);
+        addPoints(bar1);
+        addPoints(bar2);
+        this.bars.add(bar1);
+        this.bars.add(bar2);
+        transform1.rotateY(TWO_PI / NUMBER_OF_BARS);
+        transform2.rotateY(TWO_PI / (NUMBER_OF_BARS - 0.01));
       }
     }
   }
@@ -79,7 +85,7 @@ private static class Carousel extends LXModel {
   private static class Bar extends LXModel {
   
     private static final int BAR_LENGTH = 10 * FEET;
-    private static final int NUMBER_OF_LEDS_PER_LEG = 10;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 32;
   
     public Bar(LXTransform transform) {
       super(new Fixture(transform));
@@ -89,7 +95,7 @@ private static class Carousel extends LXModel {
       Fixture(LXTransform transform) {
         final float spacing = BAR_LENGTH / NUMBER_OF_LEDS_PER_LEG;
         transform.push();
-        transform.translate(spacing/2, 0, 0);
+        transform.translate(1*FEET + spacing/2, 0, 0);
         for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
           addPoint(new LXPoint(transform));
           transform.translate(spacing, 0, 0);
@@ -102,7 +108,7 @@ private static class Carousel extends LXModel {
 
 private static class LampPost extends LXModel {
   private static float HEIGHT_OF_POST = 10 * FEET;
-  private static int NLEDS = 10;
+  private static int NLEDS = 19;
   
   public LampPost(float x, float z) {
     super(new Fixture(x, z));
