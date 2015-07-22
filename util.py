@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import print_function
 
-import time
-
 import configparser
+import os
+import socket
+import subprocess
+import time
 
 import zmq
 ctx = zmq.Context.instance()
@@ -13,13 +15,51 @@ def running_on_pi():
     # Assume that an ARM processor means we're on the Pi
     return uname_m == 'armv7l' # Pi2 is arm7l vs Pi1's arm6l
 
-def get_config():
-    if onPi():
-        pass #cp = ConfigParser("/etc/dreamland/dreamland.conf")
-    
+def get_default_ip():
+    """
+    This sets up to send a UDP packet but doesn't actually send anything.
+    It uses that to figure out what IP would be used to send.
+
+    # TODO - does this work without a default gateway set?
+
+    From: http://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+    """
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 53))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
+
+class DreamlandConfig():
+    def __init__(self, config_filename):
+        self.filename = config_filename
+        self.read_config()
+
+    def read_config(self):
+        if not os.path.exists(self.filename):
+            raise Exception("Config file %s not found." % (self.filename, ))
+        exec_var_dir = {}
+        with open(self.filename) as f:
+            code = compile(f.read(), self.filename, 'exec')
+            exec(code, exec_var_dir)
+        self.config = {k: v for k, v in exec_var_dir.items() if k != '__builtins__'}
+
+    def master(self):
+        return self.config['master']
+
+    def topic(self):
+        return self.config['topic']
+
+    def input(self):
+        return self.config['input']
+
+    def output(self):
+        return self.config['output']
 
 class SubClient():
     def __init__(self, master, topic=''):
+        self.master = master
+        self.topic = topic
         self.sub = ctx.socket(zmq.SUB)
         self.sub.connect("tcp://%s:6000" % (master,) )
         self.sub.setsockopt_string(zmq.SUBSCRIBE, topic)
@@ -30,21 +70,28 @@ class SubClient():
         data = self.sub.recv_string()
         if raw:
             return data
-        return data.split('|')[1].split('-')
-        #return self.sub.recv().split('|')[1]
+        return data.split('|')[1].split('#')
     
 class PubClient():
-    def __init__(self, master, topic):
-        #ctx = zmq.Context.instance()
+    def __init__(self, master, topic=''):
+        self.master = master
+        self.topic = topic
+
         self.pub = ctx.socket(zmq.PUB)
         self.pub.connect("tcp://%s:6001" % (master,) )
         self.topic = str(topic)
         time.sleep(.01)
 
-    def send(self, msg):
-        b = str('%s|%s' % (self.topic, msg))
-        print('b:',b)
+    def send_with_topic(self, which, level):
         return self.pub.send_string('%s|%s' % (self.topic, msg))
+
+    def send(self, which, level):
+        return self.raw_send('%s#%d' % (which, level))
+
+    def raw_send(self, msg, topic=None):
+        if topic is None: # Override used by behavior client
+            topic = self.topic
+        return self.pub.send_string('%s|%s' % (topic, msg))
 
 class PubSubProxy():
     def __init__(self):
