@@ -1,150 +1,173 @@
+import java.util.*;
 
-
-public static class Model extends LXModel 
-{
-  public Model () 
-  {
-    super(new WorldFixture().toLxPoints());
+public static class Model extends LXModel {
+  
+  private final static int NUMBER_OF_LAMPPOSTS = 3;
+  private final static int LAMPPOST_RADIUS = 20*FEET;
+  private final static int NUMBER_OF_BENCHES = 3;
+  private final static int INNER_BENCH_RADIUS = 10*FEET;
+  private final static int OUTER_BENCH_RADIUS = 15*FEET;
+  
+  public final Carousel carousel; 
+  public final List<LampPost> lampPosts;
+  public final List<Bench> benches;
+  
+  public Model() {
+    super(new Fixture());
+    Fixture f = (Fixture) this.fixtures.get(0);
+    this.carousel = f.carousel;
+    this.lampPosts = Collections.unmodifiableList(f.lampPosts);
+    this.benches = Collections.unmodifiableList(f.benches);
   }
-
-  private static class Point {
-    private final float x, y, z;
-
-    public Point(float x, float y, float z) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-    }
-
-    public Point rotate(float theta) {
-      return new Point(
-        cos(theta) * x - sin(theta) * y,
-        sin(theta) * x + cos(theta) * y,
-        z
-        );
-    }
-
-    public Point translate(float x, float y, float z) {
-      return new Point(this.x + x, this.y + y, this.z + z);
-    }
-
-    public LXPoint toLxPoint() {
-      return new LXPoint(x, y, z);
-    }
-  }
-
-  private static class Component extends java.util.ArrayList/*<Point>*/ {
-
-    public Component rotate(float theta) {
-      Component out = new Component();
-      for (int i = 0; i < size(); i++)
-        out.addPoint(((Point)get(i)).rotate(theta));
-      return out;
-    }
-
-    public Component translate(float x, float y, float z) {
-      Component out = new Component();
-      for (int i = 0; i < size(); i++)
-        out.addPoint(((Point)get(i)).translate(x, y, z));
-      return out;
-    }
-
-    protected void addPoint(Point p) {
-      add(p);
-    }
-
-    protected void addComponent(Component c) {
-      addAll(c);
-    }
-
-    public List/*<LXPoint>*/ toLxPoints() {
-      List/*<LXPoint>*/ out = new ArrayList/*<LXPoint>*/();
-      for (int i = 0; i < size(); i++)
-        out.add(((Point)get(i)).toLxPoint());
-      return out;
-    }
-  }
-
-  private static class BarFixture extends Component {
-    private static final int BAR_LENGTH = 10 * FEET;
-    private static final int NUMBER_OF_LEDS_PER_LEG = 10;
-
-    public BarFixture() {
-      for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++)
-        addPoint(new Point((i + 0.5) / NUMBER_OF_LEDS_PER_LEG * BAR_LENGTH, 0, 0));
-    }
-  }
-
-  private static class CarouselFixture extends Component {
-    private static final int HEIGHT_OF_CAROUSEL = -10 * FEET;
-
-    public CarouselFixture(int nbars) {
-      BarFixture prototype = new BarFixture();
-      for (int i = 0; i < nbars; i++)
-        addComponent(prototype.translate(0, 0, HEIGHT_OF_CAROUSEL).rotate(2 * PI * i / nbars));
-    }
-  }
-
-  private static class WingFixture extends Component {
-    private static float BENCH_LENGTH = 5;
-    private static float BENCH_ANGLE = 120;
-    private static float WX = BENCH_LENGTH * cos((BENCH_ANGLE - 90) * PI / 180);
-    private static float WY = BENCH_LENGTH * sin((BENCH_ANGLE - 90) * PI / 180);
-    private static int NLEDS = 10;
-
-    public WingFixture() {
-      for (int i = NLEDS; i > 0; i--) {
-        float x = WX * ((i + 0.5f) / NLEDS) * FEET;
-        float y = WY * ((i + 0.5f) / NLEDS) * FEET;
-        addPoint(new Point(x, y, 0));
-      }
-      for (int i = 0; i < NLEDS; i++) {
-        float x = WX * ((i + 0.5f) / NLEDS) * FEET;
-        float y = WY * ((i + 0.5f) / NLEDS) * FEET;
-        addPoint(new Point(-x, y, 0));
-      }
-    }
-  }
-
-  private static class BenchFixture extends Component {
-    public BenchFixture() {
-      WingFixture prototype = new WingFixture();
-      for (int i = 0; i < 3; i++)
-        addComponent(prototype.translate(0, 0, (i + 1) * FEET));
-    }
-  }
-
-  private static class LampPostFixture extends Component{
-    private static float HEIGHT_OF_POST = -10 * FEET;
-    private static int NLEDS = 10;
+  
+  private static class Fixture extends LXAbstractFixture {
     
-    public LampPostFixture(){
-      for (int i = 0; i < NLEDS; i++)
-        addPoint( new Point(0, 0, (i + 0.5f) / NLEDS * HEIGHT_OF_POST));
-      
-    }
-  }
-
-  private static class WorldFixture extends Component {
-    public WorldFixture() {
-      // carousel
-      addComponent(new CarouselFixture(9));
-      
-      BenchFixture bench = new BenchFixture();
-      // inner benches
-      for (int i = 0; i < 3; i++) {
-       addComponent(bench.translate(0, -10 * FEET, 0).rotate(2 * PI * i / 3f));
+    private final Carousel carousel;
+    private final List<LampPost> lampPosts = new ArrayList<LampPost>();
+    private final List<Bench> benches = new ArrayList<Bench>();
+    
+    Fixture() {
+      addPoints(this.carousel = new Carousel());
+      for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
+        float theta = TWO_PI * i / (float) NUMBER_OF_LAMPPOSTS;
+        LampPost lampPost = new LampPost(LAMPPOST_RADIUS * cos(theta), LAMPPOST_RADIUS * sin(theta));
+        addPoints(lampPost);
+        this.lampPosts.add(lampPost);
       }
-      // outer benches
-      for (int i = 0; i < 3; i++) {
-        addComponent(bench.translate(0, -15 * FEET, 0).rotate(2 * PI * (i + 0.5) / 3f));
-      }
-
-      LampPostFixture post = new LampPostFixture();
-      // lamp posts
-      for (int i = 0; i <3; i++) {
-        addComponent(post.translate(0, -20 * FEET, 0).rotate(2 * PI * i / 3f));
+      for (int i = 0; i < NUMBER_OF_BENCHES; ++i) {
+        Bench inner = new Bench(new LXTransform().rotateY(TWO_PI * i / (float)NUMBER_OF_BENCHES).translate(0, 0, -INNER_BENCH_RADIUS));
+        addPoints(inner);
+        this.benches.add(inner);
+        
+        Bench outer = new Bench(new LXTransform().rotateY(TWO_PI * (i+.5) / (float)NUMBER_OF_BENCHES).translate(0, 0, -OUTER_BENCH_RADIUS));
+        addPoints(outer);
+        this.benches.add(outer);
       }
     }
   }
 }
+
+private static class Carousel extends LXModel {
+  
+  private static final int CAROUSEL_HEIGHT = 10 * FEET;
+  private static final int NUMBER_OF_BARS = 9;
+  
+  public final List<Bar> bars;
+  
+  Carousel() {
+    super(new Fixture());
+    Fixture f = (Fixture) this.fixtures.get(0);
+    this.bars = Collections.unmodifiableList(f.bars);
+  } 
+  
+  private static class Fixture extends LXAbstractFixture {
+    
+    private List<Bar> bars = new ArrayList<Bar>();
+    
+    Fixture() {
+      LXTransform transform = new LXTransform();
+      transform.translate(0, CAROUSEL_HEIGHT, 0);
+      for (int i = 0; i < NUMBER_OF_BARS; ++i) {
+        Bar bar = new Bar(transform);
+        addPoints(bar);
+        this.bars.add(bar);
+        transform.rotateY(TWO_PI / NUMBER_OF_BARS);
+      }
+    }
+  }
+  
+  private static class Bar extends LXModel {
+  
+    private static final int BAR_LENGTH = 10 * FEET;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 10;
+  
+    public Bar(LXTransform transform) {
+      super(new Fixture(transform));
+    }
+    
+    private static class Fixture extends LXAbstractFixture {
+      Fixture(LXTransform transform) {
+        final float spacing = BAR_LENGTH / NUMBER_OF_LEDS_PER_LEG;
+        transform.push();
+        transform.translate(spacing/2, 0, 0);
+        for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
+          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          transform.translate(spacing, 0, 0);
+        }
+        transform.pop();
+      }
+    }
+  }
+}
+
+private static class LampPost extends LXModel {
+  private static float HEIGHT_OF_POST = 10 * FEET;
+  private static int NLEDS = 10;
+  
+  public LampPost(float x, float z) {
+    super(new Fixture(x, z));
+  }
+  
+  private static class Fixture extends LXAbstractFixture {
+    Fixture(float x, float z) {    
+      for (int i = 0; i < NLEDS; i++) {
+        addPoint(new LXPoint(x, (i + 0.5f) / NLEDS * HEIGHT_OF_POST, z));
+      }
+    }
+  }
+}
+
+private static class Bench extends LXModel {
+
+  private final static float BENCH_LENGTH = 5;
+  private final static float BENCH_ANGLE = 120;
+  private final static float WX = BENCH_LENGTH * cos((BENCH_ANGLE - 90) * PI / 180);
+  private final static float WZ = BENCH_LENGTH * sin((BENCH_ANGLE - 90) * PI / 180);
+  private final static int NLEDS = 10;
+
+  private final static int NUMBER_OF_WINGS = 3; 
+
+  Bench(LXTransform transform) {
+    super(new Fixture(transform));
+  }
+  
+  private static class Fixture extends LXAbstractFixture {
+    Fixture(LXTransform transform) {
+      for (int i = 0; i < NUMBER_OF_WINGS; i++) {
+        transform.translate(0, 1*FEET, 0); 
+        addPoints(new Wing(transform));
+      }
+    }
+  }
+  
+  private static class Wing extends LXModel {
+    
+    Wing(LXTransform transform) {
+      super(new Fixture(transform));
+    }
+    
+    private static class Fixture extends LXAbstractFixture {
+      Fixture(LXTransform transform) {
+        final float xStep = WX * FEET / NLEDS;
+        final float zStep = WZ * FEET / NLEDS;
+        
+        transform.push();
+        transform.translate(xStep*(NLEDS-0.5), 0, zStep*(NLEDS-0.5));
+        for (int i = NLEDS; i > 0; i--) {
+          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          transform.translate(-xStep, 0, -zStep);
+        }
+        transform.pop();
+        
+        transform.push();
+        transform.translate(-0.5*xStep, 0, 0.5*zStep);
+        for (int i = 0; i < NLEDS; i++) {
+          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          transform.translate(-xStep, 0, zStep);
+        }
+        transform.pop();
+      }
+    }
+  }
+}
+
