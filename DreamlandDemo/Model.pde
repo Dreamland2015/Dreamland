@@ -3,10 +3,10 @@ import java.util.*;
 public static class Model extends LXModel {
   
   private final static int NUMBER_OF_LAMPPOSTS = 3;
-  private final static int LAMPPOST_RADIUS = 20*FEET;
+  private final static int LAMPPOST_RADIUS = 17*FEET + 2*INCHES;
   private final static int NUMBER_OF_BENCHES = 3;
-  private final static int INNER_BENCH_RADIUS = 10*FEET;
-  private final static int OUTER_BENCH_RADIUS = 15*FEET;
+  private final static int INNER_BENCH_RADIUS = 8*FEET;
+  private final static int OUTER_BENCH_RADIUS = 16*FEET;
   
   public final Carousel carousel; 
   public final List<LampPost> lampPosts;
@@ -29,7 +29,7 @@ public static class Model extends LXModel {
     Fixture() {
       addPoints(this.carousel = new Carousel());
       for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
-        float theta = TWO_PI * i / (float) NUMBER_OF_LAMPPOSTS;
+        float theta = TWO_PI * i / (float) NUMBER_OF_LAMPPOSTS + TWO_PI / 12;
         LampPost lampPost = new LampPost(LAMPPOST_RADIUS * cos(theta), LAMPPOST_RADIUS * sin(theta));
         addPoints(lampPost);
         this.lampPosts.add(lampPost);
@@ -49,7 +49,7 @@ public static class Model extends LXModel {
 
 private static class Carousel extends LXModel {
   
-  private static final int CAROUSEL_HEIGHT = 10 * FEET;
+  private static final int CAROUSEL_HEIGHT = 9*FEET + 7*INCHES;
   private static final int NUMBER_OF_BARS = 9;
   
   public final List<Bar> bars;
@@ -84,8 +84,9 @@ private static class Carousel extends LXModel {
   
   private static class Bar extends LXModel {
   
-    private static final int BAR_LENGTH = 10 * FEET;
-    private static final int NUMBER_OF_LEDS_PER_LEG = 32;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 30;
+    private static final int INNER_RADIUS_OF_HUB = 14 * INCHES;
+    private static final int BAR_LENGTH = (15*FEET + 7*INCHES)/2 - INNER_RADIUS_OF_HUB;
   
     public Bar(LXTransform transform) {
       super(new Fixture(transform));
@@ -95,7 +96,7 @@ private static class Carousel extends LXModel {
       Fixture(LXTransform transform) {
         final float spacing = BAR_LENGTH / NUMBER_OF_LEDS_PER_LEG;
         transform.push();
-        transform.translate(1*FEET + spacing/2, 0, 0);
+        transform.translate(INNER_RADIUS_OF_HUB, 0, 0);
         for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
           addPoint(new LXPoint(transform));
           transform.translate(spacing, 0, 0);
@@ -107,7 +108,7 @@ private static class Carousel extends LXModel {
 }
 
 private static class LampPost extends LXModel {
-  private static float HEIGHT_OF_POST = 10 * FEET;
+  private static int NBARS = 7;
   private static int NLEDS = 19;
   
   public LampPost(float x, float z) {
@@ -115,9 +116,42 @@ private static class LampPost extends LXModel {
   }
   
   private static class Fixture extends LXAbstractFixture {
-    Fixture(float x, float z) {    
-      for (int i = 0; i < NLEDS; i++) {
-        addPoint(new LXPoint(x, (i + 0.5f) / NLEDS * HEIGHT_OF_POST, z));
+
+    private List<Bar> bars = new ArrayList<Bar>();
+
+    Fixture(float x, float z) { 
+      LXTransform transform = new LXTransform(); 
+      transform.translate(x, 0, z); 
+      for (int i = 0; i < NBARS; ++i) {
+        Bar bar = new Bar(transform);
+        addPoints(bar);
+        this.bars.add(bar);
+        // transform.translate(0, 0, 0);
+        transform.rotateY(TWO_PI / NBARS);
+      }
+    }
+  }
+
+  private static class Bar extends LXModel {
+  
+    private static final int BAR_HEIGHT = 7 * FEET;
+    private static final int BOTTOM_OF_LIGHTS = 2 * FEET;
+    private static final int NUMBER_OF_LEDS_PER_LEG = 19;
+  
+    public Bar(LXTransform transform) {
+      super(new Fixture(transform));
+    }
+    
+    private static class Fixture extends LXAbstractFixture {
+      Fixture(LXTransform transform) {
+        final float spacing = BAR_HEIGHT/ NUMBER_OF_LEDS_PER_LEG;
+        transform.push();
+        transform.translate(2, BOTTOM_OF_LIGHTS, 0);
+        for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
+          addPoint(new LXPoint(transform));
+          transform.translate(0, spacing, 0);
+        }
+        transform.pop();
       }
     }
   }
@@ -140,7 +174,7 @@ private static class Bench extends LXModel {
   private static class Fixture extends LXAbstractFixture {
     Fixture(LXTransform transform) {
       for (int i = 0; i < NUMBER_OF_WINGS; i++) {
-        transform.translate(0, 1*FEET, 0); 
+        transform.translate(0, 6, 0); 
         addPoints(new Wing(transform));
       }
     }
