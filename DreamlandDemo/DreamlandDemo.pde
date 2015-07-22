@@ -15,6 +15,9 @@ import heronarts.p2lx.ui.control.*;
 import ddf.minim.*;
 import processing.opengl.*;
 import java.util.*;
+import toxi.geom.Vec2D;
+import toxi.math.noise.PerlinNoise;
+import toxi.math.noise.SimplexNoise;
 
 
 // Let's work in feet and inches
@@ -47,7 +50,8 @@ void setup()
 		new TestZPattern(lx),
 		new MoveXPosition(lx),
 		new IteratorTestPattern(lx),
-		new TestProjectionPattern(lx)
+		new TestProjectionPattern(lx),
+		new AskewPlanes(lx)
 	});
 
 
@@ -83,7 +87,7 @@ void setup()
 	// Various sliders, knobs and buttons
 	// lx.ui.addLayer(new UIComponentsDemo(lx.ui, width-144, 4)); 
 
-	buildOutputs();
+//	buildOutputs();
 }
 
 void draw() 
