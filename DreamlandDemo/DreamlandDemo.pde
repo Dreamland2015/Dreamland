@@ -25,10 +25,9 @@ final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
 // Top-level, we have a model and a P2LX instance
-Model model;
-
-P2LX lx;
-
+Model           model;
+P2LX 			lx;
+LXPattern[]     patterns;
 // Setup establishes the windowing and LX constructs
 void setup() 
 {
@@ -44,18 +43,15 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
+		new TestXPattern(lx),
+		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
-		new AskewPlanes(lx),
-		new IteratorTestPattern(lx)setTransition(new DissolveTransition(lx)),
 		new MoveXPosition(lx),
 		new TestHuePattern(lx),
 		new TestProjectionPattern(lx),
-		new TestXPattern(lx),
 		new TestYPattern(lx),
 		new TestZPattern(lx),
-	    new block(lx), 
 	    new Bouncing(lx),
-	    new candycloudstar(lx),
 	    new Cascade(lx),
 	    new CrazyWaves(lx), 
 	    new CrossSections(lx),
@@ -64,8 +60,6 @@ void setup()
 	    new ParameterWave(lx),
 	    new Pulley(lx), 
 	    new Pulse(lx),
-	    new rainbowfade(lx),  
-	    new rainbowfadeauto(lx), 
 	    new RainbowInsanity(lx), 
 	    new SeeSaw(lx), 
 	    new ShiftingPlane(lx), 
@@ -74,6 +68,10 @@ void setup()
 	    new Strobe(lx),
 	    new SweepPattern(lx),
 	    new Twinkle(lx), 
+	    new block(lx), 
+	    new candycloudstar(lx),
+	    new rainbowfade(lx),  
+	    new rainbowfadeauto(lx), 
 	    new um(lx), 
 	    new um2(lx), 
 	    new um3_lists(lx),   
@@ -87,7 +85,7 @@ void setup()
 		new UI3dContext(lx.ui){}
 
 		// Look at center of model
-		.setCenter(model.cx, model.cy, model.cz)
+		.setCenter(model.cx, model.cy, 0)
 
 		// Position ourself some distance away from model
 		.setRadius(40 * FEET)
