@@ -91,7 +91,7 @@ private static class Carousel extends LXModel {
         transform.push();
         transform.translate(spacing/2, 0, 0);
         for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
-          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          addPoint(new LXPoint(transform));
           transform.translate(spacing, 0, 0);
         }
         transform.pop();
@@ -154,7 +154,7 @@ private static class Bench extends LXModel {
         transform.push();
         transform.translate(xStep*(NLEDS-0.5), 0, zStep*(NLEDS-0.5));
         for (int i = NLEDS; i > 0; i--) {
-          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          addPoint(new LXPoint(transform));
           transform.translate(-xStep, 0, -zStep);
         }
         transform.pop();
@@ -162,7 +162,7 @@ private static class Bench extends LXModel {
         transform.push();
         transform.translate(-0.5*xStep, 0, 0.5*zStep);
         for (int i = 0; i < NLEDS; i++) {
-          addPoint(new LXPoint(transform.x(), transform.y(), transform.z()));
+          addPoint(new LXPoint(transform));
           transform.translate(-xStep, 0, zStep);
         }
         transform.pop();

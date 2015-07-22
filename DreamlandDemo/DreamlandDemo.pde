@@ -62,13 +62,13 @@ void setup()
 		.setRadius(40 * FEET)
 
 		// Set how fast the UI can rotate rad/s
-		.setRotateVelocity(12 * PI)
+		.setRotationVelocity(12 * PI)
 
 		// Set how fast the UI can rotational acceleration
-		.setRotateAcceleration(3 * PI)
+		.setRotationAcceleration(3 * PI)
 
 		// Add a point cloud representing the LEDs
-		.addComponent(new UIPointCloud(lx,model).setPointWeight(3))
+		.addComponent(new UIPointCloud(lx,model).setPointSize(3))
 	);
 
 	// Basic 2-D contorol for channel with draggable windows
