@@ -1,7 +1,11 @@
-import paramiko
-import sys
-import time
+import tempfile
 import threading
+import time
+import sys
+
+from contextlib import contextmanager
+
+import paramiko
 
 #####################################################################################################################################
 #####################################################################################################################################
@@ -31,38 +35,44 @@ class SSHConnection():
     def __init__(self, hostname, structureName):
         self.hostname = hostname
         self.structureName = structureName
-        self.login = login
-        self.password = password
-        self.connectToSSH()
+        self.connect()
 
     # create an SSH connection, while passing errors if they arise.
-    def connectToSSH(self):
+    def connect(self):
         for x in range(10):
             try:
                 self.ssh = paramiko.SSHClient()
                 self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 self.ssh.connect(self.hostname, username=login, password=password)
-                print ("Connected to " + self.structureName)
-                break
 
-            except paramiko.AuthenticationException:
+                self.transport = self.ssh.get_transport()
+                self.sftp = paramiko.SFTPClient.from_transport(self.transport)
+                print ("Connected to " + self.structureName)
+                return
+            except (paramiko.ssh_exception.AuthenticationException, paramiko.AuthenticationException):
                 print ("Authentication failed when connecting to " + self.structureName)
                 sys.exit(1)
+            except OSError:
+                print("Encountered OSError on connection to", self.hostname, "No route to host expected")
+                import traceback
+                traceback.print_exc()
 
-            except:
                 print ("Could not SSH to " + self.structureName + ", waiting for it to start")
                 time.sleep(1)
-        return
+                continue
 
         # If no connection in the allowed time.
         raise RuntimeError("Could not connect to " + self.structureName + ". Giving up")
 
-    def connectToSSHThreaded(self, threadName):
-        threading.Thread(target=self.connectToSSH(), name=threadName).start()
-
     # once an SSH connection is created, then it is time to issue commands over the tubes
     def runCommand(self, commandToRun):
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
+        stdout.channel.exit_status_ready()
+
+        rval = stdout.channel.recv_exit_status()
+        if rval != 0:
+            print("Error running cmd:", commandToRun)
+        return rval
 
     # take a list of commands and send those over SSH
     def runMultipleCommands(self, commandList):
@@ -71,6 +81,30 @@ class SSHConnection():
             print(string)
             time.sleep(0.5)
 
+    @contextmanager
+    def using_temp_filename(self, remote_destination_filename):
+        tempfilename = tempfile.mktemp()
+        yield tempfilename
+        self.sudo_write_file(tempfilename, remote_destination_filename)
+
+    # Ghetto-rig the file writer to have root perms.
+    def sudo_write_file(self, src, dest):
+        self.runCommand('sudo mv "%s" "%s"' % (src, dest))
+
+    # Copy a file to the SSH server
+    def put_file(self, local_filename, remote_filename):
+        with self.using_temp_filename(remote_filename) as tempfilename:
+            self.sftp.put(local_filename, tempfilename)
+
+    # Write a string to the SSH server
+    def write_file(self, remote_filename, contents):
+        with self.using_temp_filename(remote_filename) as tempfilename:
+            with self.sftp.open(tempfilename, 'w') as f:
+                f.write(contents)
+
+    def write_structure_config(self, config):
+        with self.using_temp_filename('/etc/dreamland.py') as tempfilename:
+            self.write_file(tempfilename, 'config='+str(config)+'\n')
 
 #####################################################################################################################################
 # Now lets make multiple ssh connections and store those in a list
@@ -126,30 +160,16 @@ class MultiSSH:
 
 
 #####################################################################################################################################
-# G3 Note: this is super hacky, but works. The formatting was tricky to get correct.
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
 #####################################################################################################################################
-class echo:
+class ConfigWriter:
     def __init__(self, fileName, configDict, name):
         self.fileName = fileName
         self.configDict = configDict
         self.structureName = name
 
     def writeConfig(self):
-        fileLocation = '~/repo/Dreamland/' + self.fileName + '.py'
+        file_location = '/etc/dreamland.py'
 
-        keys = list(self.configDict.keys())
-
-        configToWrite = []
-        string = """echo %s = {"'%s'": "'%s'",  > %s""" % (self.fileName, "structureName", self.structureName, fileLocation)
-        configToWrite.append(string)
-
-        for index, key in enumerate(keys):
-            if index == len(keys) - 1:
-                string = """echo "'%s'": "'%s'"}  >> %s""" % (key, self.configDict[key], fileLocation)
-            else:
-                string = """echo "'%s'": "'%s'",  >> %s""" % (key, self.configDict[key], fileLocation)
-
-            configToWrite.append(string)
-
+        open(file_location,'w').write(str(self.configDict))
         return configToWrite
