@@ -20,7 +20,3 @@ void buildOutputs()
   output.addChild(new DreamlandFadecandyOutput(lx, "localhost", 7890));
   // output.addChild(new DreamlandFadecandyOutput(lx, "pi2.local", 7890));
 }
-
-void subscribe(){
-  Sub subscriber = new Sub();
-}

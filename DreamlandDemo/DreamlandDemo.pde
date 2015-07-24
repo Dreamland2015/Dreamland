@@ -83,7 +83,7 @@ void setup()
 
 
   buildOutputs();
-  // subscribe();
+  thread("psenvsub");
 
 
 	// Add pieces of the UI
