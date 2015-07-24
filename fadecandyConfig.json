@@ -10,17 +10,26 @@
     "devices": [
         {
             "type": "fadecandy",
-            "serial": "LXJNACKAPTQLQVMF",
+            "serial": "MEQKVNLRRPUHOXID",
             "map": [
-                [ 0, 0, 0, 512 ]
+                [ 0, 0, 0, 50, "grb"],
+                [ 0, 50, 64, 50 , "grb"],
+                [ 0, 100, 128, 50 , "grb"],
+                [ 0, 150, 192, 50 , "grb"],
+                [ 0, 200, 256, 50 , "grb"],
+                [ 0, 250, 320, 50 , "grb"]
             ]
         },
         {
             "type": "fadecandy",
-            "serial": "ELWQLXUWZPYTKTIB",
+            "serial": "LJGIVTKUZVYNAZIP",
             "map": [
-                [ 0, 512, 0, 64 ],
-                [ 0, 576, 128, 32 ]
+                [ 0, 300, 0, 50, "grb"],
+                [ 0, 350, 64, 50 , "grb"],
+                [ 0, 400, 128, 50 , "grb"],
+                [ 0, 450, 192, 50 , "grb"],
+                [ 0, 500, 256, 50 , "grb"],
+                [ 0, 550, 320, 50 , "grb"]
             ]
         }
     ]

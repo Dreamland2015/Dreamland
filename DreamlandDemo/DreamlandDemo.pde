@@ -1,3 +1,5 @@
+import ZstProcessing.*;
+
 // Get all our imports out of the way
 import heronarts.lx.*;
 import heronarts.lx.audio.*;
@@ -43,6 +45,7 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
+		// new ControlProjectionSpeed(lx),
 		new TestXPattern(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
@@ -80,6 +83,7 @@ void setup()
 
 
   buildOutputs();
+  // subscribe();
 
 
 	// Add pieces of the UI
