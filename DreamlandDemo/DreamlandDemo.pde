@@ -15,6 +15,8 @@ import heronarts.p2lx.ui.control.*;
 import ddf.minim.*;
 import processing.opengl.*;
 import java.util.*;
+import java.lang.reflect.*;
+import java.lang.Class.*;
 import toxi.geom.Vec2D;
 import toxi.math.noise.PerlinNoise;
 import toxi.math.noise.SimplexNoise;
@@ -23,6 +25,8 @@ import toxi.math.noise.SimplexNoise;
 // Let's work in feet and inches
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
+
+ float rotationPosition = 0f;
 
 // Top-level, we have a model and a P2LX instance
 Model           model;
@@ -43,7 +47,7 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
-		// new ControlProjectionSpeed(lx),
+		new ControlProjectionPositionOfCarousel(lx),
 		new TestXPattern(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
@@ -126,5 +130,3 @@ void draw()
 {
     background(#292929);
 }
-
-

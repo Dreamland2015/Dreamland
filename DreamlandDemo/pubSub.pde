@@ -22,4 +22,3 @@ void psenvsub () {
     subscriber.close ();
     context.term ();
 }
-
