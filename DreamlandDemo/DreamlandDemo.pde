@@ -1,5 +1,3 @@
-import ZstProcessing.*;
-
 // Get all our imports out of the way
 import heronarts.lx.*;
 import heronarts.lx.audio.*;
@@ -26,8 +24,6 @@ import toxi.math.noise.SimplexNoise;
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
-Float rotationPosition = 0f;
-
 // Top-level, we have a model and a P2LX instance
 Model           model;
 P2LX 			lx;
@@ -48,7 +44,6 @@ void setup()
 	lx.setPatterns(new LXPattern[] 
 	{
 		// new ControlProjectionSpeed(lx),
-		new ControlProjectionPosition(lx),
 		new TestXPattern(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
