@@ -253,13 +253,17 @@ class ControlProjectionPositionOfCarousel extends DLPattern
   private final LXProjection rotation;
   // private final SawLFO angle = new SawLFO(0, TWO_PI, 1000);
   private final BasicParameter angle = new BasicParameter("Angle", 0, 0, TWO_PI);
+  private final BasicParameter widthOfPlane = new BasicParameter("width", 0, 0, 1000);
+  private final BasicParameter thingy = new BasicParameter("thingy", 0,0,10);
 
 
   public ControlProjectionPositionOfCarousel(LX lx) {
     super(lx);
-    rotation = new LXProjection(model.carousel);
+    rotation = new LXProjection(model);
     // addModulator(angle).trigger()
     addParameter(angle);
+    addParameter(widthOfPlane);
+    addParameter(thingy);
   }
 
   public void run(double deltaMs) 
@@ -269,7 +273,8 @@ class ControlProjectionPositionOfCarousel extends DLPattern
     rotation.rotateY(angle.getValuef()); // or whatever is appropriate
     float hv = lx.getBaseHuef();
     for (LXVector c : rotation) {
-      float d = max(0, abs(c.x) - 10 + .1f*abs(c.y) + .02f*abs(c.x)); // plane / spear thing
+      // float d = max(0, abs(c.x) - widthOfPlane.getValuef() + thingy.getValuef()*abs(c.y) + .02f*abs(c.x)); // plane / spear thing
+      float d = max(0, abs(c.x) - widthOfPlane.getValuef() + + .02f*abs(c.x)); // plane / spear thing
       colors[c.index] = lx.hsb(
         100,
         100,
