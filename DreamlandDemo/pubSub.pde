@@ -1,6 +1,6 @@
 import org.zeromq.ZMQ;
 
-void psenvsub () {
+void Subscriber () {
     // Prepare our context and subscriber
     ZMQ.Context context = ZMQ.context(1);
     ZMQ.Socket subscriber = context.socket(ZMQ.SUB);

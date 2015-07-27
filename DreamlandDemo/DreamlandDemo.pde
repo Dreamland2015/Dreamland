@@ -26,7 +26,14 @@ import toxi.math.noise.SimplexNoise;
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 
- float rotationPosition = 0f;
+// creat variable for position data
+float rotationPosition = 0f;
+
+// Build teh fadecandy outputs
+buildOutputs();
+
+// start the subscriber in a new thread
+thread("Subscriber");
 
 // Top-level, we have a model and a P2LX instance
 Model           model;
@@ -84,8 +91,7 @@ void setup()
 	});
 
 
-  buildOutputs();
-  thread("psenvsub");
+
 
 
 	// Add pieces of the UI
