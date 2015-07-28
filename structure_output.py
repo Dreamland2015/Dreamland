@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import traceback
 
 import util
 import GPIO
@@ -15,6 +16,12 @@ sub = util.SubClient(config.master(), config.topic())
 
 outputs = GPIO.GPIO_outputs(config.output())
 
+print(config.config)
+
 while True:
     action, level = sub.recv()
-    outputs.output(action, int(level))
+    print("action", action, level)
+    try:
+        outputs.output(action, int(level))
+    except KeyError:
+        traceback.print_exc()
