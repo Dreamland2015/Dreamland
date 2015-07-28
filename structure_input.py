@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 """)
     sys.exit(1)
 
-config = util.DreamlandConfig(sys.argv[0])
+config = util.DreamlandConfig(sys.argv[1])
 pub = util.PubClient(config.master(), config.topic())
 
 button = GPIO_button(config.input())
