@@ -8,7 +8,7 @@ import util
 
 def doit():
     pub = util.PubClient(master='localhost', topic=['carousel', 'thing'][random.randint(0,1)])
-    pub.send(['center', 'side'][random.randint(0,1)], random.randint(0,1))
+    pub.send(['flame1', 'flame2'][random.randint(0,1)], random.randint(0,1))
 
 if __name__ == '__main__':
     doit()
