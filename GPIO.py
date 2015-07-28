@@ -35,7 +35,7 @@ class GPIO_button():
     def __init__(self, input_cfg):
         self.cfg = input_cfg
         self.pin = input_cfg['pin']
-        _GPIO.setup(self.pin, _GPIO.IN)
+        _GPIO.setup(self.pin, _GPIO.IN, pull_up_down=_GPIO.PUD_UP)
 
     def wait(self, level, callback):
         _GPIO.wait_for_edge(self.pin, level)
