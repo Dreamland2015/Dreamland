@@ -42,7 +42,7 @@ class DreamlandConfig():
         with open(self.filename) as f:
             code = compile(f.read(), self.filename, 'exec')
             exec(code, exec_var_dir)
-        self.config = {k: v for k, v in exec_var_dir.items() if k != '__builtins__'}
+        self.config = exec_var_dir['config']
         print('Config read:', self.config)
 
     def master(self):
