@@ -37,6 +37,6 @@ class GPIO_button():
         self.pin = input_cfg['pin']
         _GPIO.setup(self.pin, _GPIO.IN)
 
-    def button_wait(self, level, callback):
-        GPIO.wait_for_input(level)
+    def wait(self, level, callback):
+        _GPIO.wait_for_input(level)
         callback()

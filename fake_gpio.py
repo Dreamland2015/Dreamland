@@ -1,3 +1,5 @@
+import time
+
 IN = 0
 OUT = 1
 
@@ -9,3 +11,8 @@ def output(pin, level):
 
 def cleanup():
     print("GPIO CLEANUP")
+
+def wait_for_input(level):
+    print("GPIO fake input wait, sleeping...", end = "")
+    time.sleep(4)
+    print("GPIO fake input wait returning.")
