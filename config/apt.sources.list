@@ -1,0 +1,3 @@
+deb http://dreamland-master.local:3142/mirrordirector.raspbian.org/raspbian/ wheezy main contrib non-free rpi
+deb http://dreamland-master.local:3142/raspberrypi.collabora.com wheezy rpi
+deb http://dreamland-master.local:3142/archive.raspberrypi.org/debian/ wheezy main
