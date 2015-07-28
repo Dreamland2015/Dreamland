@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 """)
     sys.exit(1)
 
-config = util.DreamlandConfig(args['<config_file>'])
+config = util.DreamlandConfig(sys.argv[1])
 sub = util.SubClient(config.master(), config.topic())
 
 outputs = GPIO.GPIO_outputs(config.output())
