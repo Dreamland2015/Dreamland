@@ -1,15 +1,15 @@
 import util
 
 if util.running_on_pi():
-    import Rpi.GPIO as _GPIO
+    import RPi.GPIO as _GPIO
     _GPIO.setmode(_GPIO.BOARD)
 else:
     import fake_gpio as _GPIO
 
 LOW = 0
 HIGH = 1
-BUTTON_PRESSED = 1
-BUTTON_RELEASED = 0
+BUTTON_PRESSED = _GPIO.FALLING
+BUTTON_RELEASED = _GPIO.RISING
 
 cleanup = _GPIO.cleanup
 
@@ -38,5 +38,5 @@ class GPIO_button():
         _GPIO.setup(self.pin, _GPIO.IN)
 
     def wait(self, level, callback):
-        _GPIO.wait_for_input(level)
+        _GPIO.wait_for_edge(self.pin, level)
         callback()
