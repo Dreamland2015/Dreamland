@@ -32,9 +32,10 @@ startDreamlandStructure = "sudo python3 ~/repo/Dreamland/dreamlandStructure.py"
 # simple class that creates an SSH connection to a single computer.
 #####################################################################################################################################
 class SSHConnection():
-    def __init__(self, hostname, structureName):
+    def __init__(self, hostname, structureName, debug=False):
         self.hostname = hostname
         self.structureName = structureName
+        self.debug = debug
         self.connect()
 
     # create an SSH connection, while passing errors if they arise.
@@ -69,9 +70,20 @@ class SSHConnection():
         stdin, stdout, stderr = self.ssh.exec_command(commandToRun)
         stdout.channel.exit_status_ready()
 
+        if self.debug:
+            print('Running:\n\t', commandToRun, 'on', self.hostname)
+            while not stdout.channel.exit_status_ready():
+                print(str(stdout.channel.recv(1024), encoding='utf-8'), end="")
+
         rval = stdout.channel.recv_exit_status()
         if rval != 0:
             print("Error running cmd:", commandToRun)
+        return rval
+
+    def tryCommand(self, commandToRun):
+        rval = self.runCommand(commandToRun)
+        if rval != 0:
+            raise Exception("Failure running %s" % (commandToRun, ))
         return rval
 
     # take a list of commands and send those over SSH
