@@ -28,6 +28,7 @@ class GPIO_outputs():
     def __init__(self, output_cfg):
         self.cfg = output_cfg
         for name, pin_info in output_cfg.items():
+            print("Setting up", name, 'output')
             _GPIO.setup(pin_info['pin'], _GPIO.OUT)
 
     def output(self, name, level):
