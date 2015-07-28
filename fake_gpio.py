@@ -2,7 +2,11 @@ import time
 
 IN = 0
 OUT = 1
-PUD_UP = 0
+
+PUD_UP = 0 # Pullup enable
+
+RISING = 1
+FALLING = 0
 
 def setup(pin, in_out, pull_up_down=None):
     print("GPIO CONFIG pin", pin, "configured for", ['input','output'][in_out])
