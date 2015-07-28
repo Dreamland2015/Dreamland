@@ -20,6 +20,7 @@ config = {
 #        'master': serverIp,
 #    },
     'carousel': {
+        'topic': 'carousel',
         'hostname': "pi7.local",
         'input': {'button':{'pin':7}},
         'output': { },
