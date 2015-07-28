@@ -13,13 +13,13 @@ if len(sys.argv) != 2:
 config = util.DreamlandConfig(sys.argv[1])
 pub = util.PubClient(config.master(), config.topic())
 
-button = GPIO_button(config.input())
+button = GPIO.GPIO_button(config.input())
 
 def pressed():
-    pub.send(config.input['name'], GPIO.BUTTON_PRESSED)
+    pub.send(config.input()['name'], GPIO.BUTTON_PRESSED)
     
 def released():
-    pub.send(config.input['name'], GPIO.BUTTON_RELEASED)
+    pub.send(config.input()['name'], GPIO.BUTTON_RELEASED)
     
 while True:
     button.wait(GPIO.BUTTON_PRESSED, pressed)
