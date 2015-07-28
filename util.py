@@ -13,7 +13,7 @@ ctx = zmq.Context.instance()
 def running_on_pi():
     uname_m = subprocess.check_output('uname -m', shell=True).strip()
     # Assume that an ARM processor means we're on the Pi
-    return uname_m == 'armv7l' # Pi2 is arm7l vs Pi1's arm6l
+    return uname_m == b'armv7l' # Pi2 is arm7l vs Pi1's arm6l
 
 def get_default_ip():
     """
