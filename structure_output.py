@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""
-Usage:
-    structure_output.py <config_file>
-"""
 import sys
-
-import docopt
-
-args = docopt.docopt(__doc__)
 
 import util
 import GPIO
+
+if len(sys.argv) != 2:
+    print("""Usage:
+    structure_output.py <config_file>
+""")
+    sys.exit(1)
 
 config = util.DreamlandConfig(args['<config_file>'])
 sub = util.SubClient(config.master(), config.topic())

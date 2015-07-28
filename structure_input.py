@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
-"""
-Usage:
-    structure_input.py <config_file>
-"""
 import sys
-
-import docopt
-
-args = docopt.docopt(__doc__)
 
 import util
 import GPIO
 
-config = util.DreamlandConfig(args['<config_file>'])
+if len(sys.argv) != 2:
+    print("""Usage:
+    structure_input.py <config_file>
+""")
+    sys.exit(1)
+
+config = util.DreamlandConfig(sys.argv[0])
 pub = util.PubClient(config.master(), config.topic())
 
 button = GPIO_button(config.input())
