@@ -1,3 +1,5 @@
+import time
+
 import util
 
 if util.running_on_pi():
@@ -40,3 +42,4 @@ class GPIO_button():
     def wait(self, level, callback):
         _GPIO.wait_for_edge(self.pin, level)
         callback()
+        time.sleep(.01)
