@@ -47,59 +47,38 @@ class gts_data(object):
 				self.edges1.value = dat
 			elif whichdata == 'edges2':
 				self.edges2.value = dat
+			elif whichdata == 'edge1time':
+				self.edge1time.value = dat
+			elif whichdata == 'edge2time':
+				self.edge2time.value = dat
 			else:
 				pass
  
-def sensor_edge(ch, edge, sdat):
-	""" 
-	Callback function for an edge on a sensor.
-	Count edges (gear teeth) forward or backward for either sensor.
-	"""
-	curtime = time.time()
+def sensor_up(ch, sdat):
+	""" Callback function for a rising edge on a sensor.  """
+	now = time.time()
 	
-	if (ch = gearsensor1_pin):
-		edgevar = 'edges1'
+	if (ch == gearsensor1_pin):
 		s2 = GPIO.input(gearsensor2_pin)
-	elif (ch = gearsensor2_pin):
-		edgevar = 'edges2'
+		forward = (s2==0)
+		edgevar = 'edges1'
+		deltat = now - sdat.getdata('edge1time')
+		sdat.setdata('edge1time', now)
+	elif (ch == gearsensor2_pin):
 		s2 = GPIO.input(gearsensor1_pin)
+		forward = (s2==1)
+		edgevar = 'edges2'
+		deltat = now - sdat.getdata('edge2time')
+		sdat.setdata('edge2time', now)
 
-	forward = ((edge=='rising') is not (s2==1))
-	if forward==1:
+	if forward==True:
 		newedges = gtsdata.getdata(edgevar) + 1
 	else:
 		newedges = gtsdata.getdata(edgevar) - 1
 		
 	sdat.setdata(edgevar, newedges)
-	
-	
-	print("sensed rising edge on channel - count = %d" % newedgest1 )
-
-
-def sensor1_edge(ch, edge, sdat):
-	""" Callback function for an edge on a sensor1, counting gear tooth edges. """
-	curtime = time.time()
-	
-	s2 = GPIO.input(gearsensor2_pin)	# check sensor 2 level
-	forward = ((edge=='rising') is not (s2==1))
-
-	if forward==True:
-		newedgecount = gtsdata.getdata('edges1') + 1
-	else:
-		newedgecount = gtsdata.getdata('edges1') - 1
-		
-	sdat.setdata('edges1', newedgecount)
-	
-	print("sensed rising edge on channel - count = %d" % newedgest1 )
-
-	 
-#def sensor1_down(channel):
-#	   s2 = GPIO.input(gearsensor2_pin)
-#	   if s2==1:
-#			   edgecount1 += 1
-#	   else:
-#			   edgecount1 -= 1
-#	   print("detector1 sensed falling edge - count = %d" % edgecount1 )
+	print("sensed rising edge on channel %s - count = %d - delta t = %f"
+               % (ch, newedges, deltat) )
 
 
 if __name__ == "__main__":
@@ -110,16 +89,14 @@ if __name__ == "__main__":
 	GPIO.setup(gearsensor2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 	GPIO.add_event_detect(gearsensor1_pin, GPIO.RISING,
-	                      callback=lambda ch: sensor1_up(ch, 'rising', gtsdata))
-	GPIO.add_event_detect(gearsensor1_pin, GPIO.FALLING, 
-	                      callback=lambda ch: sensor1_up(ch, 'falling', gtsdata))
+	                      callback=lambda ch: sensor_up(ch, gtsdata))
  
+	print("waiting for gear teeth")
 	while True:
 		try:
 				curtime = time.time()
-				print("waiting for gear tooth")
 		except KeyboardInterrupt:
 				GPIO.cleanup()
-		time.sleep(3)
+		time.sleep(5)
  
 	GPIO.cleanup()
