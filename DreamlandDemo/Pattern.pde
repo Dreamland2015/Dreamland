@@ -13,3 +13,12 @@ abstract class DLPattern extends LXPattern {
     model = (Model)lx.model;
   }
 }
+
+abstract class DLLayer extends LXLayer{
+  protected final Model model;
+
+  DLLayer(LX lx) {
+    super(lx);
+    model = (Model)lx.model;
+  }
+}
