@@ -248,38 +248,32 @@ class TestProjectionPattern extends LXPattern {
   } 
 }
 
-class ControlProjectionPositionOfCarousel extends DLPattern
+class ControlProjectionPosition extends LXPattern 
 {
   private final LXProjection rotation;
   // private final SawLFO angle = new SawLFO(0, TWO_PI, 1000);
   private final BasicParameter angle = new BasicParameter("Angle", 0, 0, TWO_PI);
-  private final BasicParameter widthOfPlane = new BasicParameter("width", 0, 0, 1000);
-  private final BasicParameter thingy = new BasicParameter("thingy", 0,0,10);
 
 
-  public ControlProjectionPositionOfCarousel(LX lx) {
+  public ControlProjectionPosition(LX lx) {
     super(lx);
     rotation = new LXProjection(model);
     // addModulator(angle).trigger()
     addParameter(angle);
-    addParameter(widthOfPlane);
-    addParameter(thingy);
   }
 
   public void run(double deltaMs) 
   {
     rotation.reset();
     rotation.center(); // assuming you want to rotate about the center of your model?
-    rotation.rotateY(angle.getValuef()); // or whatever is appropriate
+    rotation.rotateZ(rotationPosition); // or whatever is appropriate
     float hv = lx.getBaseHuef();
     for (LXVector c : rotation) {
-      // float d = max(0, abs(c.x) - widthOfPlane.getValuef() + thingy.getValuef()*abs(c.y) + .02f*abs(c.x)); // plane / spear thing
-      float d = max(0, abs(c.x) - widthOfPlane.getValuef() + + .02f*abs(c.x)); // plane / spear thing
+      float d = max(0, abs(c.y) - 10 + .1f*abs(c.z) + .02f*abs(c.x)); // plane / spear thing
       colors[c.index] = lx.hsb(
         100,
         100,
         constrain(140 - 40*d, 0, 100)
-        // constrain(50, 0, 100)
       );
     }
   }

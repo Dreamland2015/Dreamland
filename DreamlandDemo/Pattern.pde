@@ -11,6 +11,5 @@ abstract class DLPattern extends LXPattern {
   DLPattern(LX lx) {
     super(lx);
     model = (Model)lx.model;
-    
   }
 }

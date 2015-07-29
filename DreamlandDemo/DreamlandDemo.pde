@@ -15,8 +15,6 @@ import heronarts.p2lx.ui.control.*;
 import ddf.minim.*;
 import processing.opengl.*;
 import java.util.*;
-import java.lang.reflect.*;
-import java.lang.Class.*;
 import toxi.geom.Vec2D;
 import toxi.math.noise.PerlinNoise;
 import toxi.math.noise.SimplexNoise;
@@ -25,15 +23,7 @@ import toxi.math.noise.SimplexNoise;
 // Let's work in feet and inches
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
-
-// creat variable for position data
 float rotationPosition = 0f;
-
-// Build teh fadecandy outputs
-buildOutputs();
-
-// start the subscriber in a new thread
-thread("Subscriber");
 
 // Top-level, we have a model and a P2LX instance
 Model           model;
@@ -54,7 +44,7 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] 
 	{
-		new ControlProjectionPositionOfCarousel(lx),
+		// new ControlProjectionSpeed(lx),
 		new TestXPattern(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
@@ -91,6 +81,8 @@ void setup()
 	});
 
 
+  buildOutputs();
+  thread("psenvsub");
 
 
 
@@ -136,3 +128,5 @@ void draw()
 {
     background(#292929);
 }
+
+
