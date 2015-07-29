@@ -288,9 +288,9 @@ class ProjectionLayerTest extends DLPattern {
     super(lx);
     addParameter(colorSpread);
     addParameter(stars);
-    addLayer(new CarouselLayer(lx));
     addLayer(new CircleLayer(lx));
     addLayer(new RodLayer(lx));
+    addLayer(new CarouselLayer(lx));
     for (int i = 0; i < 200; ++i) {
       addLayer(new StarLayer(lx));
     }
@@ -319,8 +319,23 @@ class ProjectionLayerTest extends DLPattern {
       rotation.reset();
       rotation.center(); // assuming you want to rotate about the center of your model?
       rotation.rotateY(rotationPosition); // or whatever is appropriate
+      
+      // NOTE(DEMO): Adding this to make it rotatefor the demo even with no pubSub data
+      rotation.rotateY(angle.getValuef());
+      
       for (LXVector c : rotation) {
-        c.rotate(rotationPosition); // not sure if this is correct
+        // c.rotate(rotationPosition); // not sure if this is correct
+        
+        // NOTE(DEMO):
+        // Nope, it's not correct. What you want to do here is draw the points in the carousel based
+        // upon their *projected* coordinates, which c already contains. You shouldn't mutate those
+        // vectors anymore. You perhaps want to do something like this:
+        float th = atan2(c.z, c.x);
+        colors[c.index] = LXColor.hsb(
+           (PI + th) * 360f / TWO_PI,
+           100,
+           100
+        );
       }
     }
   }
