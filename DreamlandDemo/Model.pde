@@ -11,7 +11,8 @@ public static class Model extends LXModel {
   public final Carousel carousel; 
   public final CarouselBottom carouselBottom;
   public final List<LampPost> lampPosts;
-  public final List<Bench> benches;
+  public final List<Bench> outerBenches;
+  public final List<Bench> innerBenches;
   
   public Model() {
     super(new Fixture());
@@ -19,7 +20,8 @@ public static class Model extends LXModel {
     this.carousel = f.carousel;
     this.carouselBottom = f.carouselBottom;
     this.lampPosts = Collections.unmodifiableList(f.lampPosts);
-    this.benches = Collections.unmodifiableList(f.benches);
+    this.outerBenches = Collections.unmodifiableList(f.outerBenches);
+    this.innerBenches = Collections.unmodifiableList(f.innerBenches);
   }
   
   private static class Fixture extends LXAbstractFixture {
@@ -27,7 +29,8 @@ public static class Model extends LXModel {
     private final Carousel carousel;
     private final CarouselBottom carouselBottom;
     private final List<LampPost> lampPosts = new ArrayList<LampPost>();
-    private final List<Bench> benches = new ArrayList<Bench>();
+    private final List<Bench> outerBenches = new ArrayList<Bench>();
+    private final List<Bench> innerBenches = new ArrayList<Bench>();
     
     Fixture() {
       addPoints(this.carousel = new Carousel());
@@ -41,11 +44,11 @@ public static class Model extends LXModel {
       for (int i = 0; i < NUMBER_OF_BENCHES; ++i) {
         Bench inner = new Bench(new LXTransform().rotateY(TWO_PI * i / (float)NUMBER_OF_BENCHES).translate(0, 0, -INNER_BENCH_RADIUS));
         addPoints(inner);
-        this.benches.add(inner);
+        this.innerBenches.add(inner);
         
         Bench outer = new Bench(new LXTransform().rotateY(TWO_PI * (i+.5) / (float)NUMBER_OF_BENCHES).translate(0, 0, -OUTER_BENCH_RADIUS));
         addPoints(outer);
-        this.benches.add(outer);
+        this.outerBenches.add(outer);
       }
     }
   }
