@@ -45,6 +45,7 @@ void setup()
 	lx.setPatterns(new LXPattern[] 
 	{
 		// new ControlProjectionSpeed(lx),
+		new HelloWorldPattern(lx),
 		new ProjectionLayerTest(lx),
 		new TestXPattern(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
