@@ -6,6 +6,8 @@ P2LX lx;
 //private final int BG_COLOR = #292929;
 private final int WARNING_RED_COLOR = #B33A3A;
 
+public UIButton fire1;
+
 class DreamlandFireEnablePanel extends UIWindow {
 
 	private final int BG_COLOR = UI.get().theme.getControlBackgroundColor();
@@ -75,24 +77,34 @@ class DreamlandControlPanelUI extends UIWindow {
 	DreamlandControlPanelUI(UI ui) {
 		super(ui, "CtrlPanel", 0, 0, 100, 800);
 		println("created!");
-		new DreamlandFireEnablePanel(ui, "Fire1", 0, 30).addToContainer(this);
-		new DreamlandFireEnablePanel(ui, "Fire2", 0, 160).addToContainer(this);
-		new DreamlandFireEnablePanel(ui, "Fire3", 0, 290).addToContainer(this);
+		DreamlandFireEnablePanel fpanel1 =
+			new DreamlandFireEnablePanel(ui, "Fire1", 0, 30);
+		fpanel1.addToContainer(this);
+		fire1 = fpanel1.fire;
+		DreamlandFireEnablePanel fpanel2 =
+			new DreamlandFireEnablePanel(ui, "Fire2", 0, 160);
+		fpanel2.addToContainer(this);
+		DreamlandFireEnablePanel fpanel3 =
+			new DreamlandFireEnablePanel(ui, "Fire3", 0, 290);
+		fpanel3.addToContainer(this);
 	}
 }
 
 
-void setup() 
+void setup()
 {
-	size(1200, 800); 
+	size(1200, 800);
 	//colorMode(RGB, );
 	background(#292929);
 
 	lx = new P2LX(this);
-	lx.ui.addLayer(new DreamlandControlPanelUI(lx.ui)); 
+	DreamlandControlPanelUI cpui = new DreamlandControlPanelUI(lx.ui);
+	lx.ui.addLayer(cpui);
+
+	thread("zeromq_sub");
 }
 
-void draw() 
+void draw()
 {
 	// Processing/P2LX needs this to process actions, even though it's a NOP.
 }
