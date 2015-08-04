@@ -2,6 +2,7 @@ import os
 import tempfile
 import threading
 import time
+import socket
 import sys
 
 from contextlib import contextmanager
@@ -36,6 +37,7 @@ class SSHConnection():
     def __init__(self, hostname, debug=None):
         self.hostname = hostname
         self.debug = debug
+        self.ip = None
         self.connect()
 
     # create an SSH connection, while passing errors if they arise.
@@ -48,6 +50,7 @@ class SSHConnection():
 
                 self.transport = self.ssh.get_transport()
                 self.sftp = paramiko.SFTPClient.from_transport(self.transport)
+                self.ip = socket.gethostbyname(self.hostname)
                 print ("Connected to " + self.hostname)
                 return
             except (paramiko.ssh_exception.AuthenticationException, paramiko.AuthenticationException):
@@ -71,7 +74,7 @@ class SSHConnection():
         stdout.channel.exit_status_ready()
 
         if self.debug:
-            print('Running:\n\t', commandToRun, 'on', self.hostname)
+            print('Running:\n\t', commandToRun, 'on', self.hostname, 'at', self.ip)
             while not stdout.channel.exit_status_ready():
                 print(str(stdout.channel.recv(1024), encoding='utf-8'), end="")
 
