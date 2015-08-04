@@ -118,58 +118,6 @@ class SSHConnection():
         with self.using_temp_filename('/etc/dreamland.py') as tempfilename:
             self.write_file(tempfilename, 'config='+str(config)+'\n')
 
-#####################################################################################################################################
-# Now lets make multiple ssh connections and store those in a list
-#####################################################################################################################################
-class MultiSSH:
-    def __init__(self, configDict):
-        self.configDict = configDict
-        self.structureNames = list(self.configDict.keys())
-        self.sshConnections = []
-        for structure in self.structureNames:
-            self.sshConnections.append(SSHConnection(self.configDict[structure]["hostname"], structure))
-
-    # Run a single command on all SSH connections
-    def runOnAll(self, commandToRun):
-        for connection in self.sshConnections:
-            connection.runCommand(commandToRun)
-
-    # Run a list of commands on all SSH connections
-    def runMultipleCommandsOnAll(self, commandList):
-        for string in commandList:
-            self.runOnAll(string)
-
-    # Kill python scripts running on each connection
-    def killAllPythonScripts(self):
-        self.runOnAll("sudo pkill python")
-
-    # Restart the python script for each structure
-    def restartDreamlandStructureScript(self):
-        self.runOnAll(startDreamlandStructure)
-        print('restarting ' + self.str)
-
-    def rebootRaspberryPis(self):
-        print('Rebooting RPIs')
-        self.runOnAll('sudo reboot')
-
-    # For the entire piece, kill python scripts, reset config files and restart the piece
-    def killSetupReboot(self):
-        self.killAllPythonScripts()
-        time.sleep(0.5)
-        self.setupConfigFile()
-        time.sleep(0.5)
-        self.rebootRaspberryPis()
-
-    # Create a configuration file on the appropriate strucutre RPI
-    def setupConfigFile(self):
-        configName = "structureConfig"
-        for connection in self.sshConnections:
-            name = connection.structureName
-            print('Setting up configuration file on ' + name)
-            e = echo(configName, self.configDict[name], name)
-            commandsToWrite = e.writeConfig()
-            connection.runMultipleCommands(commandsToWrite)
-
 
 #####################################################################################################################################
 # Take a dictionary and parse out the correct string to send echo commands over the ssh connection
@@ -185,6 +133,7 @@ class ConfigWriter:
 
         open(file_location,'w').write(str(self.configDict))
         return configToWrite
+
 
 class DreamlandPi(SSHConnection):
     def __init__(self, config, debug=None):
