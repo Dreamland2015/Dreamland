@@ -25,7 +25,7 @@ class FireEnablePanel extends UIWindow {
 	FireEnablePanel(UI ui, String title, float panel_x, float panel_y) {
 		super(ui, title, panel_x, panel_y, 100, 130);
 
-		int y = 20;
+		int y = 30;
 		enable = new UIButton(5, y, ELEMENT_WIDTH, 45) {
 			public void onToggle(boolean enabled) {
 				int bgcol;
@@ -93,6 +93,27 @@ class ControlPanelUI extends UIWindow {
 		FireEnablePanel fpanel3 =
 			new FireEnablePanel(ui, "Fire3", x, y);
 		fpanel3.addToContainer(this);
+		y += 130;
+		FireEnablePanel fpanel4 =
+			new FireEnablePanel(ui, "Big Fire Poofer", x, y);
+		fpanel4.addToContainer(this);
+
+		y = 30;
+		x = 200;
+		// Fire on lanterns (3)
+		FireEnablePanel fpanel5 =
+			new FireEnablePanel(ui, "Lantern1 Fire", x, y);
+		fpanel5.addToContainer(this);
+		y += 130;
+		FireEnablePanel fpanel6 =
+			new FireEnablePanel(ui, "Lantern2 Fire", x, y);
+		fpanel6.addToContainer(this);
+		y += 130;
+		FireEnablePanel fpanel7 =
+			new FireEnablePanel(ui, "Lantern3 Fire", x, y);
+		fpanel7.addToContainer(this);
+		y += 130;
+
 	}
 }
 
