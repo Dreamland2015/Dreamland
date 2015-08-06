@@ -197,8 +197,8 @@ class DreamlandPi(SSHConnection):
         """
         self.put_file('config/fcserver.json', '/etc/fcserver.json')
         self.runCommand('sudo rm /usr/local/bin/fcserver.json')
-        self.runCommand('sudo killall fcserver')
         self.supervisor_reread()
+        self.runCommand('sudo killall fcserver')
         self.runCommand('sudo supervisorctl restart fcserver')
 
     def do_full_setup(self):
