@@ -50,6 +50,7 @@ class FireEnablePanel extends UIWindow {
 				fire.setBackgroundColor(inactiveCol);
 				fire.setActiveLabel(bu_text[1]);
 				fire.setInactiveLabel(bu_text[0]);
+				fire.setActive(false);
 			}
 		};
 		enable.setActiveLabel("Enabled!")
@@ -66,7 +67,7 @@ class FireEnablePanel extends UIWindow {
 		};
 		fire.setMomentary(true)	
 			.addToContainer(this);
-		// Hacky workaround
+		// Hacky workaround by setting it true first.
 		enable.setActive(true);
 		enable.setActive(false);
 	}
