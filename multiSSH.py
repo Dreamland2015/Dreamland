@@ -199,6 +199,7 @@ class DreamlandPi(SSHConnection):
         self.runCommand('sudo rm /usr/local/bin/fcserver.json')
         self.runCommand('sudo killall fcserver')
         self.supervisor_reread()
+        self.runCommand('sudo supervisorctl restart fcserver')
 
     def do_full_setup(self):
         self.setup_rc_local()
