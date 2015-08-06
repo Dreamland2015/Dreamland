@@ -161,6 +161,7 @@ class DreamlandPi(SSHConnection):
         hard to restart to load a new config file.
         """
         self.put_file('config/rc.local', '/etc/rc.local')
+        self.runCommand('sudo killall fcserver')
         print('rc.local restored.')
 
     def setup_apt(self):
