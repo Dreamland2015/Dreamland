@@ -57,7 +57,7 @@ public static class Model extends LXModel {
 private static class Carousel extends LXModel {
   
   private static final int CAROUSEL_HEIGHT = 9*FEET + 7*INCHES;
-  private static final int NUMBER_OF_BARS = 9;
+  private static final int NUMBER_OF_BARS = 7;
   
   public final List<Bar> bars;
   
