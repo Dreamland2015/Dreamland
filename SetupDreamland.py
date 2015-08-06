@@ -43,9 +43,21 @@ configs = [
             #},
         'master': serverIp,
     },
+    {
+        'topic': 'lantern1',
+        'hostname': "pi8.local",
+        'input': {'button':{'pin':7}},
+        'output': { },
+            #'flame1':{'pin':7},
+            #'flame2':{'pin':11},
+            #'flame3':{'pin':13},
+            #'center_flame':{'pin':15},
+            #},
+        'master': serverIp,
+    },
 ]
 
-s = multiSSH.MultiDreamandPi([configs[2]])
-s.do_full_setup()
-#s.do_partial_setup()
+s = multiSSH.MultiDreamandPi([configs[3]], debug=True)
+#s.do_full_setup()
+s.do_partial_setup()
 print('Pi is now fully setup')
