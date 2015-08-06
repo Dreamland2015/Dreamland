@@ -215,8 +215,8 @@ class DreamlandPi(SSHConnection):
         self.supervisor_reload()
 
     def do_partial_setup(self):
+        self.setup_fadecandy()
         self.do_code_refresh()
-        self.supervisor_reload()
 
 class MultiDreamandPi:
     def __init__(self, configs, debug=False):
