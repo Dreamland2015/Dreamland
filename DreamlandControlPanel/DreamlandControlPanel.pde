@@ -6,9 +6,10 @@ P2LX lx;
 //private final int BG_COLOR = #292929;
 private final int WARNING_RED_COLOR = #B33A3A;
 
+ControlPanelUI cpui;
 public UIButton fire1;
 
-class DreamlandFireEnablePanel extends UIWindow {
+class FireEnablePanel extends UIWindow {
 
 	private final int BG_COLOR = UI.get().theme.getControlBackgroundColor();
 	protected int DEFAULT_ACTIVE_COLOR = UI.get().theme.getPrimaryColor();
@@ -21,7 +22,7 @@ class DreamlandFireEnablePanel extends UIWindow {
 	UIButton enable;
 	UIButton fire;
 	boolean fire_enabled;
-	DreamlandFireEnablePanel(UI ui, String title, float panel_x, float panel_y) {
+	FireEnablePanel(UI ui, String title, float panel_x, float panel_y) {
 		super(ui, title, panel_x, panel_y, 100, 130);
 
 		int y = 20;
@@ -71,21 +72,26 @@ class DreamlandFireEnablePanel extends UIWindow {
 	}
 }
 
-class DreamlandControlPanelUI extends UIWindow {
+class ControlPanelUI extends UIWindow {
 	private final int ELEMENT_WIDTH = 80;
 
-	DreamlandControlPanelUI(UI ui) {
-		super(ui, "CtrlPanel", 0, 0, 100, 800);
+	ControlPanelUI(UI ui) {
+		super(ui, "CtrlPanel", 0, 0, 600, 800);
 		println("created!");
-		DreamlandFireEnablePanel fpanel1 =
-			new DreamlandFireEnablePanel(ui, "Fire1", 0, 30);
-		fpanel1.addToContainer(this);
-		fire1 = fpanel1.fire;
-		DreamlandFireEnablePanel fpanel2 =
-			new DreamlandFireEnablePanel(ui, "Fire2", 0, 160);
+		int x = 5;
+		int y = 30;
+		// Fire on main Carousel (4)
+		FireEnablePanel fpanel_c1 =
+			new FireEnablePanel(ui, "Fire1", x, y);
+		fpanel_c1.addToContainer(this);
+		//fire1 = fpanel1.fire;
+		y += 130;
+		FireEnablePanel fpanel2 =
+			new FireEnablePanel(ui, "Fire2", x, y);
 		fpanel2.addToContainer(this);
-		DreamlandFireEnablePanel fpanel3 =
-			new DreamlandFireEnablePanel(ui, "Fire3", 0, 290);
+		y += 130;
+		FireEnablePanel fpanel3 =
+			new FireEnablePanel(ui, "Fire3", x, y);
 		fpanel3.addToContainer(this);
 	}
 }
@@ -98,7 +104,7 @@ void setup()
 	background(#292929);
 
 	lx = new P2LX(this);
-	DreamlandControlPanelUI cpui = new DreamlandControlPanelUI(lx.ui);
+	cpui = new ControlPanelUI(lx.ui);
 	lx.ui.addLayer(cpui);
 
 	thread("zeromq_sub");
