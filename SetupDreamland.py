@@ -3,19 +3,18 @@ import time
 import util
 
 import multiSSH
-from multiSSH import MultiSSH
 
 serverIp = util.get_default_ip()
 
 configs = [
     { 'topic': 'carousel-top',
-      'hostname': "samsonpi.local",
+      'hostname': "pi15.local",
       'input': {'button':{'pin':1}},
       'output': {
-          'flame1':{'pin':7},
-          'flame2':{'pin':11},
-          'flame3':{'pin':13},
-          'center_flame':{'pin':15},
+          'flame1':{'pin':6},
+          'flame2':{'pin':13},
+          'flame3':{'pin':19},
+          'center_flame':{'pin':26},
           },
       'master': serverIp,
     },
@@ -57,7 +56,7 @@ configs = [
     },
 ]
 
-s = multiSSH.MultiDreamandPi([configs[3]], debug=True)
+s = multiSSH.MultiDreamandPi([configs[0]], debug=True)
 #s.do_full_setup()
 s.do_partial_setup()
 print('Pi is now fully setup')
