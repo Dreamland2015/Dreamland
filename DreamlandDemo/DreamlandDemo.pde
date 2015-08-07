@@ -80,6 +80,7 @@ void setup()
 		new um3_lists(lx),
 		new MultiSine(lx),
 		new BarbershopLamppostsPattern(lx),
+		new ColorBarbershopLamppostsPattern(lx),
 	});
 
 
