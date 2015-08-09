@@ -8,16 +8,12 @@ from multiprocessing import Value as mp_Value, Lock as mp_Lock
 COUNTDIR = 1
 
 # number of teeth on gear. Should be 120 for Dreamland, 42 for demo gear.
-#NTEETH = 42
-NTEETH = 120
+NTEETH = 42
 
 # Raspberry Pi pins to which the sensors are connected
 gearsensor1_pin = 16
 gearsensor2_pin = 18
 gearsensor3_pin = 22
-gearsensor1b_pin = 15
-gearsensor2b_pin = 19
-gearsensor3b_pin = 21
 
 # The phase (measured in number of teeth) by which the rising edge of sensor 3
 # precedes the rising edge sensor 1 in time, during "forward" rotation. Must be
@@ -94,7 +90,7 @@ def sensor_up(ch, sdat):
     if (ch == gearsensor1_pin):
         # increment/decrement tooth counter
         step = COUNTDIR if (sensor2==0) else -COUNTDIR
-        print("ch1: ", step)
+        print(step)
         newtcount1 = sdat.getdata('tcount1') + step
         sdat.setdata('tcount1', newtcount1)
 
@@ -118,30 +114,25 @@ def sensor_up(ch, sdat):
         speed1 = speed
 
     elif (ch == gearsensor3_pin):
-#        if use_sensor3:  # needs to be fixed
-        step = -COUNTDIR if (sensor2==0) else COUNTDIR
-        print("ch3: ", step)
-        newtcount3 = sdat.getdata('tcount3') + step
-        sdat.setdata('tcount3', newtcount3)
-        deltat3 = now - sdat.getdata('edge3time')    # for debugging
-        speed = 1/deltat3 * 360/NTEETH
-        newangle = (newtcount3 % NTEETH)* 360/NTEETH
-        sdat.setdata('edge3time', now)
-        speed3 = speed
+        if use_sensor3:  # needs to be fixed
+            step = -COUNTDIR if (sensor2==0) else COUNTDIR
+            newtcount3 = sdat.getdata('tcount3') + step
+            sdat.setdata('tcount3', newtcount3)
+            deltat3 = now - sdat.getdata('edge3time')    # for debugging
+            speed = 1/deltat3 * 360/NTEETH
+            newangle = (newtcount1 % NTEETH)* 360/NTEETH
+            sdat.setdata('edge3time', now)
+            speed3 = speed
     else:
         return
 
-    print("ch1: %d | ch3: %d | %.1f deg | %.4f speed"
-               % (sdat.getdata('tcount1'), sdat.getdata('tcount3'),
-                  sdat.getdata('angle'), sdat.getdata('speed')) )
+    print("ch1: %d | %.5f sec    ch3: %d | %.5f sec"
+               % (newtcount1, deltat1, newtcount3, deltat3) )
 
 if __name__ == "__main__": 
     gtsdata = gts_data()
 
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(gearsensor1b_pin, GPIO.IN)
-    GPIO.setup(gearsensor2b_pin, GPIO.IN)
-    GPIO.setup(gearsensor3b_pin, GPIO.IN)
     GPIO.setup(gearsensor1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(gearsensor2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(gearsensor3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
