@@ -54,9 +54,21 @@ configs = [
             #},
         'master': serverIp,
     },
+    {
+        'topic': 'carousel-top',
+        'hostname': "pi15.local",
+        'input': {'button':{'pin':7}},
+        'output': { },
+        'master': serverIp,
+    },
+    {
+        'topic': 'outerbench1',
+        'hostname': "pi7.local",
+        'master': serverIp,
+    },
 ]
 
-s = multiSSH.MultiDreamandPi([configs[0]], debug=True)
-#s.do_full_setup()
-s.do_partial_setup()
+s = multiSSH.MultiDreamandPi([configs[-1]], debug=True)
+s.do_full_setup()
+#s.do_partial_setup()
 print('Pi is now fully setup')
