@@ -36,6 +36,29 @@
 				[ 0,  25,   64, 30, "brg"]
 			]
 		},
+		{
+			"type": "fadecandy",
+			"comment": "Outer Bench 1",
+			"serial": "JPPLYQHVZLCFATGB",
+			"map": [
+				[ 0, 0, 0, 512, "brg" ]
+			]
+		},
+		{
+			"type": "fadecandy",
+            "comment": "Lantern 1",
+			"serial": "VHLXIGZTHZSFANUL",
+			"map": [
+                [ 0, 534 ,  0 ,  19 , "brg" ],
+                [ 0, 553 ,  64 ,  19 , "brg" ],
+                [ 0, 572 ,  128 ,  19 , "brg" ],
+                [ 0, 591 ,  192 ,  19 , "brg" ],
+                [ 0, 610 ,  256 ,  19 , "brg" ],
+                [ 0, 629 ,  320 ,  19 , "brg" ],
+                [ 0, 648 ,  384 ,  19 , "brg" ],
+                [ 0, 667 ,  448 ,  19 , "brg" ]
+			]
+		},
         {
             "comment": "only for testing, as this list is ordered.",
             "type": "fadecandy",
