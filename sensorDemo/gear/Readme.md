@@ -37,4 +37,8 @@ Wire colors for sensor setup 1 (to follow wires in case there is a cable problem
 | header connector cable    |    red + pink    | white + green/yellowstripe |    brown + black    |    -   |      green     |
 | Rpi GPIO pin              | 15(pink)+16(red) |     18(white)+19(g/ys)     | 21(brown)+22(black) | 2 or 4 |                |
 
+<<<<<<< HEAD
 The header connector at the end of the Cat5 cable should be connected with the "USB" writing towards the edge of the RPi, and positioned so the pink and red wires are on pin 15 and 16.
+=======
+The header connector at the end of the Cat5 cable should be connected with the "USB" writing towards the edge of the RPi, and positioned so the pink and red wires are on pin 15 and 16.
+>>>>>>> 9b2fe35ac937570ecb9c96476af7f4f4e31499cb
