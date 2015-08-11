@@ -26,12 +26,13 @@ Each sensor output pin gets connected to a GPIO pin that is configured with pull
 Since the GPIO package only allows sensing either rising or falling edges, not both, by connecting to two pins we can detect both.
 
 Wire colors for sensor setup 1 (to follow wires in case there is a cable problem):
+
 | Setup 1                   |     Sensor 1     |          Sensor 2          |       Sensor 3      |  Power |     Ground     |
 |---------------------------|:----------------:|:--------------------------:|:-------------------:|:------:|:--------------:|
 | Sensor_pin                |         2        |              2             |          2          |    1   |        4       |
 | Sensor_wire_color         |      yellow      |            white           |         blue        |   red  |      black     |
 | white_ethernet_cable_wire |       green      |            brown           |         blue        | orange | 4x_white_wires |
-| [RJ-45 socket connector]
+| [RJ-45 socket connector]  |                  |                            |                     |        |                |
 | gray cat5 cable           |       green      |            brown           |         blue        | orange | 4x_white_wires |
 | header pin single wire    |         -        |              -             |          -          |   red  |        -       |
 | header connector cable    |    red + pink    | white + green/yellowstripe |    brown + black    |    -   |      green     |
