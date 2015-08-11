@@ -66,6 +66,11 @@ configs = [
         'hostname': "pi7.local",
         'master': serverIp,
     },
+    {
+        'topic': 'lantern1',
+        'hostname': "pi9.local",
+        'master': serverIp,
+    },
 ]
 
 s = multiSSH.MultiDreamandPi([configs[-1]], debug=True)
