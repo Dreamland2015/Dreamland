@@ -38,9 +38,9 @@ public static class Model extends LXModel {
     Fixture f = (Fixture) this.fixtures.get(0);
     this.carousel = f.carousel;
     this.carouselBottom = f.carouselBottom;
-    this.lampPosts = Collections.unmodifiableList(f.lampPosts);
     this.outerBenches = Collections.unmodifiableList(f.outerBenches);
     this.innerBenches = Collections.unmodifiableList(f.innerBenches);
+    this.lampPosts = Collections.unmodifiableList(f.lampPosts);
     this.kaleidoscopes = Collections.unmodifiableList(f.kaleidoscopes);
   }
   
@@ -54,21 +54,12 @@ public static class Model extends LXModel {
     private final List<Kaleidoscope> kaleidoscopes = new ArrayList<Kaleidoscope>();
     
     Fixture() {
+      // Build carousel top
       addPoints(this.carousel = new Carousel());
+
+      // Build carousel bottom
       addPoints(this.carouselBottom = new CarouselBottom(0,0));
       
-      // Build lamp posts
-      for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
-        LXTransform transform = new LXTransform();
-        float theta = radians(120) * i;
-        transform.push();
-        transform.rotateY(radians(120) * i);
-        transform.translate(LAMPPOST_RADIUS, 0, 0);
-        LampPost lampPost = new LampPost(transform);
-        addPoints(lampPost);
-        this.lampPosts.add(lampPost);
-      }
-
       // Build inner benches
       for (int i = 0; i < NUMBER_OF_BENCHES; i++)
       {
@@ -93,6 +84,18 @@ public static class Model extends LXModel {
         this.outerBenches.add(bench);
       }
 
+      // Build lamp posts
+      for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
+        LXTransform transform = new LXTransform();
+        float theta = radians(120) * i;
+        transform.push();
+        transform.rotateY(radians(120) * i);
+        transform.translate(LAMPPOST_RADIUS, 0, 0);
+        LampPost lampPost = new LampPost(transform);
+        addPoints(lampPost);
+        this.lampPosts.add(lampPost);
+      }
+
       // Build Kaleidoscopes
       for (int i = 0; i <3; i++)
       {
@@ -112,33 +115,73 @@ private static class Carousel extends LXModel {
   
   private static final int CAROUSEL_HEIGHT = 9*FEET + 7*INCHES;
   private static final int NUMBER_OF_BARS = 9;
+  private static final int NUMBER_OF_ARMS = 9;
   
   public final List<Bar> bars;
+  public final List<Arm> arms;
   
   Carousel() {
     super(new Fixture());
     Fixture f = (Fixture) this.fixtures.get(0);
     this.bars = Collections.unmodifiableList(f.bars);
+    this.arms = Collections.unmodifiableList(f.arms);
   } 
   
   private static class Fixture extends LXAbstractFixture {
     
     private List<Bar> bars = new ArrayList<Bar>();
+    private List<Arm> arms = new ArrayList<Arm>();
     
-    Fixture() {
-      LXTransform transform1 = new LXTransform();
-      LXTransform transform2 = new LXTransform();
-      transform1.translate(0, CAROUSEL_HEIGHT, 0);
-      transform2.translate(0, CAROUSEL_HEIGHT, 0);
-      for (int i = 0; i < NUMBER_OF_BARS; ++i) {
-        Bar bar1 = new Bar(transform1);
-        Bar bar2 = new Bar(transform2);
-        addPoints(bar1);
-        addPoints(bar2);
-        this.bars.add(bar1);
+    Fixture() 
+    {
+      for(int i = 0; i < NUMBER_OF_ARMS; i++)
+      {
+        LXTransform transform = new LXTransform();
+        transform.push();
+        transform.translate(0, CAROUSEL_HEIGHT, 0);
+        transform.rotateY(TWO_PI / NUMBER_OF_ARMS * i);
+        Arm arm = new Arm(transform);
+        transform.pop();
+        addPoints(arm);
+        this.arms.add(arm);
+        for(Bar b : arm.bars)
+        {
+          this.bars.add(b);
+        }
+      }
+    }
+  }
+
+  private static class Arm extends LXModel
+  {
+    private List<Bar> bars;
+
+    public Arm(LXTransform transform)
+    {
+      super(new Fixture(transform));
+      Fixture f = (Fixture) this.fixtures.get(0);
+      this.bars = Collections.unmodifiableList(f.bars);
+    }
+
+    private static class Fixture extends LXAbstractFixture
+    {
+      private List<Bar> bars = new ArrayList<Bar>();
+
+      Fixture(LXTransform transform)
+      {
+        transform.push();
+        transform.translate(0,0,-1);
+        Bar bar = new Bar(transform);
+        this.bars.add(bar);
+        addPoints(bar);
+        transform.pop();
+
+        transform.push();
+        transform.translate(0,0,1);
+        Bar bar2 = new Bar(transform);
         this.bars.add(bar2);
-        transform1.rotateY(TWO_PI / NUMBER_OF_BARS);
-        transform2.rotateY(TWO_PI / (NUMBER_OF_BARS - 0.01));
+        addPoints(bar2);
+        transform.pop();
       }
     }
   }
@@ -270,16 +313,19 @@ private static class CarouselBottom extends LXModel {
 private static class Bench extends LXModel {
   
   public final List<Wing> wings;
+  public final List<Bar> bars;
   
   Bench(int[] NLEDS, int DROW, LXTransform transform) {
     super(new Fixture(NLEDS, DROW, transform));
     Fixture f = (Fixture) this.fixtures.get(0);
     this.wings = Collections.unmodifiableList(f.wings);
+    this.bars = Collections.unmodifiableList(f.bars);
   } 
   
   private static class Fixture extends LXAbstractFixture {
     
     private List<Wing> wings = new ArrayList<Wing>();
+    private List<Bar> bars = new ArrayList<Bar>();
     private int counter = 0;
     
     Fixture(int[] NLEDS, int DROW, LXTransform transform) 
@@ -294,21 +340,29 @@ private static class Bench extends LXModel {
         this.wings.add(wing);
         addPoints(wing); 
         transform.pop();
+        for(Bar b : wing.bars)
+        {
+          this.bars.add(b);
+        }
       }
     }
   }
 
   private static class Wing extends LXModel
   {
+    private List<Bar> bars;
 
     public Wing(int numLeds, LXTransform transform)
     {
       super(new Fixture(numLeds, transform));
+      Fixture f = (Fixture) this.fixtures.get(0);
+      this.bars = Collections.unmodifiableList(f.bars);
     }
 
     private static class Fixture extends LXAbstractFixture
     {
-      private List<Bar> bars = new ArrayList<Bar>();  
+      private List<Bar> bars = new ArrayList<Bar>(); 
+
       Fixture(int numLeds, LXTransform transform)
       {
         transform.push();

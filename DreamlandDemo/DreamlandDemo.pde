@@ -84,6 +84,8 @@ void setup()
 		new ColorBarbershopLamppostsPattern(lx),
 		new LampPostBarIterator(lx),
 		new StructureIterator(lx),
+		new CarouselArmIterator(lx),
+		new CarouselBarIterator(lx),
 	});
 
 
@@ -107,7 +109,7 @@ void setup()
 		.setRotationVelocity(12 * PI)
 
 		// Set how fast the UI can rotational acceleration
-		.setRotationAcceleration(3 * PI)
+		.setRotationAcceleration(6 * PI)
 
 		// Add a point cloud representing the LEDs
 		.addComponent(new UIPointCloud(lx,model).setPointSize(3))
