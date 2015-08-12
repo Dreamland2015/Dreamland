@@ -8,13 +8,14 @@ private final static int INNER_BENCH_RADIUS = 8*FEET - 27*INCHES;
 private final static int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
 
 // Bench parameters
-private static final int NROWS = 3;
-private static final int[] NLEDS_INNER = {15, 20, 25};    // Number of LEDs per row on inner benches
-private static final int[] NLEDS_OUTER = {20, 25, 30};    // Number of LEDs per row on outer benches
-private static final int LED_SPACING = 3 * INCHES;        // Spacing of the LED on benches
-private static final int DIST_ROWS = 5 * INCHES;          // Distance between rows
-private static final float ANGLE = 120;                   // Large angle of the benches
-private static final int NUMBENCHES = 3;                  // Number of benches per ring
+// private static final int NROWS = 3;
+private static final int[] NLEDS_INNER = {5, 6};         // Number of LEDs per row on inner benches
+private static final int[] NLEDS_OUTER = {16, 17, 18};   // Number of LEDs per row on outer benches
+private static final int LED_SPACING = 3 * INCHES;       // Spacing of the LED on benches
+private static final int DROWS_INNER = 5 * INCHES;       // Distance between rows
+private static final int DROWS_OUTER = 7 * INCHES;       // Distance between rows
+private static final float ANGLE = 150;                  // Large angle of the benches
+private static final int NUMBENCHES = 3;                 // Number of benches per ring
 
 public static class Model extends LXModel {  
   public final Carousel carousel; 
@@ -64,7 +65,7 @@ public static class Model extends LXModel {
         transform.push();
         transform.rotateY(radians(120) * i);
         transform.translate(INNER_BENCH_RADIUS, 0, 0);
-        Bench bench = new Bench(NLEDS_INNER ,transform);
+        Bench bench = new Bench(NLEDS_INNER ,DROWS_INNER, transform);
         addPoints(bench);
         this.innerBenches.add(bench);
       }
@@ -76,7 +77,7 @@ public static class Model extends LXModel {
         transform.push();
         transform.rotateY((radians(120) * i) + radians(60));
         transform.translate(OUTER_BENCH_RADIUS, 0, 0);
-        Bench bench = new Bench(NLEDS_OUTER ,transform);
+        Bench bench = new Bench(NLEDS_OUTER , DROWS_OUTER,transform);
         addPoints(bench);
         this.outerBenches.add(bench);
       }
@@ -150,9 +151,13 @@ private static class LampPost extends LXModel {
   private static int BOTTOM_OF_LIGHTS = 2 * FEET;
   private static int NBARS = 7;
   private static int NLEDS = 19;
+
+  public final List<Bar> bars;
   
   public LampPost(LXTransform transform) {
     super(new Fixture(transform));
+    Fixture f = (Fixture) this.fixtures.get(0);
+    this.bars = Collections.unmodifiableList(f.bars);
   }
   
   private static class Fixture extends LXAbstractFixture {
@@ -182,7 +187,7 @@ private static class LampPost extends LXModel {
       Fixture(LXTransform transform) {
         final float spacing = BAR_HEIGHT/ NLEDS;
         transform.push();
-        transform.translate(BAR_RADIUS, BOTTOM_OF_LIGHTS, 0);
+        transform.translate(-BAR_RADIUS, BOTTOM_OF_LIGHTS, 0);
         for (int i = 0; i < NLEDS; i++) {
           addPoint(new LXPoint(transform));
           transform.translate(0, spacing, 0);
@@ -246,8 +251,8 @@ private static class Bench extends LXModel {
   
   public final List<Wing> wings;
   
-  Bench(int[] NLEDS, LXTransform transform) {
-    super(new Fixture(NLEDS, transform));
+  Bench(int[] NLEDS, int DROW, LXTransform transform) {
+    super(new Fixture(NLEDS, DROW, transform));
     Fixture f = (Fixture) this.fixtures.get(0);
     this.wings = Collections.unmodifiableList(f.wings);
   } 
@@ -257,11 +262,12 @@ private static class Bench extends LXModel {
     private List<Wing> wings = new ArrayList<Wing>();
     private int counter = 0;
     
-    Fixture(int[] NLEDS, LXTransform transform) 
+    Fixture(int[] NLEDS, int DROW, LXTransform transform) 
     {
+      int NROWS = NLEDS.length;
       for (int i = 0; i < NROWS; i ++)
       {
-        transform.translate(FEET ,0 , 0);
+        transform.translate(DROW ,0 , 0);
         transform.push();
         transform.rotateY(radians(ANGLE / 2));
         Wing wing = new Wing(NLEDS[i], transform);
