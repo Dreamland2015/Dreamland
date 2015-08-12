@@ -1,21 +1,25 @@
-import java.util.*;
-
-// Carousel
-private final static int NUMBER_OF_LAMPPOSTS = 3;
-private final static int LAMPPOST_RADIUS = 17*FEET + 2*INCHES;
-private final static int NUMBER_OF_BENCHES = 3;
-private final static int INNER_BENCH_RADIUS = 8*FEET - 27*INCHES;
-private final static int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
+// Overall dreamland dimensions
+private static final int LAMPPOST_RADIUS = 17*FEET + 2*INCHES;
+private static final int BENCH_LED_HEIGHT = 15;                    // Height of leds in benches
+private static final int INNER_BENCH_RADIUS = 8*FEET - 27*INCHES;
+private static final int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
 
 // Bench parameters
-// private static final int NROWS = 3;
-private static final int[] NLEDS_INNER = {5, 6};         // Number of LEDs per row on inner benches
-private static final int[] NLEDS_OUTER = {16, 17, 18};   // Number of LEDs per row on outer benches
-private static final int LED_SPACING = 3 * INCHES;       // Spacing of the LED on benches
+private static final float ANGLE = 150;                  // Large angle of the benches
 private static final int DROWS_INNER = 5 * INCHES;       // Distance between rows
 private static final int DROWS_OUTER = 7 * INCHES;       // Distance between rows
-private static final float ANGLE = 150;                  // Large angle of the benches
+private static final int LED_SPACING = 3 * INCHES;       // Spacing of the LED on benches
 private static final int NUMBENCHES = 3;                 // Number of benches per ring
+private static final int NUMBER_OF_BENCHES = 3;
+private static final int[] NLEDS_INNER = {5, 6};         // Number of LEDs per row on inner benches
+private static final int[] NLEDS_OUTER = {16, 17, 18};   // Number of LEDs per row on outer benches
+
+// Lamp post parameters
+private static final int NUMBER_OF_LAMPPOSTS = 3;
+private static final int BOTTOM_OF_LP_LED = 2 * FEET;
+private static float LP_BAR_HEIGHT = 45.5;
+private static float LP_BAR_RADIUS = 2.5;
+
 
 public static class Model extends LXModel {  
   public final Carousel carousel; 
@@ -146,9 +150,6 @@ private static class Carousel extends LXModel {
 }
 
 private static class LampPost extends LXModel {
-  private static float BAR_HEIGHT = 45.5;
-  private static float BAR_RADIUS = 2.5;
-  private static int BOTTOM_OF_LIGHTS = 2 * FEET;
   private static int NBARS = 7;
   private static int NLEDS = 19;
 
@@ -185,9 +186,9 @@ private static class LampPost extends LXModel {
     
     private static class Fixture extends LXAbstractFixture {
       Fixture(LXTransform transform) {
-        final float spacing = BAR_HEIGHT/ NLEDS;
+        final float spacing = LP_BAR_HEIGHT/ NLEDS;
         transform.push();
-        transform.translate(-BAR_RADIUS, BOTTOM_OF_LIGHTS, 0);
+        transform.translate(-LP_BAR_RADIUS, BOTTOM_OF_LP_LED, 0);
         for (int i = 0; i < NLEDS; i++) {
           addPoint(new LXPoint(transform));
           transform.translate(0, spacing, 0);
@@ -319,6 +320,7 @@ private static class Bench extends LXModel {
     
     private static class Fixture extends LXAbstractFixture {
       Fixture(int numLeds, LXTransform transform) {
+        transform.translate(0, BENCH_LED_HEIGHT, 0);
         transform.push();
         for (int i = 0; i < numLeds; i++) {
           addPoint(new LXPoint(transform));
