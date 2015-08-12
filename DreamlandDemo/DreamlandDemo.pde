@@ -83,6 +83,7 @@ void setup()
 		new BarbershopLamppostsPattern(lx),
 		new ColorBarbershopLamppostsPattern(lx),
 		new LampPostBarIterator(lx),
+		new StructureIterator(lx),
 	});
 
 
@@ -97,7 +98,7 @@ void setup()
 		new UI3dContext(lx.ui){}
 
 		// Look at center of model
-		.setCenter(model.cx, model.cy, 0)
+		.setCenter(0, 0, 0)
 
 		// Position ourself some distance away from model
 		.setRadius(40 * FEET)

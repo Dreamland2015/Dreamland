@@ -1,6 +1,6 @@
 // Overall dreamland dimensions
 private static final int LAMPPOST_RADIUS = 17*FEET + 2*INCHES;
-private static final int BENCH_LED_HEIGHT = 15;                    // Height of leds in benches
+private static final int BENCH_LED_HEIGHT = 15*INCHES;                    // Height of leds in benches
 private static final int INNER_BENCH_RADIUS = 8*FEET - 27*INCHES;
 private static final int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
 
@@ -17,12 +17,12 @@ private static final int[] NLEDS_OUTER = {16, 17, 18};   // Number of LEDs per r
 // Lamp post parameters
 private static final int NUMBER_OF_LAMPPOSTS = 3;
 private static final int BOTTOM_OF_LP_LED = 2 * FEET;
-private static float LP_BAR_HEIGHT = 45.5;
-private static float LP_BAR_RADIUS = 2.5;
+private static final float LP_BAR_HEIGHT = 45.5;
+private static final float LP_BAR_RADIUS = 2.5;
 
 // KScope parameters
 private static final int KSCOPE_RADIUS = 30 * FEET;
-private static final int KSCOPE_NLED = 20;
+private static final int KSCOPE_NLED = 12;
 
 
 public static class Model extends LXModel {  

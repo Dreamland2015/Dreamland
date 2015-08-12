@@ -42,13 +42,13 @@ class HelloWorldPattern extends DLPattern
 		    	colors[p.index]=lx.hsb(h + modifier, s, b);
 			} 
 
-			// for (LXPoint p : model.outerBenches.get(benchNum).points) 
-			// {
-			// 	float h = 255 - whatColor.getValuef();
-		 //    	int s = 100;
-		 //    	int b = 100;
-		 //    	colors[p.index]=lx.hsb(h + modifier, s, b);
-			// } 
+			for (LXPoint p : model.outerBenches.get(benchNum).points) 
+			{
+				float h = 255 - whatColor.getValuef();
+		    	int s = 100;
+		    	int b = 100;
+		    	colors[p.index]=lx.hsb(h + modifier, s, b);
+			} 
 		}		
     } 
 }
@@ -169,33 +169,3 @@ class PythonProjection extends DLPattern
   }
 } 
 
-class LampPostBarIterator extends DLPattern
-{
-	private final BasicParameter num = new BasicParameter("num" ,0 ,0 ,6);
-	private final SawLFO counter = new SawLFO(0, 6, 1000);
-
-	public LampPostBarIterator(LX lx)
-	{
-		super(lx);
-		addParameter(num);
-		addModulator(counter).trigger();
-	}
-
-	public void run(double deltaMs) 
-	{
-		for (LampPost lp : model.lampPosts)
-		{
-			for(int i = 0; i < 7; i ++)
-			{
-				for(LXPoint p : lp.bars.get(i).points)
-				{
-					colors[p.index] = LXColor.BLACK;
-				}
-			}
-			for (LXPoint p : lp.bars.get((int) num.getValuef()).points)
-			{
-				colors[p.index] = LXColor.WHITE;
-			}
-		}
-	}
-}
