@@ -82,6 +82,7 @@ void setup()
 		new MultiSine(lx),
 		new BarbershopLamppostsPattern(lx),
 		new ColorBarbershopLamppostsPattern(lx),
+		new LampPostBarIterator(lx),
 	});
 
 

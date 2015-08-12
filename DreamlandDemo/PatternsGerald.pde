@@ -1,7 +1,8 @@
 class HelloWorldPattern extends DLPattern
 { 
 	private final BasicParameter colorChangeSpeed = new BasicParameter("SPD",  5000, 0, 10000);
- 	private final SinLFO whatColor = new SinLFO(0, 255, colorChangeSpeed);
+ 	private final SawLFO whatColor = new SawLFO(0, 360, colorChangeSpeed);
+ 	private  int counter = 1;
     
 	public HelloWorldPattern(LX lx)
 	{
@@ -11,32 +12,14 @@ class HelloWorldPattern extends DLPattern
       // addLayer(new CylinderColor(lx));
       for(int i = 0; i < 3; i++)
       {
-      	addLayer(new BenchColor(lx, i, 255 / 3 * i));
+      	addLayer(new BenchColor(lx, i, 255 / 3 * counter));
+      	counter += 1;
       }
     }
 
     public void run(double deltaMs) {
     // The layers run automatically
     }
-    
-    private class CylinderColor extends DLLayer
-    {
-    	private CylinderColor(LX lx)
-    	{
-    		super(lx);
-    	}
-
-		public void run(double deltaMs)
-		{
-			for (LXPoint p : model.carouselBottom.points) 
-			{
-				float h = whatColor.getValuef();
-		    	int s = 100;
-		    	int b = 100;
-		    	colors[p.index]=lx.hsb(h, s, b);
-			} 
-		}	
-    } 
 
     private class BenchColor extends DLLayer
     {
@@ -59,13 +42,13 @@ class HelloWorldPattern extends DLPattern
 		    	colors[p.index]=lx.hsb(h + modifier, s, b);
 			} 
 
-			for (LXPoint p : model.outerBenches.get(benchNum).points) 
-			{
-				float h = 255 - whatColor.getValuef();
-		    	int s = 100;
-		    	int b = 100;
-		    	colors[p.index]=lx.hsb(h + modifier, s, b);
-			} 
+			// for (LXPoint p : model.outerBenches.get(benchNum).points) 
+			// {
+			// 	float h = 255 - whatColor.getValuef();
+		 //    	int s = 100;
+		 //    	int b = 100;
+		 //    	colors[p.index]=lx.hsb(h + modifier, s, b);
+			// } 
 		}		
     } 
 }
@@ -160,9 +143,10 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 class PythonProjection extends DLPattern 
 {
   private final LXProjection rotation;
-  private final BasicParameter thick = new BasicParameter("thick", 0.1, 0, 200);
+  private final BasicParameter thick = new BasicParameter("thick", 1, 0, 200);
 
-  public PythonProjection(LX lx) {
+  public PythonProjection(LX lx) 
+  {
     super(lx);
     rotation = new LXProjection(model.carousel);
     addParameter(thick);
@@ -184,3 +168,21 @@ class PythonProjection extends DLPattern
     }
   }
 } 
+
+class LampPostBarIterator extends DLPattern
+{
+	private final BasicParameter num = new BasicParameter("num" ,0 ,0 ,7);
+
+	public LampPostBarIterator(LX lx)
+	{
+		super(lx);
+	}
+
+	public void run(double deltaMs) 
+	{
+		for(LXPoint p : model.lampPosts.get(0).bars.get(0).points)
+		{
+			colors[p.index] = lx.hsb(100,0,100);
+		}
+	}
+}
