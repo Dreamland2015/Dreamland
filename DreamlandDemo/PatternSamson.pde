@@ -65,10 +65,7 @@ class BarbershopLamppostsPattern extends DLPattern
 					int theta = theta_map.get(atan2(p.z - m.cz, p.x - m.cx));
 					int osc = int(saw_var.getValuef());
 					int h = height_map.get(p.y);
-					if (
-						((theta + osc) % 7 == h % 7) ||
-						((theta + osc + 4) % 7 == h % 7)
-					) {
+					if ((theta + osc) % 7 == h % 7) {
 						colors[p.index] = LXColor.RED;
 					} else {
 						colors[p.index] = LXColor.WHITE;

@@ -15,9 +15,6 @@ NTEETH = 120
 gearsensor1_pin = 16
 gearsensor2_pin = 18
 gearsensor3_pin = 22
-gearsensor1b_pin = 15
-gearsensor2b_pin = 19
-gearsensor3b_pin = 21
 
 # The phase (measured in number of teeth) by which the rising edge of sensor 3
 # precedes the rising edge sensor 1 in time, during "forward" rotation. Must be
@@ -139,9 +136,6 @@ if __name__ == "__main__":
     gtsdata = gts_data()
 
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(gearsensor1b_pin, GPIO.IN)
-    GPIO.setup(gearsensor2b_pin, GPIO.IN)
-    GPIO.setup(gearsensor3b_pin, GPIO.IN)
     GPIO.setup(gearsensor1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(gearsensor2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(gearsensor3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
