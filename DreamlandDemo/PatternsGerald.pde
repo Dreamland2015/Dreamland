@@ -156,3 +156,31 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 		}
 	}
 }
+
+class PythonProjection extends DLPattern 
+{
+  private final LXProjection rotation;
+  private final BasicParameter thick = new BasicParameter("thick", 0.1, 0, 200);
+
+  public PythonProjection(LX lx) {
+    super(lx);
+    rotation = new LXProjection(model.carousel);
+    addParameter(thick);
+  }
+
+  public void run(double deltaMs) 
+  {
+    rotation.reset();
+    rotation.center(); // assuming you want to rotate about the center of your model?
+    rotation.rotateZ(rotationPosition); // or whatever is appropriate
+    float hv = lx.getBaseHuef();
+    for (LXVector c : rotation) {
+      float d = max(0, abs(c.y) - thick.getValuef() + .1f*abs(c.z) + .02f*abs(c.x)); // plane / spear thing
+      colors[c.index] = lx.hsb(
+        100,
+        100,
+        constrain(140 - 40*d, 0, 100)
+      );
+    }
+  }
+} 

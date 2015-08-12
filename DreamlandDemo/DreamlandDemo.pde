@@ -47,6 +47,7 @@ void setup()
 		new HelloWorldPattern(lx),
 		new ProjectionLayerTest(lx),
 		new TestXPattern(lx),
+		new PythonProjection(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
 		new AskewPlanes(lx),
 		new MoveXPosition(lx),
