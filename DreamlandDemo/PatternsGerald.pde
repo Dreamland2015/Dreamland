@@ -53,8 +53,6 @@ class HelloWorldPattern extends DLPattern
     } 
 }
 
-import heronarts.lx.color.LXColor;
-
 // BarbershopLamppostsPattern is a white pole with a red line that looks like it's rotating.
 class ColorBarbershopLamppostsPattern extends DLPattern
 {
@@ -168,4 +166,3 @@ class PythonProjection extends DLPattern
     }
   }
 } 
-

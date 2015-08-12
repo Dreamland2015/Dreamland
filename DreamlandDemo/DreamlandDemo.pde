@@ -1,20 +1,21 @@
 // Get all our imports out of the way
+import ddf.minim.*;
 import heronarts.lx.*;
 import heronarts.lx.audio.*;
 import heronarts.lx.color.*;
+import heronarts.lx.color.LXColor;
 import heronarts.lx.model.*;
 import heronarts.lx.modulator.*;
 import heronarts.lx.output.*;
 import heronarts.lx.parameter.*;
 import heronarts.lx.pattern.*;
-import heronarts.lx.transition.*;
 import heronarts.lx.transform.*;
+import heronarts.lx.transition.*;
 import heronarts.p2lx.*;
 import heronarts.p2lx.ui.*;
 import heronarts.p2lx.ui.control.*;
-import ddf.minim.*;
-import processing.opengl.*;
 import java.util.*;
+import processing.opengl.*;
 import toxi.geom.Vec2D;
 import toxi.math.noise.PerlinNoise;
 import toxi.math.noise.SimplexNoise;
@@ -82,10 +83,13 @@ void setup()
 		new MultiSine(lx),
 		new BarbershopLamppostsPattern(lx),
 		new ColorBarbershopLamppostsPattern(lx),
+
+		// Setup patterns
 		new LampPostBarIterator(lx),
 		new StructureIterator(lx),
 		new CarouselArmIterator(lx),
 		new CarouselBarIterator(lx),
+
 	});
 
 
