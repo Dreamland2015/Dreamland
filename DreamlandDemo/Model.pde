@@ -181,7 +181,7 @@ private static class Bench extends LXModel {
   private static class Fixture extends LXAbstractFixture {
     Fixture(LXTransform transform) {
       for (int i = 0; i < NUMBER_OF_WINGS; i++) {
-        transform.translate(0, 6, 0); 
+        transform.translate(0, 0, 6); 
         addPoints(new Wing(transform));
       }
     }
