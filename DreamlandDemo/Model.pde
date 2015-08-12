@@ -20,6 +20,10 @@ private static final int BOTTOM_OF_LP_LED = 2 * FEET;
 private static float LP_BAR_HEIGHT = 45.5;
 private static float LP_BAR_RADIUS = 2.5;
 
+// KScope parameters
+private static final int KSCOPE_RADIUS = 30 * FEET;
+private static final int KSCOPE_NLED = 20;
+
 
 public static class Model extends LXModel {  
   public final Carousel carousel; 
@@ -27,6 +31,7 @@ public static class Model extends LXModel {
   public final List<LampPost> lampPosts;
   public final List<Bench> outerBenches;
   public final List<Bench> innerBenches;
+  public final List<Kaleidoscope> kaleidoscopes;
   
   public Model() {
     super(new Fixture());
@@ -36,6 +41,7 @@ public static class Model extends LXModel {
     this.lampPosts = Collections.unmodifiableList(f.lampPosts);
     this.outerBenches = Collections.unmodifiableList(f.outerBenches);
     this.innerBenches = Collections.unmodifiableList(f.innerBenches);
+    this.kaleidoscopes = Collections.unmodifiableList(f.kaleidoscopes);
   }
   
   private static class Fixture extends LXAbstractFixture {
@@ -45,6 +51,7 @@ public static class Model extends LXModel {
     private final List<LampPost> lampPosts = new ArrayList<LampPost>();
     private final List<Bench> outerBenches = new ArrayList<Bench>();
     private final List<Bench> innerBenches = new ArrayList<Bench>();
+    private final List<Kaleidoscope> kaleidoscopes = new ArrayList<Kaleidoscope>();
     
     Fixture() {
       addPoints(this.carousel = new Carousel());
@@ -84,6 +91,18 @@ public static class Model extends LXModel {
         Bench bench = new Bench(NLEDS_OUTER , DROWS_OUTER,transform);
         addPoints(bench);
         this.outerBenches.add(bench);
+      }
+
+      // Build Kaleidoscopes
+      for (int i = 0; i <3; i++)
+      {
+        LXTransform transform = new LXTransform();
+        transform.push();
+        transform.rotateY((radians(120) * i) + radians(60));
+        transform.translate(KSCOPE_RADIUS, 0, 0);
+        Kaleidoscope kaleidoscope = new Kaleidoscope(KSCOPE_NLED, transform);
+        addPoints(kaleidoscope);
+        this.kaleidoscopes.add(kaleidoscope);
       }
     }
   }
@@ -302,6 +321,83 @@ private static class Bench extends LXModel {
         transform.push();
         transform.translate(0 ,0, 0);
         transform.rotateY(radians(180 - ANGLE));
+        Bar bar2 = new Bar(numLeds, transform);
+        this.bars.add(bar2);
+        addPoints(bar2);
+        transform.pop();
+
+      }
+    }
+  }
+  
+  private static class Bar extends LXModel {
+  
+  
+    public Bar(int numLeds, LXTransform transform) {
+      super(new Fixture(numLeds, transform));
+    }
+    
+    private static class Fixture extends LXAbstractFixture {
+      Fixture(int numLeds, LXTransform transform) {
+        transform.translate(0, BENCH_LED_HEIGHT, 0);
+        transform.push();
+        for (int i = 0; i < numLeds; i++) {
+          addPoint(new LXPoint(transform));
+          transform.translate(LED_SPACING, 0, 0);
+        }
+        transform.pop();
+      }
+    }
+  }
+}
+
+private static class Kaleidoscope extends LXModel {
+  
+  
+  Kaleidoscope(int NLEDS, LXTransform transform) {
+    super(new Fixture(NLEDS, transform));
+  } 
+  
+  private static class Fixture extends LXAbstractFixture {
+    
+    private int counter = 0;
+    
+    Fixture(int NLEDS, LXTransform transform) 
+    {
+      for (int i = 0; i < 1; i ++)
+      {
+        transform.push();
+        transform.rotateY(radians(45));
+        Wing wing = new Wing(NLEDS, transform);
+        addPoints(wing); 
+        transform.pop();
+      }
+    }
+  }
+
+  private static class Wing extends LXModel
+  {
+
+    public Wing(int numLeds, LXTransform transform)
+    {
+      super(new Fixture(numLeds, transform));
+    }
+
+    private static class Fixture extends LXAbstractFixture
+    {
+      private List<Bar> bars = new ArrayList<Bar>();  
+      Fixture(int numLeds, LXTransform transform)
+      {
+        transform.push();
+        transform.translate(- numLeds * LED_SPACING + LED_SPACING ,0,0);
+        Bar bar = new Bar(numLeds - 1, transform);
+        this.bars.add(bar);
+        addPoints(bar);
+        transform.pop();
+
+        transform.push();
+        transform.translate(0 ,0, 0);
+        transform.rotateY(radians(90));
         Bar bar2 = new Bar(numLeds, transform);
         this.bars.add(bar2);
         addPoints(bar2);
