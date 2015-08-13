@@ -8,7 +8,7 @@ private static final int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
 private static final float ANGLE = 150;                  // Large angle of the benches
 private static final int DROWS_INNER = 5 * INCHES;       // Distance between rows
 private static final int DROWS_OUTER = 7 * INCHES;       // Distance between rows
-private static final int LED_SPACING = 3 * INCHES;       // Spacing of the LED on benches
+private static final int BENCH_LED_SPACING = 3 * INCHES;       // Spacing of the LED on benches
 private static final int NUMBENCHES = 3;                 // Number of benches per ring
 private static final int NUMBER_OF_BENCHES = 3;
 private static final int[] NLEDS_INNER = {5, 6};         // Number of LEDs per row on inner benches
@@ -58,7 +58,7 @@ public static class Model extends LXModel {
       addPoints(this.carousel = new Carousel());
 
       // Build carousel bottom
-      addPoints(this.carouselBottom = new CarouselBottom(0,0));
+      addPoints(this.carouselBottom = new CarouselBottom());
       
       // Build inner benches
       for (int i = 0; i < NUMBER_OF_BENCHES; i++)
@@ -261,55 +261,6 @@ private static class LampPost extends LXModel {
   }
 }
 
-private static class CarouselBottom extends LXModel {
-  private static int NBARS = 6;
-  private static int NLEDS = 19;
-  
-  public CarouselBottom(float x, float z) {
-    super(new Fixture(x, z));
-  }
-  
-  private static class Fixture extends LXAbstractFixture {
-
-    private List<Bar> bars = new ArrayList<Bar>();
-
-    Fixture(float x, float z) { 
-      LXTransform transform = new LXTransform(); 
-      transform.translate(x, 0, z); 
-      for (int i = 0; i < NBARS; ++i) {
-        Bar bar = new Bar(transform);
-        addPoints(bar);
-        this.bars.add(bar);
-        // transform.translate(0, 0, 0);
-        transform.rotateY(TWO_PI / NBARS);
-      }
-    }
-  }
-
-  private static class Bar extends LXModel {
-  
-    private static final int BAR_HEIGHT = 9*FEET + 7*INCHES;
-    private static final int NUMBER_OF_LEDS_PER_LEG = 19;
-  
-    public Bar(LXTransform transform) {
-      super(new Fixture(transform));
-    }
-    
-    private static class Fixture extends LXAbstractFixture {
-      Fixture(LXTransform transform) {
-        final float spacing = BAR_HEIGHT/ NUMBER_OF_LEDS_PER_LEG;
-        transform.push();
-        transform.translate(3, 0, 0);
-        for (int i = 0; i < NUMBER_OF_LEDS_PER_LEG; i++) {
-          addPoint(new LXPoint(transform));
-          transform.translate(0, spacing, 0);
-        }
-        transform.pop();
-      }
-    }
-  }
-}
-
 private static class Bench extends LXModel {
   
   public final List<Wing> wings;
@@ -366,7 +317,7 @@ private static class Bench extends LXModel {
       Fixture(int numLeds, LXTransform transform)
       {
         transform.push();
-        transform.translate(- numLeds * LED_SPACING + LED_SPACING ,0,0);
+        transform.translate(- numLeds * BENCH_LED_SPACING + BENCH_LED_SPACING ,0,0);
         Bar bar = new Bar(numLeds - 1, transform);
         this.bars.add(bar);
         addPoints(bar);
@@ -397,7 +348,7 @@ private static class Bench extends LXModel {
         transform.push();
         for (int i = 0; i < numLeds; i++) {
           addPoint(new LXPoint(transform));
-          transform.translate(LED_SPACING, 0, 0);
+          transform.translate(BENCH_LED_SPACING, 0, 0);
         }
         transform.pop();
       }
@@ -443,7 +394,7 @@ private static class Kaleidoscope extends LXModel {
       Fixture(int numLeds, LXTransform transform)
       {
         transform.push();
-        transform.translate(- numLeds * LED_SPACING + LED_SPACING ,0,0);
+        transform.translate(- numLeds * BENCH_LED_SPACING + BENCH_LED_SPACING ,0,0);
         Bar bar = new Bar(numLeds - 1, transform);
         this.bars.add(bar);
         addPoints(bar);
@@ -474,7 +425,108 @@ private static class Kaleidoscope extends LXModel {
         transform.push();
         for (int i = 0; i < numLeds; i++) {
           addPoint(new LXPoint(transform));
-          transform.translate(LED_SPACING, 0, 0);
+          transform.translate(BENCH_LED_SPACING, 0, 0);
+        }
+        transform.pop();
+      }
+    }
+  }
+}
+
+private static class CarouselBottom extends LXModel {
+  private static int NBARS = 6;
+  private static int NLEDS_BOTTOM = 30;
+  private static int NLEDS_TOP = 2;
+  private static int LED_SPACING = 3;
+  private static int CAROUSEL_RADIUS = 4;
+  private static int CAROUSEL_EXT_HEIGHT = 8 * FEET;
+  private static int CAROUSEL_GROUND_OFFSET = 6 * INCHES;
+  
+  public CarouselBottom() {
+    super(new Fixture());
+  }
+  
+  private static class Fixture extends LXAbstractFixture {
+
+    private List<Bar> bars = new ArrayList<Bar>();
+    private List<LXPoint> barPoints = new ArrayList<LXPoint>();
+
+    Fixture() { 
+      // Build lower section of the carousel bottom
+      LXTransform transform = new LXTransform(); 
+      for (int i = 0; i < NBARS; ++i) {
+        transform.push(); 
+        transform.rotateY(TWO_PI / NBARS * i);
+        BarBottom barBottom = new BarBottom(NLEDS_BOTTOM, transform);
+        addPoints(barBottom);
+        transform.pop();
+      }
+
+      // Build upper section of the carousel bottom
+      for (int i = 0; i < NBARS; ++i)
+      {
+        transform.push(); 
+        transform.rotateY(TWO_PI / NBARS * i);
+        BarTop barTop = new BarTop(NLEDS_TOP, transform);
+        addPoints(barTop);
+        transform.pop();
+      }
+    }
+  }
+
+  private static class BarBottom extends LXModel
+  {
+    public BarBottom(int numLed, LXTransform transform)
+    {
+      super(new Fixture(numLed, transform));
+    }
+
+    private static class Fixture extends LXAbstractFixture
+    {
+      Fixture(int numLed, LXTransform transform)
+      {
+        transform.push();
+        transform.translate(CAROUSEL_RADIUS, CAROUSEL_GROUND_OFFSET, 0);
+        Bar bar = new Bar(numLed, transform);
+        addPoints(bar);
+        transform.pop();
+      }
+    }
+  }
+
+  private static class BarTop extends LXModel
+  {
+    public BarTop(int numLed, LXTransform transform)
+    {
+      super(new Fixture(numLed, transform));
+    }
+
+    private static class Fixture extends LXAbstractFixture
+    {
+      Fixture(int numLed, LXTransform transform)
+      {
+        transform.push();
+        transform.rotateZ(PI);
+        transform.translate(CAROUSEL_RADIUS, -CAROUSEL_GROUND_OFFSET -CAROUSEL_EXT_HEIGHT, 0);
+        Bar bar = new Bar(numLed, transform);
+        addPoints(bar);
+        transform.pop();
+      }
+    }
+  }
+
+  private static class Bar extends LXModel {
+  
+    public Bar(int numLed, LXTransform transform) {
+      super(new Fixture(numLed, transform));
+    }
+    
+    private static class Fixture extends LXAbstractFixture {
+      Fixture(int numLed, LXTransform transform) {
+        transform.push();
+        for (int i = 0; i < numLed; i++) {
+          addPoint(new LXPoint(transform));
+          transform.translate(0, LED_SPACING, 0);
         }
         transform.pop();
       }

@@ -128,9 +128,9 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 							100);
 					} else {
 						colors[p.index] = lx.hsb(
+							0,
 							100,
-							100,
-							0);
+							100);
 					}
 				}
 			}
