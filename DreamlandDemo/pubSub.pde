@@ -1,5 +1,7 @@
 import org.zeromq.ZMQ;
 
+String subscribeTo = "testing";
+
 void psenvsub () {
     // Prepare our context and subscriber
     ZMQ.Context context = ZMQ.context(1);
@@ -7,16 +9,17 @@ void psenvsub () {
     println("did a thing");
 
     subscriber.connect("tcp://localhost:6000");
-    subscriber.subscribe("".getBytes());
+    subscriber.subscribe(subscribeTo.getBytes());
     while (!Thread.currentThread ().isInterrupted ()) {
         // Read envelope with address
         String address = subscriber.recvStr ();
         // Read message contents
-        String contents = subscriber.recvStr ();
-        float number = Float.parseFloat(contents);
+        String[] contents = subscriber.recvStr().split(",");
         println(contents);
 
-        rotationPosition = number;
+
+        rotationPosition = Float.parseFloat(contents[1]);
+        rotationVelocity = Float.parseFloat(contents[2]);
 
     }
     subscriber.close ();

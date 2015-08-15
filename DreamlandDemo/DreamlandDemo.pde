@@ -25,6 +25,7 @@ import toxi.math.noise.SimplexNoise;
 final static int INCHES = 1;
 final static int FEET = 12 * INCHES;
 float rotationPosition = 0f;
+float rotationVelocity = 0f;
 
 // Top-level, we have a model and a P2LX instance
 Model           model;
