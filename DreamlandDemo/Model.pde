@@ -447,7 +447,7 @@ private static class Kaleidoscope extends LXModel {
 private static class CarouselBottom extends LXModel {
   private static int NBARS = 6;
   private static int NLEDS_BOTTOM = 30;
-  private static int NLEDS_TOP = 2;
+  private static int NLEDS_TOP = 6;
   private static int LED_SPACING = 3;
   private static int CAROUSEL_RADIUS = 4;
   private static int CAROUSEL_EXT_HEIGHT = 8 * FEET;
