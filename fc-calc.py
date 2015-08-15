@@ -5,13 +5,19 @@
 # Numbers don't match real life, they were pulled from Model.pde
 #
 # before L1 is:
-#   Carousel (top) = 7 bars * 30 leds per leg * 2 bars per leg
-carousel_top = 7 * 30 * 2
+#
+carousel_top = 9 * 34 * 2
 
 #   CarouselBottom = 6 * 19
-carousel_bottom = 6 * 19
+carousel_bottom = 6 * (30 + 6)
 
-offset = carousel_top + carousel_bottom
+inner_bench = 2 * (5 + 6)
+inner_bench_tot = 3 * inner_bench
+
+outer_bench = 2 * (16 + 17 + 18)
+outer_bench_tot = outer_bench * 3
+
+offset = carousel_top + carousel_bottom + inner_bench_tot + outer_bench_tot
 
 per_strand = 19
 opc_per = 64
