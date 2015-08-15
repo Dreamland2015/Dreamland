@@ -18,5 +18,5 @@ void buildOutputs()
   output.enabled.setValue(false);
   lx.addOutput(output);
   // output.addChild(new DreamlandFadecandyOutput(lx, "localhost", 7890));
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi9.local", 7890));
+  output.addChild(new DreamlandFadecandyOutput(lx, "pi4.local", 7890));
 }

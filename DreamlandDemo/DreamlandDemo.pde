@@ -89,6 +89,9 @@ void setup()
 		new StructureIterator(lx),
 		new CarouselArmIterator(lx),
 		new CarouselBarIterator(lx),
+		new CarouselBarPointIterator(lx),
+		new LampPostBarPointIterator(lx),
+		new LampPostRing(lx),
 
 	});
 

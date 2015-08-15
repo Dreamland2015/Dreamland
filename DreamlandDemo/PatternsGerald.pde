@@ -58,7 +58,8 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 {
 	private final BasicParameter rotationalSpeed = new BasicParameter("SPD",  10000, 1000);
 	private final SawLFO saw_var = new SawLFO(0, 6, 5000);
-	final BasicParameter user_var = new BasicParameter("HUE", 0, 0, 255);
+	final BasicParameter user_var = new BasicParameter("HUE", 0, 0, 360);
+	final BasicParameter user_var2 = new BasicParameter("HUE2", 0, 0, 360);
 
 	public ColorBarbershopLamppostsPattern(LX lx)
 	{
@@ -66,6 +67,7 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 		saw_var.setPeriod(rotationalSpeed);
 		addParameter(rotationalSpeed);
 		addParameter(user_var);
+		addParameter(user_var2);
 		addModulator(saw_var).trigger();
 		addLayer(new CylinderColor(lx));
 	}
@@ -128,7 +130,7 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 							100);
 					} else {
 						colors[p.index] = lx.hsb(
-							0,
+							user_var2.getValuef(),
 							100,
 							100);
 					}

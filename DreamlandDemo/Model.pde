@@ -216,11 +216,13 @@ private static class LampPost extends LXModel {
   private static int NLEDS = 19;
 
   public final List<Bar> bars;
+  // public final List<LXPoint> rings;
   
   public LampPost(LXTransform transform) {
     super(new Fixture(transform));
     Fixture f = (Fixture) this.fixtures.get(0);
     this.bars = Collections.unmodifiableList(f.bars);
+    // this.rings = Collections.unmodifiableList(f.rings);
   }
   
   private static class Fixture extends LXAbstractFixture {
@@ -239,6 +241,15 @@ private static class LampPost extends LXModel {
       }
     }
   }
+
+  // private static class Ring extends LXModel
+  // {
+  //   public Ring(List<Bar> bars)
+  //   {
+  //     super(new Fixture());
+  //   }
+    
+  // }
 
   private static class Bar extends LXModel {
   
@@ -449,7 +460,6 @@ private static class CarouselBottom extends LXModel {
   private static class Fixture extends LXAbstractFixture {
 
     private List<Bar> bars = new ArrayList<Bar>();
-    private List<LXPoint> barPoints = new ArrayList<LXPoint>();
 
     Fixture() { 
       // Build lower section of the carousel bottom
