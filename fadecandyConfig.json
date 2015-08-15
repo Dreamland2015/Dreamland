@@ -1,47 +1,84 @@
+
 {
-    "listen": [ null, 7890 ],
-    "verbose": true,
-    "color": { "gamma": 2.5, "whitepoint": [ 1, 1, 1 ] },
-    "devices": [
-        // {
-        //     "type": "fadecandy",
-        //     "comment": "lantern1 - dome lights",
-        //     "serial": "ZVBHRFIQVBEVMBGD",
-        //     "map": [
-        //         [ 0, 0, 0, 19, "brg" ],
-        //         [ 0, 19, 64, 19, "brg" ],
-        //         [ 0, 38, 128, 19, "brg" ],
-        //         [ 0, 57, 192, 19, "brg" ],
-        //         [ 0, 76, 256, 19, "brg" ],
-        //         [ 0, 95, 320, 19, "brg" ],
-        //         [ 0, 114, 384, 19, "brg" ],
-        //         [ 0, 133, 448, 19, "brg" ]
-        //     ]
-        // },
-        {
-            "type": "fadecandy",
-            "serial": "BFRJUKEALFOJGPUZ",
-            "map": [
-                [ 0, 0, 0, 34, "grb" ],
-                [ 0, 68, 64, 34, "grb" ],
-                [ 0, 68, 128, 34, "grb" ],
-                [ 0, 102, 192, 34, "grb" ]
-            ]
+        "listen": [null, 7890],
+        "verbose": true,
+        "color": {
+                "gamma": 2.5,
+                "whitepoint": [1, 1, 1]
         },
-        {
-            "type": "fadecandy",
-            "serial": "CEIACCFHZZYVKNAJ",
-            "map": [ [ 0, 0, 0, 19, "brg" ] ]
-        },
-        {
-            "type": "fadecandy",
-            "serial": "LJGIVTKUZVYNAZIP",
-            "map": [ [ 0, 19, 0, 6, "brg" ], [ 0, 25, 64, 30, "brg" ] ]
-        },
+        "devices": [
+                {
+                        "type": "fadecandy",
+            "comment": "lantern1 - dome lights",
+                        "serial": "ZVBHRFIQVBEVMBGD",
+                        "map": [
+                                [ 0,      0,   0, 19, "brg" ],
+                                [ 0,     19,  64, 19, "brg" ],
+                                [ 0,     38, 128, 19, "brg" ],
+                                [ 0,     57, 192, 19, "brg" ],
+                                [ 0,     76, 256, 19, "brg" ],
+                                [ 0,     95, 320, 19, "brg" ],
+                                [ 0,    114, 384, 19, "brg" ],
+                                [ 0,    133, 448, 19, "brg" ]
+                        ]
+                },
+                {
+                        "type": "fadecandy",
+                        "serial": "CEIACCFHZZYVKNAJ",
+                        "map": [
+                                [ 0,    0,   0, 19, "brg" ]
+                        ]
+                },
+                {
+                        "type": "fadecandy",
+                        "serial": "LJGIVTKUZVYNAZIP",
+                        "map": [
+                                [ 0,  19,   0, 6, "brg" ],
+                                [ 0,  25,   64, 30, "brg"]
+                        ]
+                },
+                {
+                        "type": "fadecandy",
+                        "comment": "Outer Bench 1",
+                        "serial": "JPPLYQHVZLCFATGB",
+                        "map": [
+                                [ 0, 0, 0, 512, "grb" ]
+                        ]
+                },
+                {
+                        "type": "fadecandy",
+            "comment": "Lantern 1",
+                        "serial": "VHLXIGZTHZSFANUL",
+                        "map": [
+                [ 0, 534 ,  0 ,  19 , "brg" ],
+                [ 0, 553 ,  64 ,  19 , "brg" ],
+                [ 0, 572 ,  128 ,  19 , "brg" ],
+                [ 0, 591 ,  192 ,  19 , "brg" ],
+                [ 0, 610 ,  256 ,  19 , "brg" ],
+                [ 0, 629 ,  320 ,  19 , "brg" ],
+                [ 0, 648 ,  384 ,  19 , "brg" ],
+                [ 0, 667 ,  448 ,  19 , "brg" ]
+                        ]
+                },
+                {
+                        "type": "fadecandy",
+            "comment": "Lantern 3",
+                        "serial": "PXFPFNVNFXUDGPAZ",
+                        "map": [
+                [ 0, 1999, 0, 19, "brg" ],
+                [ 0, 1218, 64, 19, "brg" ],
+                [ 0, 1237, 128, 19, "brg" ],
+                [ 0, 1256, 192, 19, "brg" ],
+                [ 0, 1275, 256, 19, "brg" ],
+                [ 0, 1294, 320, 19, "brg" ],
+                [ 0, 1313, 384, 19, "brg" ],
+                [ 0, 1332, 448, 19, "brg" ]
+                        ]
+                },
         {
             "comment": "only for testing, as this list is ordered.",
             "type": "fadecandy",
-            "map": [ [ 0, 0, 0, 512 ] ]
+            "map": [[ 0, 0, 0, 512 ]]
         }
-    ]
+        ]
 }
