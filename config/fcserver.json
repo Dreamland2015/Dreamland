@@ -71,6 +71,12 @@
                 },
                 {
                     "type": "fadecandy",
+                    "comment": "Lantern 2",
+                    "serial": "VHLXIGZTHZSFANUL",
+                    "map": [
+                [ 0, 0, 0, 512, "brg" ],
+                {
+                    "type": "fadecandy",
                     "comment": "Lantern 3",
                     "serial": "PXFPFNVNFXUDGPAZ",
                     "map": [
