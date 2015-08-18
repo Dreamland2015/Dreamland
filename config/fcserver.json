@@ -1,4 +1,3 @@
-
 {
         "listen": [null, 7890],
         "verbose": true,
@@ -48,8 +47,48 @@
                 },
                 {
                     "type": "fadecandy",
+                    "comment": "Inner Bench 1-8",
+                    "serial": "ZVBHRFIQVBEVMBGD",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Inner Bench 1-6",
+                    "serial": "YCMWFBCCNZQVEZCJ",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Inner Bench 1-4",
+                    "serial": "XPVLMYKYHNUTOTAN",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
                     "comment": "Outer Bench 1",
                     "serial": "JPPLYQHVZLCFATGB",
+                    [map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Outer Bench 2",
+                    "serial": "MUSAVVCWHTMRCHYH",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Outer Bench 3",
+                    "serial": "KUAUDPMSHTUXAPCD",
                     "map": [
                             [ 0, 0, 0, 512, "grb" ]
                     ]
@@ -68,6 +107,12 @@
                             [ 0, 648 ,  384 ,  19 , "brg" ],
                             [ 0, 667 ,  448 ,  19 , "brg" ]
                            ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Lantern 2",
+                    "serial": "VHLXIGZTHZSFANUL",
+                    "map": [ [ 0, 0, 0, 512, "brg" ] ]
                 },
                 {
                     "type": "fadecandy",

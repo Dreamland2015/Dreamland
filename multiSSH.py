@@ -3,6 +3,7 @@ import tempfile
 import threading
 import time
 import socket
+import stat
 import sys
 
 from contextlib import contextmanager
@@ -97,10 +98,12 @@ class SSHConnection():
             time.sleep(0.5)
 
     @contextmanager
-    def using_temp_filename(self, remote_destination_filename):
+    def using_temp_filename(self, remote_destination_filename, chmod=None):
         tempfilename = tempfile.mktemp()
         yield tempfilename
         self.sudo_write_file(tempfilename, remote_destination_filename)
+        if chmod:
+            self.runCommand('sudo chmod "%o" "%s"' % (chmod, remote_destination_filename))
 
     # Ghetto-rig the file writer to have root perms.
     def sudo_write_file(self, src, dest):
@@ -108,7 +111,8 @@ class SSHConnection():
 
     # Copy a file to the SSH server
     def put_file(self, local_filename, remote_filename):
-        with self.using_temp_filename(remote_filename) as tempfilename:
+        mode = stat.S_IMODE(os.stat(local_filename).st_mode)
+        with self.using_temp_filename(remote_filename, chmod = mode) as tempfilename:
             self.sftp.put(local_filename, tempfilename)
 
     # Write a string to the SSH server

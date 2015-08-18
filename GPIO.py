@@ -28,7 +28,7 @@ class GPIO_outputs():
     def __init__(self, output_cfg):
         self.cfg = output_cfg
         for name, pin_info in output_cfg.items():
-            print("Setting up", name, 'output')
+            print("Setting up", name, 'output', pin_info['pin'])
             _GPIO.setup(pin_info['pin'], _GPIO.OUT)
 
     def output(self, name, level):
@@ -38,6 +38,7 @@ class GPIO_button():
     def __init__(self, input_cfg):
         self.cfg = input_cfg
         self.pin = input_cfg['pin']
+        print('Setting up button input on pin', self.pin)
         _GPIO.setup(self.pin, _GPIO.IN, pull_up_down=_GPIO.PUD_UP)
 
     def wait(self, level, callback):
