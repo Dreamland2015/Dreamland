@@ -47,8 +47,48 @@
                 },
                 {
                     "type": "fadecandy",
+                    "comment": "Inner Bench 1-8",
+                    "serial": "ZVBHRFIQVBEVMBGD",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Inner Bench 1-6",
+                    "serial": "YCMWFBCCNZQVEZCJ",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Inner Bench 1-4",
+                    "serial": "XPVLMYKYHNUTOTAN",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
                     "comment": "Outer Bench 1",
                     "serial": "JPPLYQHVZLCFATGB",
+                    [map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Outer Bench 2",
+                    "serial": "MUSAVVCWHTMRCHYH",
+                    "map": [
+                            [ 0, 0, 0, 512, "grb" ]
+                    ]
+                },
+                {
+                    "type": "fadecandy",
+                    "comment": "Outer Bench 3",
+                    "serial": "KUAUDPMSHTUXAPCD",
                     "map": [
                             [ 0, 0, 0, 512, "grb" ]
                     ]
