@@ -2,6 +2,8 @@ import ddf.minim.*;
 import heronarts.lx.*;
 import heronarts.lx.transform.*;
 
+String master = "localhost";
+
 P2LX lx;
 
 //private final int BG_COLOR = #292929;
@@ -64,13 +66,14 @@ class FireEnablePanel extends UIWindow {
 		y += 50;
 
 		fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
-			ZMQ_pub pub = new ZMQ_pub(topic, which);
+			ZMQ_pub pub = new ZMQ_pub(master, topic, which);
 			protected void onToggle(boolean enabled) {
 				if (fire_enabled && enabled) {
 					pub.sendMessage("1");
-				}
-				else{
+					println(topic + "|" + which + " on");
+				} else {
 					pub.sendMessage("0");
+					println(topic + "|" + which + " off");
 				}
 			}
 		};
@@ -139,7 +142,7 @@ void setup()
 	cpui = new ControlPanelUI(lx.ui);
 	lx.ui.addLayer(cpui);
 
-	// thread("zeromq_sub");
+	thread("zeromq_sub");
 }
 
 void draw()

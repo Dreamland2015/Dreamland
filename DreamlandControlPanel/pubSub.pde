@@ -50,20 +50,16 @@ class ZMQ_pub {
 	String which;
 	ZMQ.Socket publisher;
 
-	public ZMQ_pub(String topic, String which){
+	public ZMQ_pub(String master, String topic, String which){
         ZMQ.Context context = ZMQ.context(1);
         this.publisher = context.socket(ZMQ.PUB);
-        this.publisher.connect("tcp://localhost:6001");
+        this.publisher.connect("tcp://" + master + ":6001");
 		this.topic = topic;
 		this.which = which;
-		println("Created " + topic);
 	}
 
 	void sendMessage(String value){
 		String sayWhat = this.topic + "|" + this.which + "#" + value;
         this.publisher.send(sayWhat);
-        // this.publisher.close();
-        // this.context.term();
-        println(this.topic + "|" + this.which + " done");
 	}
 }
