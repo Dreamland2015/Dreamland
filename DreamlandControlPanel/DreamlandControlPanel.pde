@@ -1,5 +1,6 @@
 import ddf.minim.*;
 import heronarts.lx.*;
+import heronarts.lx.transform.*;
 
 P2LX lx;
 
@@ -17,6 +18,7 @@ class FireEnablePanel extends UIWindow {
 	
 	protected String[] DISABLED_TEXT = {"DISABLED", "DISABLED"};
 	protected String[] ENABLED_TEXT = {"Fire!", "Firing..."};
+	String name;
 
 	private final int ELEMENT_WIDTH = 80;
 	UIButton enable;
@@ -24,6 +26,7 @@ class FireEnablePanel extends UIWindow {
 	boolean fire_enabled;
 	FireEnablePanel(UI ui, String title, float panel_x, float panel_y) {
 		super(ui, title, panel_x, panel_y, 100, 130);
+		this.name = title;
 
 		int y = 30;
 		enable = new UIButton(5, y, ELEMENT_WIDTH, 45) {
@@ -59,9 +62,10 @@ class FireEnablePanel extends UIWindow {
 		y += 50;
 
 		fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
+			ZMQ_pub pub = new ZMQ_pub(name);
 			protected void onToggle(boolean enabled) {
 				if (fire_enabled && enabled) {
-					println("pressed!", enabled);
+					pub.sendMessage("hello");
 				}
 			}
 		};
@@ -74,46 +78,47 @@ class FireEnablePanel extends UIWindow {
 }
 
 class ControlPanelUI extends UIWindow {
-	private final int ELEMENT_WIDTH = 80;
+	// private final int ELEMENT_WIDTH = 80;
 
 	ControlPanelUI(UI ui) {
-		super(ui, "CtrlPanel", 0, 0, 600, 800);
+		super(ui, "CtrlPanel", 0, 0, 230, 600);
 		println("created!");
-		int x = 5;
+		int x = 10;
 		int y = 30;
+		int VERT_OFFSET = 140;
 		// Fire on main Carousel (4)
 		FireEnablePanel fpanel_c1 =
 			new FireEnablePanel(ui, "Fire1", x, y);
 		fpanel_c1.addToContainer(this);
 		//fire1 = fpanel1.fire;
-		y += 130;
+		y += VERT_OFFSET;
 		FireEnablePanel fpanel2 =
 			new FireEnablePanel(ui, "Fire2", x, y);
 		fpanel2.addToContainer(this);
-		y += 130;
+		y += VERT_OFFSET;
 		FireEnablePanel fpanel3 =
 			new FireEnablePanel(ui, "Fire3", x, y);
 		fpanel3.addToContainer(this);
-		y += 130;
+		y += VERT_OFFSET;
 		FireEnablePanel fpanel4 =
 			new FireEnablePanel(ui, "Big Fire Poofer", x, y);
 		fpanel4.addToContainer(this);
 
+		x = 120;
 		y = 30;
-		x = 200;
 		// Fire on lanterns (3)
 		FireEnablePanel fpanel5 =
 			new FireEnablePanel(ui, "Lantern1 Fire", x, y);
 		fpanel5.addToContainer(this);
-		y += 130;
+		y += VERT_OFFSET;
 		FireEnablePanel fpanel6 =
 			new FireEnablePanel(ui, "Lantern2 Fire", x, y);
 		fpanel6.addToContainer(this);
-		y += 130;
+		y += VERT_OFFSET;
 		FireEnablePanel fpanel7 =
 			new FireEnablePanel(ui, "Lantern3 Fire", x, y);
 		fpanel7.addToContainer(this);
-		y += 130;
+		y += VERT_OFFSET;
 
 	}
 }

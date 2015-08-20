@@ -42,3 +42,26 @@ void zeromq_sub() {
     subscriber.close ();
     context.term ();
 }
+
+
+class ZMQ_pub {
+	String message;
+	String sendTo;
+
+
+	public ZMQ_pub(String sendTo){
+		this.sendTo = sendTo;
+		println("Created " + sendTo);
+	}
+
+	void sendMessage(String message){
+		String sayWhat = this.sendTo + ", " + message;
+        ZMQ.Context context = ZMQ.context(1);
+        ZMQ.Socket publisher = context.socket(ZMQ.PUB);
+        publisher.connect("tcp://localhost:6001");
+        publisher.sendMore(sayWhat);
+        publisher.close ();
+        context.term ();
+        println(this.sendTo + " done");
+	}
+}
