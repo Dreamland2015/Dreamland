@@ -18,15 +18,17 @@ class FireEnablePanel extends UIWindow {
 	
 	protected String[] DISABLED_TEXT = {"DISABLED", "DISABLED"};
 	protected String[] ENABLED_TEXT = {"Fire!", "Firing..."};
-	String name;
+	String topic;
+	String which;
 
 	private final int ELEMENT_WIDTH = 80;
 	UIButton enable;
 	UIButton fire;
 	boolean fire_enabled;
-	FireEnablePanel(UI ui, String title, float panel_x, float panel_y) {
-		super(ui, title, panel_x, panel_y, 100, 130);
-		this.name = title;
+	FireEnablePanel(UI ui, String myTopic, String myWhich, float panel_x, float panel_y) {
+		super(ui, myTopic + " " + myWhich, panel_x, panel_y, 100, 130);
+		this.topic = myTopic;
+		this.which = myWhich;
 
 		int y = 30;
 		enable = new UIButton(5, y, ELEMENT_WIDTH, 45) {
@@ -62,10 +64,13 @@ class FireEnablePanel extends UIWindow {
 		y += 50;
 
 		fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
-			ZMQ_pub pub = new ZMQ_pub(name);
+			ZMQ_pub pub = new ZMQ_pub(topic, which);
 			protected void onToggle(boolean enabled) {
 				if (fire_enabled && enabled) {
-					pub.sendMessage("hello");
+					pub.sendMessage("1");
+				}
+				else{
+					pub.sendMessage("0");
 				}
 			}
 		};
@@ -88,35 +93,35 @@ class ControlPanelUI extends UIWindow {
 		int VERT_OFFSET = 140;
 		// Fire on main Carousel (4)
 		FireEnablePanel fpanel_c1 =
-			new FireEnablePanel(ui, "Fire1", x, y);
+			new FireEnablePanel(ui, "carouselTop", "fire1", x, y);
 		fpanel_c1.addToContainer(this);
 		//fire1 = fpanel1.fire;
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel2 =
-			new FireEnablePanel(ui, "Fire2", x, y);
+			new FireEnablePanel(ui, "carouselTop", "fire2", x, y);
 		fpanel2.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel3 =
-			new FireEnablePanel(ui, "Fire3", x, y);
+			new FireEnablePanel(ui, "carouselTop", "fire3", x, y);
 		fpanel3.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel4 =
-			new FireEnablePanel(ui, "Big Fire Poofer", x, y);
+			new FireEnablePanel(ui, "carouselTop", "center", x, y);
 		fpanel4.addToContainer(this);
 
 		x = 120;
 		y = 30;
 		// Fire on lanterns (3)
 		FireEnablePanel fpanel5 =
-			new FireEnablePanel(ui, "Lantern1 Fire", x, y);
+			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
 		fpanel5.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel6 =
-			new FireEnablePanel(ui, "Lantern2 Fire", x, y);
+			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
 		fpanel6.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel7 =
-			new FireEnablePanel(ui, "Lantern3 Fire", x, y);
+			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
 		fpanel7.addToContainer(this);
 		y += VERT_OFFSET;
 
@@ -134,12 +139,10 @@ void setup()
 	cpui = new ControlPanelUI(lx.ui);
 	lx.ui.addLayer(cpui);
 
-	thread("zeromq_sub");
+	// thread("zeromq_sub");
 }
 
 void draw()
 {
 	// Processing/P2LX needs this to process actions, even though it's a NOP.
 }
-
-

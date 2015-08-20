@@ -46,22 +46,24 @@ void zeromq_sub() {
 
 class ZMQ_pub {
 	String message;
-	String sendTo;
+	String topic;
+	String which;
+	ZMQ.Socket publisher;
 
-
-	public ZMQ_pub(String sendTo){
-		this.sendTo = sendTo;
-		println("Created " + sendTo);
+	public ZMQ_pub(String topic, String which){
+        ZMQ.Context context = ZMQ.context(1);
+        this.publisher = context.socket(ZMQ.PUB);
+        this.publisher.connect("tcp://localhost:6001");
+		this.topic = topic;
+		this.which = which;
+		println("Created " + topic);
 	}
 
-	void sendMessage(String message){
-		String sayWhat = this.sendTo + ", " + message;
-        ZMQ.Context context = ZMQ.context(1);
-        ZMQ.Socket publisher = context.socket(ZMQ.PUB);
-        publisher.connect("tcp://localhost:6001");
-        publisher.sendMore(sayWhat);
-        publisher.close ();
-        context.term ();
-        println(this.sendTo + " done");
+	void sendMessage(String value){
+		String sayWhat = this.topic + "|" + this.which + "#" + value;
+        this.publisher.send(sayWhat);
+        // this.publisher.close();
+        // this.context.term();
+        println(this.topic + "|" + this.which + " done");
 	}
 }
