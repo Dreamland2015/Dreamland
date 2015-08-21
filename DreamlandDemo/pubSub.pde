@@ -1,6 +1,6 @@
 import org.zeromq.ZMQ;
 
-String subscribeTo = "testing";
+String subscribeTo = "accel";
 
 void psenvsub () {
     // Prepare our context and subscriber
@@ -12,7 +12,8 @@ void psenvsub () {
     subscriber.subscribe(subscribeTo.getBytes());
     while (!Thread.currentThread ().isInterrupted ()) {
         // Read envelope with address
-        String address = subscriber.recvStr ();
+        String address = subscriber.recvStr();
+
         // Read message contents
         String[] contents = subscriber.recvStr().split(",");
         println(contents);
@@ -26,3 +27,47 @@ void psenvsub () {
     context.term ();
 }
 
+class ZMQ_pub {
+    String message;
+    String topic;
+    String which;
+    ZMQ.Socket publisher;
+
+    public ZMQ_pub(String master, String topic, String which){
+        ZMQ.Context context = ZMQ.context(1);
+        this.publisher = context.socket(ZMQ.PUB);
+        this.publisher.connect("tcp://" + master + ":6001");
+        this.topic = topic;
+        this.which = which;
+    }
+
+    void sendMessage(String value){
+        String sayWhat = this.topic + "|" + this.which + "#" + value;
+        this.publisher.send(sayWhat);
+    }
+}
+
+class ZMQ_sub {
+    String message;
+    String topic;
+    String which;
+    String subscribeTo  
+    ZMQ.Socket subscriber;
+
+    public ZMQ_sub(String master, String topic, String which){
+        this.subscribeTo = topic + "|" + which;
+
+        ZMQ.Context context = ZMQ.context(1);
+        this.subscriber = context.socket(ZMQ.SUB);
+        this.subscriber.connect("tcp://" + master + ":6001");
+        this.subscriber.subscribe(this.subscribeTo.getBytes());
+        this.topic = topic;
+        this.which = which;
+    }
+
+    private recvMessage(){
+        String message = subscriber.recvStr();
+        String[] contents =
+
+    }
+}

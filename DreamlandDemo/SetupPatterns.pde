@@ -218,13 +218,15 @@ class LampPostBarPointIterator extends DLPattern
 
 class LampPostRing extends DLPattern
 {
-	private final BasicParameter ringNum = new BasicParameter("ringNum", 0, 0, 18);
-	private final TriangleLFO triangle = new TriangleLFO(0, 18, 2000);
+	private final BasicParameter speed = new BasicParameter("speed", 2000, 10000, 100);
+	private final BasicParameter dist = new BasicParameter("dist", 100, 1, 1000);
+	private final TriangleLFO triangle = new TriangleLFO(0, 19, speed);
 
 	public LampPostRing(LX lx)
 	{
 		super(lx);
-		addParameter(ringNum);
+		addParameter(speed);
+		addParameter(dist);
 		addModulator(triangle).trigger();
 	}
 
@@ -232,7 +234,7 @@ class LampPostRing extends DLPattern
 	{
 		for(LampPost lp : model.lampPosts)
 		{
-			for(int i = 0; i < 6; i ++)
+			for(int i = 0; i < 7; i ++)
 			{
 				for(LXPoint p : lp.bars.get(i).points)
 				{
@@ -243,17 +245,18 @@ class LampPostRing extends DLPattern
 
 		for(LampPost lp : model.lampPosts)
 			{
-			for(int i = 0; i < 6; i ++)
+			for(int i = 0; i < 7; i ++)
 			{
 				List<LXPoint> bar = lp.bars.get(i).points;
 				for(int ii = 0; ii < 18; ii ++)
 				{
 					for(LXPoint p : bar)
 					{
-						colors[p.index] = LXColor.BLACK;
+						float bv = max(0, dist.getValuef() - abs(p.y - triangle.getValuef()));
+						colors[p.index] = lx.hsb(100,100,bv);
 					}
-				// colors[bar.get((int) ringNum.getValuef()).index] = LXColor.WHITE;
 				colors[bar.get((int) triangle.getValuef()).index] = LXColor.WHITE;
+				// colors[bar.get((int) triangle.getValuef()).index] = lx.hsb(100,100,bv);
 				}
 			}
 		}
