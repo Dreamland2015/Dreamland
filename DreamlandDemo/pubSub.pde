@@ -11,16 +11,13 @@ void psenvsub () {
     subscriber.connect("tcp://localhost:6000");
     subscriber.subscribe(subscribeTo.getBytes());
     while (!Thread.currentThread ().isInterrupted ()) {
-        // Read envelope with address
-        String address = subscriber.recvStr();
-
         // Read message contents
-        String[] contents = subscriber.recvStr().split(",");
+        String[] contents = subscriber.recvStr().split("\\|");
         println(contents);
 
 
-        rotationPosition = Float.parseFloat(contents[1]);
-        rotationVelocity = Float.parseFloat(contents[2]);
+        // rotationPosition = Float.parseFloat(contents[1]);
+        // rotationVelocity = Float.parseFloat(contents[2]);
 
     }
     subscriber.close ();
@@ -51,7 +48,7 @@ class ZMQ_sub {
     String message;
     String topic;
     String which;
-    String subscribeTo  
+    String subscribeTo;
     ZMQ.Socket subscriber;
 
     public ZMQ_sub(String master, String topic, String which){
@@ -65,9 +62,9 @@ class ZMQ_sub {
         this.which = which;
     }
 
-    private recvMessage(){
-        String message = subscriber.recvStr();
-        String[] contents =
+    // private recvMessage(){
+    //     String message = subscriber.recvStr();
+    //     // String[] contents = messa
 
-    }
+    // }
 }
