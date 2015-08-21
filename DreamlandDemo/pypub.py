@@ -16,9 +16,10 @@ i = 0
 while True:
     messagedata = str(t[i])
     i = i + 1
-    topic = 'testing'
-    print("%s, %i" % (messagedata, v))
-    socket.send_string("%s, %s, %i" % (topic, messagedata, v))
+    topic = 'accel'
+    sendString = "%s|%s,%i" % (topic, messagedata, v)
+    print(sendString)
+    socket.send_string(sendString)
     time.sleep(0.001)
     if i == len(t):
         i = 0

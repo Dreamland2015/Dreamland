@@ -3,13 +3,9 @@ class Button {
 	String topic;
 	String master;
 	String which;
-	ZMQ_pub pub;
+	ZMQ_sub sub;
 
 	public Button(String master, String topic, String which){
-		sub = new ZMQ_pub(master, topic, which);
-	}
-
-	public isPressed(){
-		
+		sub = new ZMQ_sub(master, topic, which);
 	}
 }
