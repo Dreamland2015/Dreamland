@@ -157,9 +157,11 @@ class PythonProjection extends DLPattern
     rotation.reset();
     // rotation.center(); // assuming you want to rotate about the center of your model?
     rotation.rotateY(rotationPosition); // or whatever is appropriate
+    // rotation.translate(model.xMax,0,0);
     float hv = lx.getBaseHuef();
     for (LXVector c : rotation) {
-      float d = max(0, abs(c.x) - thick.getValuef() + .1f*abs(c.z) + .02f*abs(c.x)); // plane / spear thing
+      // float d = max(0, abs(c.x) - thick.getValuef() + .1f*abs(c.z) + .02f*abs(c.x)); // plane / spear thing
+      float d = max(0, abs(c.x) - thick.getValuef() + 0*abs(c.z / 2)); // plane / spear thing
       colors[c.index] = lx.hsb(
         100,
         100,

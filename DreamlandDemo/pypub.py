@@ -4,7 +4,7 @@ import time
 import numpy as np
 
 t = np.linspace(0, 2 * np.pi, 1000)
-v = 30
+v = .1
 
 
 port = "6000"

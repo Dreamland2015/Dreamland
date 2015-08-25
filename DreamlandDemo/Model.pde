@@ -1,6 +1,6 @@
 // Overall dreamland dimensions
 private static final int LAMPPOST_RADIUS = 17*FEET + 2*INCHES;
-private static final int BENCH_LED_HEIGHT = 15*INCHES;                    // Height of leds in benches
+private static final int BENCH_LED_HEIGHT = 18*INCHES;                    // Height of leds in benches
 private static final int INNER_BENCH_RADIUS = 8*FEET - 27*INCHES;
 private static final int OUTER_BENCH_RADIUS = 17*FEET + 6*INCHES;
 
@@ -16,7 +16,7 @@ private static final int[] NLEDS_OUTER = {16, 17, 18};   // Number of LEDs per r
 
 // Lamp post parameters
 private static final int NUMBER_OF_LAMPPOSTS = 3;
-private static final int BOTTOM_OF_LP_LED = 2 * FEET;
+private static final int BOTTOM_OF_LP_LED = 54;
 private static final float LP_BAR_HEIGHT = 45.5;
 private static final float LP_BAR_RADIUS = 2.5;
 
@@ -72,6 +72,18 @@ public static class Model extends LXModel {
         this.innerBenches.add(bench);
       }
 
+      // Build lamp posts
+      for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
+        LXTransform transform = new LXTransform();
+        float theta = radians(120) * i;
+        transform.push();
+        transform.rotateY(radians(120) * i);
+        transform.translate(LAMPPOST_RADIUS, 0, 0);
+        LampPost lampPost = new LampPost(transform);
+        addPoints(lampPost);
+        this.lampPosts.add(lampPost);
+      }
+
       // Build outer benches
       for (int i = 0; i < NUMBER_OF_BENCHES; i++)
       {
@@ -84,17 +96,6 @@ public static class Model extends LXModel {
         this.outerBenches.add(bench);
       }
 
-      // Build lamp posts
-      for (int i = 0; i < NUMBER_OF_LAMPPOSTS; ++i) {
-        LXTransform transform = new LXTransform();
-        float theta = radians(120) * i;
-        transform.push();
-        transform.rotateY(radians(120) * i);
-        transform.translate(LAMPPOST_RADIUS, 0, 0);
-        LampPost lampPost = new LampPost(transform);
-        addPoints(lampPost);
-        this.lampPosts.add(lampPost);
-      }
 
       // Build Kaleidoscopes
       for (int i = 0; i <3; i++)
@@ -329,7 +330,8 @@ private static class Bench extends LXModel {
       {
         transform.push();
         transform.translate(- numLeds * BENCH_LED_SPACING + BENCH_LED_SPACING ,0,0);
-        Bar bar = new Bar(numLeds - 1, transform);
+        Bar bar = new Bar(numLeds, transform);
+        // Bar bar = new Bar(numLeds - 1, transform);
         this.bars.add(bar);
         addPoints(bar);
         transform.pop();
@@ -448,10 +450,10 @@ private static class CarouselBottom extends LXModel {
   private static int NBARS = 6;
   private static int NLEDS_BOTTOM = 30;
   private static int NLEDS_TOP = 6;
-  private static int LED_SPACING = 3;
+  private static float LED_SPACING = 2.5;
   private static int CAROUSEL_RADIUS = 4;
-  private static int CAROUSEL_EXT_HEIGHT = 8 * FEET;
-  private static int CAROUSEL_GROUND_OFFSET = 6 * INCHES;
+  private static float CAROUSEL_EXT_HEIGHT = 77.5;
+  private static float CAROUSEL_GROUND_OFFSET = 6.5 * INCHES;
   
   public CarouselBottom() {
     super(new Fixture());
@@ -462,17 +464,8 @@ private static class CarouselBottom extends LXModel {
     private List<Bar> bars = new ArrayList<Bar>();
 
     Fixture() { 
-      // Build lower section of the carousel bottom
-      LXTransform transform = new LXTransform(); 
-      for (int i = 0; i < NBARS; ++i) {
-        transform.push(); 
-        transform.rotateY(TWO_PI / NBARS * i);
-        BarBottom barBottom = new BarBottom(NLEDS_BOTTOM, transform);
-        addPoints(barBottom);
-        transform.pop();
-      }
-
       // Build upper section of the carousel bottom
+      LXTransform transform = new LXTransform(); 
       for (int i = 0; i < NBARS; ++i)
       {
         transform.push(); 
@@ -481,6 +474,15 @@ private static class CarouselBottom extends LXModel {
         addPoints(barTop);
         transform.pop();
       }
+      // Build lower section of the carousel bottom
+      for (int i = 0; i < NBARS; ++i) {
+        transform.push(); 
+        transform.rotateY(TWO_PI / NBARS * i);
+        BarBottom barBottom = new BarBottom(NLEDS_BOTTOM, transform);
+        addPoints(barBottom);
+        transform.pop();
+      }
+
     }
   }
 
@@ -516,8 +518,9 @@ private static class CarouselBottom extends LXModel {
       Fixture(int numLed, LXTransform transform)
       {
         transform.push();
-        transform.rotateZ(PI);
-        transform.translate(CAROUSEL_RADIUS, -CAROUSEL_GROUND_OFFSET -CAROUSEL_EXT_HEIGHT, 0);
+        // transform.rotateZ(PI);
+        // transform.translate(CAROUSEL_RADIUS, CAROUSEL_GROUND_OFFSET, 0);
+        transform.translate(CAROUSEL_RADIUS, CAROUSEL_GROUND_OFFSET + CAROUSEL_EXT_HEIGHT , 0);
         Bar bar = new Bar(numLed, transform);
         addPoints(bar);
         transform.pop();

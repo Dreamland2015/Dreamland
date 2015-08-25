@@ -9,166 +9,116 @@
     "devices": [
         {
             "type": "fadecandy",
-            "comment": "[FC 0] Carousel Top 1 Bars 0-7",
+            "comment": "Carousel bottom upper + 0&1 of carousel bottom lower",
             "serial": "ZVBHRFIQVBEVMBGD",
             "map": [
-                [ 0, 0 , 0 , 34 , "brg" ],
-                [ 0, 34 , 64 , 34 , "brg" ],
-                [ 0, 68 , 128 , 34 , "brg" ],
-                [ 0, 102 , 192 , 34 , "brg" ],
-                [ 0, 136 , 256 , 34 , "brg" ],
-                [ 0, 170 , 320 , 34 , "brg" ],
-                [ 0, 204 , 384 , 34 , "brg" ],
-                [ 0, 238 , 448 , 34 , "brg" ]
+                [ 0, 612 , 0 , 6 , "brg" ],
+                [ 0, 618 , 64 , 6 , "brg" ],
+                [ 0, 624 , 128 , 6 , "brg" ],
+                [ 0, 630 , 192 , 6 , "brg" ],
+                [ 0, 636 , 256 , 6 , "brg" ],
+                [ 0, 642 , 320 , 6 , "brg" ],
+                [ 0, 648 , 384 , 30 , "brg" ],
+                [ 0, 678 , 448 , 30 , "brg" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 1] Carousel Top 2 Bars 8-15",
-            "serial": "ZVBHRFIQVBEVMBGD",
-            "map": [
-                [ 0, 272 , 0 , 34 , "brg" ],
-                [ 0, 306 , 64 , 34 , "brg" ],
-                [ 0, 340 , 128 , 34 , "brg" ],
-                [ 0, 374 , 192 , 34 , "brg" ],
-                [ 0, 408 , 256 , 34 , "brg" ],
-                [ 0, 442 , 320 , 34 , "brg" ],
-                [ 0, 476 , 384 , 34 , "brg" ],
-                [ 0, 510 , 448 , 34 , "brg" ]
-            ]
-        },
-
-        {
-            "type": "fadecandy",
-            "comment": "[FC 2] Carousel Top 3 Bars 16-18",
-            "serial": "ZVBHRFIQVBEVMBGD",
-            "map": [
-                [ 0, 544 , 0 , 34 , "brg" ],
-                [ 0, 578 , 64 , 34 , "brg" ]
-            ]
-        },
-
-        {
-            "type": "fadecandy",
-            "comment": "[FC 3] Inner Bench 1-8",
-            "serial": "ZVBHRFIQVBEVMBGD",
-            "map": [
-                [ 0, 612 , 0 , 30 , "brg" ],
-                [ 0, 642 , 64 , 30 , "brg" ],
-                [ 0, 672 , 128 , 30 , "brg" ],
-                [ 0, 702 , 192 , 30 , "brg" ],
-                [ 0, 732 , 256 , 30 , "brg" ],
-                [ 0, 762 , 320 , 30 , "brg" ],
-                [ 0, 792 , 384 , 6 , "brg" ],
-                [ 0, 798 , 448 , 6 , "brg" ]
-            ]
-        },
-
-        {
-            "type": "fadecandy",
-            "comment": "[FC 4] Inner Bench 1-4",
+            "comment": "Carousel bottom lower 2-5",
             "serial": "XPVLMYKYHNUTOTAN",
             "map": [
-                [ 0, 804 , 0 , 6 , "brg" ],
-                [ 0, 810 , 64 , 6 , "brg" ],
-                [ 0, 816 , 128 , 6 , "brg" ],
-                [ 0, 822 , 192 , 6 , "brg" ]
+                  [ 0, 708 , 0 , 30 , "brg" ],
+                  [ 0, 738 , 64 , 30 , "brg" ],
+                  [ 0, 768 , 128 , 30 , "brg" ],
+                  [ 0, 798 , 192 , 30 , "brg" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 5] Inner Bench 1-6",
+            "comment": "Inner bench 1, 2, 3",
             "serial": "YCMWFBCCNZQVEZCJ",
             "map": [
-                [ 0, 828 , 0 , 10 , "brg" ],
-                [ 0, 838 , 64 , 12 , "brg" ],
-                [ 0, 850 , 128 , 10 , "brg" ],
-                [ 0, 860 , 192 , 12 , "brg" ],
-                [ 0, 872 , 256 , 10 , "brg" ],
-                [ 0, 882 , 320 , 12 , "brg" ]
+                  [ 0, 828 , 0 , 10 ,   "grb" ],
+                  [ 0, 838 , 64 , 12 ,  "grb" ],
+                  [ 0, 850 , 128 , 10 , "grb" ],
+                  [ 0, 860 , 192 , 12 , "grb" ],
+                  [ 0, 872 , 256 , 10 , "grb" ],
+                  [ 0, 882 , 320 , 12 , "grb" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 6] Lamp post 1",
+            "comment": "Lamppost 1",
+            "serial": "XBNNUWHDDHYBGZSN",
+            "map": [
+                  [ 0, 894 , 0 , 19 , "brg" ],
+                  [ 0, 913 , 64 , 19 , "brg" ],
+                  [ 0, 932 , 128 , 19 , "brg" ],
+                  [ 0, 951 , 192 , 19 , "brg" ],
+                  [ 0, 970 , 256 , 19 , "brg" ],
+                  [ 0, 989 , 320 , 19 , "brg" ],
+                  [ 0, 1008 , 384 , 19 , "brg" ]
+            ]
+        },
+        {
+            "type": "fadecandy",
+            "comment": "Lamppost 2",
             "serial": "VHLXIGZTHZSFANUL",
             "map": [
-                [ 0, 894 , 0 , 19 , "brg" ],
-                [ 0, 913 , 64 , 19 , "brg" ],
-                [ 0, 932 , 128 , 19 , "brg" ],
-                [ 0, 951 , 192 , 19 , "brg" ],
-                [ 0, 970 , 256 , 19 , "brg" ],
-                [ 0, 989 , 320 , 19 , "brg" ],
-                [ 0, 1008 , 384 , 19 , "brg" ]
+                  [ 0, 1027 , 0 , 19 , "brg" ],
+                  [ 0, 1046 , 64 , 19 , "brg" ],
+                  [ 0, 1065 , 128 , 19 , "brg" ],
+                  [ 0, 1084 , 192 , 19 , "brg" ],
+                  [ 0, 1103 , 256 , 19 , "brg" ],
+                  [ 0, 1122 , 320 , 19 , "brg" ],
+                  [ 0, 1141 , 384 , 19 , "brg" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 7] Lamp post 2",
-            "serial": "VHLXIGZTHZSFANUL",
-            "map": [ 
-                [ 0, 1027 , 0 , 19 , "brg" ],
-                [ 0, 1046 , 64 , 19 , "brg" ],
-                [ 0, 1065 , 128 , 19 , "brg" ],
-                [ 0, 1084 , 192 , 19 , "brg" ],
-                [ 0, 1103 , 256 , 19 , "brg" ],
-                [ 0, 1122 , 320 , 19 , "brg" ],
-                [ 0, 1141 , 384 , 19 , "brg" ]
-            ]
-        },
-
-        {
-            "type": "fadecandy",
-            "comment": "[FC 8] Lamp post 3",
+            "comment": "Lamppost 3",
             "serial": "PXFPFNVNFXUDGPAZ",
             "map": [
-                [ 0, 1160 , 0 , 19 , "brg" ],
-                [ 0, 1179 , 64 , 19 , "brg" ],
-                [ 0, 1198 , 128 , 19 , "brg" ],
-                [ 0, 1217 , 192 , 19 , "brg" ],
-                [ 0, 1236 , 256 , 19 , "brg" ],
-                [ 0, 1255 , 320 , 19 , "brg" ],
-                [ 0, 1274 , 384 , 19 , "brg" ]
+                  [ 0, 1160 , 0 , 19 , "brg" ],
+                  [ 0, 1179 , 64 , 19 , "brg" ],
+                  [ 0, 1198 , 128 , 19 , "brg" ],
+                  [ 0, 1217 , 192 , 19 , "brg" ],
+                  [ 0, 1236 , 256 , 19 , "brg" ],
+                  [ 0, 1255 , 320 , 19 , "brg" ],
+                  [ 0, 1274 , 384 , 19 , "brg" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 9] Outer Bench 1",
+            "comment": "outer bench 1",
             "serial": "JPPLYQHVZLCFATGB",
             "map": [
-                [ 0, 1293 , 0 , 32 , "brg" ],
-                [ 0, 1325 , 64 , 34 , "brg" ],
-                [ 0, 1359 , 128 , 36 , "brg" ],
-                [ 0, 1395 , 192 , 24 , "brg" ]
+                  [ 0, 1293 , 0 , 32 ,   "grb" ],
+                  [ 0, 1325 , 64 , 34 ,  "grb" ],
+                  [ 0, 1359 , 128 , 36 , "grb" ],
+                  [ 0, 1395 , 192 , 24 , "grb" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 10] Outer Bench 2",
+            "comment": "outer bench 2",
             "serial": "MUSAVVCWHTMRCHYH",
             "map": [
-                [ 0, 1419 , 0 , 32 , "brg" ],
-                [ 0, 1451 , 64 , 34 , "brg" ],
-                [ 0, 1485 , 128 , 36 , "brg" ],
-                [ 0, 1521 , 192 , 24 , "brg" ]
+                  [ 0, 1419 , 0 , 32 ,   "grb" ],
+                  [ 0, 1451 , 64 , 34 ,  "grb" ],
+                  [ 0, 1485 , 128 , 36 , "grb" ],
+                  [ 0, 1521 , 192 , 24 , "grb" ]
             ]
         },
-
         {
             "type": "fadecandy",
-            "comment": "[FC 11] Outer Bench 3",
+            "comment": "outer bench 3",
             "serial": "KUAUDPMSHTUXAPCD",
             "map": [
-                [ 0, 1545 , 0 , 32 , "brg" ],
-                [ 0, 1577 , 64 , 34 , "brg" ],
-                [ 0, 1611 , 128 , 36 , "brg" ],
-                [ 0, 1647 , 192 , 24 , "brg" ]
+                  [ 0, 1545 , 0 , 32 ,   "grb" ],
+                  [ 0, 1577 , 64 , 34 ,  "grb" ],
+                  [ 0, 1611 , 128 , 36 , "grb" ],
+                  [ 0, 1647 , 192 , 24 , "grb" ]
             ]
         }
     ]

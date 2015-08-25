@@ -1,67 +1,64 @@
 #!/usr/bin/env python3
-import time
+# import time
 import util
 
 import multiSSH
 
 serverIp = util.get_default_ip()
+# serverIp = "192.168.2.5"
 
 configs = [
+    # {
+    #     'topic': 'carousel-top',
+    #     'hostname': "pi15.local",
+    #     'input': {'button': {'pin': 1}},
+    #     'output': {
+    #         'flame1': {'pin': 6},
+    #         'flame2': {'pin': 13},
+    #         'flame3': {'pin': 19},
+    #         'center_flame': {'pin': 26}},
+    #     'master': serverIp,
+    # },
     {
-        'topic': 'carousel-top',
-        'hostname': "pi15.local",
-        'input': {'button': {'pin': 1}},
-        'output': {
-            'flame1': {'pin': 6},
-            'flame2': {'pin': 13},
-            'flame3': {'pin': 19},
-            'center_flame': {'pin': 26}},
+        'topic': 'carouselBottom',
+        'hostname': "192.168.2.55",
         'master': serverIp,
     },
     {
-        'topic': 'carousel',
-        'hostname': "pi1.local",
+        'topic': 'lampost1',
+        'hostname': "pi16.local",
         'input': {'button': {'pin': 7}},
         'master': serverIp,
     },
     {
-        'topic': 'carousel',
-        'hostname': "samsonpi.local",
-        'input': {'button': {'pin': 7}},
-        'master': serverIp,
-    },
-    {
-        'topic': 'lantern1',
+        'topic': 'lampost2',
         'hostname': "pi8.local",
         'input': {'button': {'pin': 7}},
         'master': serverIp,
     },
     {
-        'topic': 'carousel-top',
-        'hostname': "pi15.local",
-        'input': {'button': {'pin': 7}},
+        'topic': 'lamppost3',
+        'hostname': "pi4.local",
         'master': serverIp,
     },
     {
         'topic': 'outerbench1',
-        'hostname': "pi7.local",
+        'hostname': "192.168.2.57",
         'master': serverIp,
     },
     {
-        'topic': 'lantern1',
-        'hostname': "pi9.local",
+        'topic': 'outerbench2',
+        'hostname': "pi6.local",
         'master': serverIp,
     },
     {
-        'topic': 'lantern3',
-        'hostname': "pi4.local",
-        'input': {'button': {'pin': 7}},
-        'output': {},
+        'topic': 'outerbench3',
+        'hostname': "pi5.local",
         'master': serverIp,
     }
 ]
 
-s = multiSSH.MultiDreamandPi([configs[-1]], debug=True)
-# s.do_full_setup()
-s.do_partial_setup()
+s = multiSSH.MultiDreamandPi(configs, debug=True)
+s.do_full_setup()
+# s.do_partial_setup()
 print('Pi is now fully setup')

@@ -353,7 +353,7 @@ class MultiSine extends LXPattern {
       10, 50, 10
     }
   }; 
-  final BasicParameter brightEffect = new BasicParameter("Bright", 6, 4, 10);
+  final BasicParameter brightEffect = new BasicParameter("Bright", 6, 0, 10);
   final BasicParameter colorspread = new BasicParameter("clr", 40, 10, 60);
   final BasicParameter saturation = new BasicParameter("sat", 90, 15, 90);
   final BasicParameter hue = new BasicParameter("hue", 0, 0, 360);

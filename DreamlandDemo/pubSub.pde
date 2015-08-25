@@ -12,12 +12,12 @@ void psenvsub () {
     subscriber.subscribe(subscribeTo.getBytes());
     while (!Thread.currentThread ().isInterrupted ()) {
         // Read message contents
-        String[] contents = subscriber.recvStr().split("\\|");
-        println(contents);
+        String[] message = subscriber.recvStr().split("\\|");
+        String[] contents= message[1].split(",");
 
 
-        // rotationPosition = Float.parseFloat(contents[1]);
-        // rotationVelocity = Float.parseFloat(contents[2]);
+        rotationPosition = Float.parseFloat(contents[0]);
+        rotationVelocity = Float.parseFloat(contents[1]);
 
     }
     subscriber.close ();
