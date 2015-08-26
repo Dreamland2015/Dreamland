@@ -452,7 +452,7 @@ private static class CarouselBottom extends LXModel {
   private static int NLEDS_TOP = 6;
   private static float LED_SPACING = 2.5;
   private static int CAROUSEL_RADIUS = 4;
-  private static float CAROUSEL_EXT_HEIGHT = 77.5;
+  private static float CAROUSEL_EXT_HEIGHT = 82.5;
   private static float CAROUSEL_GROUND_OFFSET = 6.5 * INCHES;
   
   public CarouselBottom() {

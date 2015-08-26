@@ -538,6 +538,7 @@ class Pulley extends LXPattern {
 
   private BasicParameter sz = new BasicParameter("SIZE", 0.01);
   private BasicParameter beatAmount = new BasicParameter("BEAT", 0.25);
+  private BasicParameter yMod = new BasicParameter("BEAT", 1, 0, 1);
 
   Pulley(LX lx) {
     super(lx);
@@ -548,6 +549,7 @@ class Pulley extends LXPattern {
     addModulator(reset).start();
     addParameter(sz);
     addParameter(beatAmount);
+    addParameter(yMod);
     trigger();
   }
 
@@ -613,7 +615,7 @@ class Pulley extends LXPattern {
       colors[p.index] = lx.hsb(
       (lx.getBaseHuef() + abs(p.x - model.cx)*.8 + p.y*.4) % 360, 
       constrain(130 - p.y*.8, 0, 100), 
-      max(0, 100 - abs(p.y - gravity[gi].getValuef())*falloff)
+      max(0, 100 - abs(p.y * yMod.getValuef() - gravity[gi].getValuef())*falloff)
         );
     }
   }

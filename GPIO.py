@@ -10,6 +10,11 @@ else:
 
 LOW = 0
 HIGH = 1
+
+# new
+# LOW = 1
+# HIGH = 0
+
 BUTTON_PRESSED = _GPIO.FALLING
 BUTTON_RELEASED = _GPIO.RISING
 
@@ -30,6 +35,7 @@ class GPIO_outputs():
         for name, pin_info in output_cfg.items():
             print("Setting up", name, 'output', pin_info['pin'])
             _GPIO.setup(pin_info['pin'], _GPIO.OUT)
+            _GPIO.output(pin_info['pin'], 1)
 
     def output(self, name, level):
         _GPIO.output(self.cfg[name]['pin'], level)
