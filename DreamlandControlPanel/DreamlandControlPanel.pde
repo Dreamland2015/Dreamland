@@ -22,7 +22,6 @@ class FireEnablePanel extends UIWindow {
 	protected String[] ENABLED_TEXT = {"Fire!", "Firing..."};
 	String topic;
 	String which;
-
 	private final int ELEMENT_WIDTH = 80;
 	UIButton enable;
 	UIButton fire;
@@ -69,10 +68,10 @@ class FireEnablePanel extends UIWindow {
 			ZMQ_pub pub = new ZMQ_pub(master, topic, which);
 			protected void onToggle(boolean enabled) {
 				if (fire_enabled && enabled) {
-					pub.sendMessage("1");
+					pub.sendMessage("0");
 					println(topic + "|" + which + " on");
 				} else {
-					pub.sendMessage("0");
+					pub.sendMessage("1");
 					println(topic + "|" + which + " off");
 				}
 			}
@@ -116,15 +115,15 @@ class ControlPanelUI extends UIWindow {
 		y = 30;
 		// Fire on lanterns (3)
 		FireEnablePanel fpanel5 =
-			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
+			new FireEnablePanel(ui, "lampPost1", "flame", x, y);
 		fpanel5.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel6 =
-			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
+			new FireEnablePanel(ui, "lampPost2", "flame", x, y);
 		fpanel6.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel7 =
-			new FireEnablePanel(ui, "lamppost1", "fire", x, y);
+			new FireEnablePanel(ui, "lampPost3", "flame", x, y);
 		fpanel7.addToContainer(this);
 		y += VERT_OFFSET;
 

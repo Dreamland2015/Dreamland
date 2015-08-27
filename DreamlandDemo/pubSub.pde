@@ -1,6 +1,6 @@
 import org.zeromq.ZMQ;
 
-String subscribeTo = "accel";
+String subscribeTo = "motion";
 
 void psenvsub () {
     // Prepare our context and subscriber
@@ -15,7 +15,7 @@ void psenvsub () {
         String[] message = subscriber.recvStr().split("\\|");
         String[] contents= message[1].split(",");
 
-
+        println(contents[1]);
         rotationPosition = Float.parseFloat(contents[0]);
         rotationVelocity = Float.parseFloat(contents[1]);
 
