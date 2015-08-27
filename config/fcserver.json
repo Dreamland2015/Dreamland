@@ -9,6 +9,46 @@
     "devices": [
         {
             "type": "fadecandy",
+            "comment": "Carousel top 1",
+            "serial": "ZVBHRFIQVBEVMBGD",
+            "map": [
+                [ 0, 0 , 0 , 34 , "brg" ],
+                [ 0, 34 , 64 , 34 , "brg" ],
+                [ 0, 68 , 128 , 34 , "brg" ],
+                [ 0, 102 , 192 , 34 , "brg" ],
+                [ 0, 136 , 256 , 34 , "brg" ],
+                [ 0, 170 , 320 , 34 , "brg" ],
+                [ 0, 204 , 384 , 34 , "brg" ],
+                [ 0, 238 , 448 , 34 , "brg" ]
+            ]
+        },
+        {
+            "type": "fadecandy",
+            "comment": "Carousel top 2",
+            "serial": "ZVBHRFIQVBEVMBGD",
+            "map": [
+                [ 0, 272 , 0 , 34 , "brg" ],
+                [ 0, 306 , 64 , 34 , "brg" ],
+                [ 0, 340 , 128 , 34 , "brg" ],
+                [ 0, 374 , 192 , 34 , "brg" ],
+                [ 0, 408 , 256 , 34 , "brg" ],
+                [ 0, 442 , 320 , 34 , "brg" ],
+                [ 0, 476 , 384 , 34 , "brg" ],
+                [ 0, 510 , 448 , 34 , "brg" ]
+            ]
+        },
+        {
+            "type": "fadecandy",
+            "comment": "Carousel top 3",
+            "serial": "ZVBHRFIQVBEVMBGD",
+            "map": [
+                [ 0, 544 , 0 , 34 , "brg" ],
+                [ 0, 578 , 64 , 34 , "brg" ],
+                [ 0, 306 , 128 , 34 , "brg" ]
+            ]
+        },
+        {
+            "type": "fadecandy",
             "comment": "Carousel bottom upper + 0&1 of carousel bottom lower",
             "serial": "ZVBHRFIQVBEVMBGD",
             "map": [
