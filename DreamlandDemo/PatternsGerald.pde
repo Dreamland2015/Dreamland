@@ -14,6 +14,22 @@ class WorkLightMode extends DLPattern
 	}
 }
 
+class RGBProjection extends DLPattern
+{
+	public RGBProjection(LX lx)
+	{
+		super(lx);
+	}
+
+	public void run(double deltaMs)
+	{
+		for (LXPoint p: model.points)
+		{
+			colors[p.index] = lx.hsb(rotationPosition, 100, 100);
+		}
+	}
+}
+
 class HelloWorldPattern extends DLPattern
 { 
 	private final BasicParameter colorChangeSpeed = new BasicParameter("SPD",  5000, 0, 10000);
@@ -153,7 +169,30 @@ class ColorBarbershopLamppostsPattern extends DLPattern
 				}
 			}
 		}
-	}
+	}class MoveYPosition extends DLPattern
+{
+  private final float modelMin = model.yMin - 50;
+  private final float modelMax = model.yMax + 50;
+  private final BasicParameter yPos = new BasicParameter("yPos", 100, modelMin, modelMax);
+  private final BasicParameter falloff = new BasicParameter("fall", 1, 0, 1);
+
+  public MoveYPosition(LX lx)
+  {
+    super(lx);
+      addParameter(yPos);
+      addParameter(falloff);
+  }
+
+  public void run(double deltaMs) 
+  {
+    float hueValue = lx.getBaseHuef();
+    for (LXPoint p : model.points)
+    {
+      float brightnessValue = max(0, 100 - abs(p.y - yPos.getValuef() * falloff.getValuef()));
+      colors[p.index] = lx.hsb(hueValue, 100, brightnessValue);
+    } 
+  }
+}
 }
 
 class PythonProjection extends DLPattern 
@@ -252,9 +291,10 @@ class BarbershopProjection extends DLPattern
 				HashMap <Float,Integer> height_map = height_map_list.get(i);
 				HashMap <Float,Integer> theta_map = theta_map_list.get(i);
 				for (LXPoint p : m.points) {
-					int theta = theta_map.get(atan2(p.z - m.cz, p.x - m.cx));
-					// int osc = int(saw_var.getValuef());
-					int osc = int(rotationVelocity*scale.getValuef());
+					// int theta = theta_map.get(atan2(p.z - m.cz, p.x - m.cx));
+					float theta = rotationPosition;
+					int osc = int(saw_var.getValuef());
+					// int osc = int(rotationVelocity*scale.getValuef());
 					int h = height_map.get(p.y);
 					if ((theta + osc) % 7 == h % 7) {
 						colors[p.index] = LXColor.RED;
@@ -266,3 +306,57 @@ class BarbershopProjection extends DLPattern
 		}
 	}
 }
+
+class PulseProjection extends LXPattern {
+  final BasicParameter speed = new BasicParameter("SPEED", 1, 0.1, 10);
+  final BasicParameter hue = new BasicParameter("hue", 45, 0, 360);
+  final BasicParameter saturation = new BasicParameter("sat", 100, 0, 100);
+  final BasicParameter scale = new BasicParameter("scale", 1, 0, 1);
+  float time = 0.;
+
+  PulseProjection(LX lx) {
+    super(lx);
+    addParameter(speed);
+    addParameter(hue);
+    addParameter(saturation);
+    addParameter(scale);
+  }
+
+  public void run(double deltaMs) {
+    time += deltaMs * rotationVelocity *scale.getValuef();
+    float timeS = time / 1000.;
+
+    for (LXPoint p : model.points) {
+      colors[p.index] = lx.hsb(
+      hue.getValuef(), 
+      saturation.getValuef(), 
+      100 * ((Math.round(timeS) % 2))
+        );
+    }
+  }
+}
+
+// class MoveYPositionProjection extends DLPattern
+// {
+//   private final float modelMin = model.yMin - 50;
+//   private final float modelMax = model.yMax + 50;
+//   private final BasicParameter yPos = new BasicParameter("yPos", 100, modelMin, modelMax);
+//   private final BasicParameter falloff = new BasicParameter("fall", 1, 0, 1);
+
+//   public MoveYPosition(LX lx)
+//   {
+//     super(lx);
+//       addParameter(yPos);
+//       addParameter(falloff);
+//   }
+
+//   public void run(double deltaMs) 
+//   {
+//     float hueValue = lx.getBaseHuef();
+//     for (LXPoint p : model.points)
+//     {
+//       float brightnessValue = max(0, 100 - abs(p.y - yPos.getValuef() * falloff.getValuef()));
+//       colors[p.index] = lx.hsb(hueValue, 100, brightnessValue);
+//     } 
+//   }
+// }

@@ -49,6 +49,8 @@ void setup()
 		new HelloWorldPattern(lx),
 		new ProjectionLayerTest(lx),
 		new BarbershopProjection(lx),
+		new RGBProjection(lx),
+		new PulseProjection(lx),
 		new WorkLightMode(lx),
 		new TestXPattern(lx),
 		new PythonProjection(lx),

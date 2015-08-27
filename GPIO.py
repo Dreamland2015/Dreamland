@@ -8,12 +8,12 @@ if util.running_on_pi():
 else:
     import fake_gpio as _GPIO
 
-LOW = 0
-HIGH = 1
+# LOW = 0
+# HIGH = 1
 
 # new
-# LOW = 1
-# HIGH = 0
+LOW = 1
+HIGH = 0
 
 BUTTON_PRESSED = _GPIO.FALLING
 BUTTON_RELEASED = _GPIO.RISING

@@ -8,17 +8,17 @@ serverIp = util.get_default_ip()
 # serverIp = "192.168.2.5"
 
 configs = [
-    # {
-    #     'topic': 'carousel-top',
-    #     'hostname': "pi15.local",
-    #     'input': {'button': {'pin': 1}},
-    #     'output': {
-    #         'flame1': {'pin': 6},
-    #         'flame2': {'pin': 13},
-    #         'flame3': {'pin': 19},
-    #         'center_flame': {'pin': 26}},
-    #     'master': serverIp,
-    # },
+    {
+        'topic': 'carousel-top',
+        'hostname': "pi15.local",
+        'input': {'button': {'pin': 1}},
+        'output': {
+            'flame1': {'pin': 7},
+            'flame2': {'pin': 11},
+            'flame3': {'pin': 13},
+            'center' : {'pin': 15}},
+        'master': serverIp,
+    },
     # {
     #     'topic': 'carouselBottom',
     #     'hostname': "192.168.2.55",
@@ -29,22 +29,22 @@ configs = [
     #     'hostname': 'pi10.local',
     #     'master': serverIp,
     # },
-    {
-        'topic': 'lampPost1',
-        'hostname': "pi16.local",
-        'input': {'button': {'pin': 12}},
-        'output': {
-                    'flame': {'pin': 11}},
-        'master': serverIp,
-    },
-    {
-        'topic': 'lampPost2',
-        'hostname': "pi8.local",
-        'input': {'button': {'pin': 12}},
-        'output': {
-                    'flame': {'pin': 11}},
-        'master': serverIp,
-    },
+    # {
+    #     'topic': 'lampPost1',
+    #     'hostname': "pi16.local",
+    #     'input': {'button': {'pin': 12}},
+    #     'output': {
+    #                 'flame': {'pin': 11}},
+    #     'master': serverIp,
+    # },
+    # {
+    #     'topic': 'lampPost2',
+    #     'hostname': "pi8.local",
+    #     'input': {'button': {'pin': 12}},
+    #     'output': {
+    #                 'flame': {'pin': 11}},
+    #     'master': serverIp,
+    # },
     # {
     #     'topic': 'lampPost3',
     #     'hostname': "pi4.local",

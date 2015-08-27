@@ -220,7 +220,7 @@ class LampPostRing extends DLPattern
 {
 	private final BasicParameter speed = new BasicParameter("speed", 2000, 10000, 100);
 	private final BasicParameter dist = new BasicParameter("dist", 100, 1, 1000);
-	private final TriangleLFO triangle = new TriangleLFO(0, 19, speed);
+	private final TriangleLFO triangle = new TriangleLFO(0, 18, speed);
 
 	public LampPostRing(LX lx)
 	{

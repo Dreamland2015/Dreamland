@@ -133,7 +133,7 @@ class ControlPanelUI extends UIWindow {
 
 void setup()
 {
-	size(1200, 800);
+	size(230, 600);
 	//colorMode(RGB, );
 	background(#292929);
 
