@@ -2,7 +2,7 @@
 import sys
 
 import util
-import GPIO
+import pi_gpio as GPIO
 
 if len(sys.argv) != 2:
     print("""Usage:
@@ -18,11 +18,12 @@ name = input_info[0]
 button = GPIO.GPIO_button(input_info[1])
 
 def pressed():
+    
     pub.send(name, GPIO.HIGH)
     
 def released():
     pub.send(name, GPIO.LOW)
     
 while True:
-    button.wait(GPIO.BUTTON_PRESSED, pressed)
-    button.wait(GPIO.BUTTON_RELEASED, released)
+    button.wait(GPIO.BUTTON_PRESSED, released)
+    button.wait(GPIO.BUTTON_RELEASED, pressed)

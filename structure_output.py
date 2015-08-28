@@ -3,7 +3,7 @@ import sys
 import traceback
 
 import util
-import GPIO
+import pi_gpio as GPIO
 
 if len(sys.argv) != 2:
     print("""Usage:
