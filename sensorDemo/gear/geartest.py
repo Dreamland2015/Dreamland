@@ -3,6 +3,7 @@ import time
 import multiprocessing as mp
 # from multiprocessing import Process as mp_Process, Array as mp_Array
 from multiprocessing import Value as mp_Value, Lock as mp_Lock
+import zmq
 
 # Count direction of gear teeth. Should be 1 or -1
 COUNTDIR = 1
@@ -12,6 +13,8 @@ COUNTDIR = 1
 NTEETH = 120
 
 # Raspberry Pi pins to which the sensors are connected
+# Each sensor is connected to two pins. The first is pullup, and senses rising edges. The
+# second is floating, and senses falling edges.
 gearsensor1_pin = 16
 gearsensor2_pin = 18
 gearsensor3_pin = 22
@@ -24,7 +27,7 @@ gearsensor3b_pin = 21
 # a number between 0 and 1.
 # Should be close to 0.5 (equivalent to 180 degrees) if sensor 3 was positioned
 # well. When it's 0.5, sensor 3 should see a gear tooth falling edge exactly when
-# when sensor 1 sees a rising edge.
+# when sensor 1 sees a rising edge. Value is not too critical any more...
 #sensor3_phase = 0.5
 sensor3_phase = 0.125
 
@@ -48,6 +51,9 @@ class gts_data(object):
         self.edge1time = mp.Value('d', t)
         self.edge2time = mp.Value('d', t)
         self.edge3time = mp.Value('d', t)
+        self.edge1btime = mp.Value('d', t)
+        self.edge2btime = mp.Value('d', t)
+        self.edge3btime = mp.Value('d', t)
   
     def getdata(self, whichdata):
         with self.lock:
@@ -59,6 +65,9 @@ class gts_data(object):
             elif whichdata == 'edge1time': return self.edge1time.value
             elif whichdata == 'edge2time': return self.edge2time.value
             elif whichdata == 'edge3time': return self.edge3time.value
+            elif whichdata == 'edge1btime': return self.edge1btime.value
+            elif whichdata == 'edge2btime': return self.edge2btime.value
+            elif whichdata == 'edge3btime': return self.edge3btime.value
             else: pass
  
     def setdata(self, whichdata, dat):
@@ -71,9 +80,12 @@ class gts_data(object):
             elif whichdata == 'edge1time': self.edge1time.value = dat
             elif whichdata == 'edge2time': self.edge2time.value = dat
             elif whichdata == 'edge3time': self.edge3time.value = dat
+            elif whichdata == 'edge1btime': self.edge1btime.value = dat
+            elif whichdata == 'edge2btime': self.edge2btime.value = dat
+            elif whichdata == 'edge3btime': self.edge3btime.value = dat
             else: pass
  
-def sensor_up(ch, sdat):
+def sensor_edge(ch, sdat, edgetype = "rising"):
     """ 
     Callback function for a rising edge on a sensor. 
     
@@ -85,8 +97,11 @@ def sensor_up(ch, sdat):
     Arguments:
     ch - the channels for sensor 1 or 3
     sdat - sensor data class 
+    edgetype - "rising" or "falling"
     """
 
+    # sensor 1 or 3 just had an edge (since this callback function was called), so now
+    # we need to find the state of sensor 2 to get the rotation direction.
     sensor2 = GPIO.input(gearsensor2_pin)
     now = time.time()
     newtcount1 = newtcount3 = deltat1 = deltat3 = 0
@@ -147,9 +162,13 @@ if __name__ == "__main__":
     GPIO.setup(gearsensor3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     GPIO.add_event_detect(gearsensor1_pin, GPIO.RISING,
-                          callback=lambda ch: sensor_up(ch, gtsdata))
+                          callback=lambda ch: sensor_up(ch, gtsdata, "rising"))
     GPIO.add_event_detect(gearsensor3_pin, GPIO.RISING,
-                          callback=lambda ch: sensor_up(ch, gtsdata))
+                          callback=lambda ch: sensor_up(ch, gtsdata, "rising"))
+    GPIO.add_event_detect(gearsensor1b_pin, GPIO.FALLING,
+                          callback=lambda ch: sensor_up(ch, gtsdata, "falling"))
+    GPIO.add_event_detect(gearsensor3b_pin, GPIO.FALLING,
+                          callback=lambda ch: sensor_up(ch, gtsdata, "falling"))
  
     print("waiting for gear teeth")
     while True:
@@ -160,3 +179,8 @@ if __name__ == "__main__":
         time.sleep(5)
  
     GPIO.cleanup()
+
+
+
+
+
