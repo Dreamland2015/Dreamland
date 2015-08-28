@@ -18,10 +18,11 @@ name = input_info[0]
 button = GPIO.GPIO_button(input_info[1])
 
 def pressed():
-    
+    print("pressed")
     pub.send(name, GPIO.HIGH)
     
 def released():
+    print("released")
     pub.send(name, GPIO.LOW)
     
 while True:
