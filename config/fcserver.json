@@ -10,7 +10,7 @@
         {
             "type": "fadecandy",
             "comment": "Carousel top 1",
-            "serial": "ZVBHRFIQVBEVMBGD",
+            "serial": "BFRJUKEALFOJGPUZ",
             "map": [
                 [ 0, 0 , 0 , 34 , "brg" ],
                 [ 0, 34 , 64 , 34 , "brg" ],
@@ -25,7 +25,7 @@
         {
             "type": "fadecandy",
             "comment": "Carousel top 2",
-            "serial": "ZVBHRFIQVBEVMBGD",
+            "serial": "CEIACCFHZZYVKNAJ",
             "map": [
                 [ 0, 272 , 0 , 34 , "brg" ],
                 [ 0, 306 , 64 , 34 , "brg" ],
@@ -40,7 +40,7 @@
         {
             "type": "fadecandy",
             "comment": "Carousel top 3",
-            "serial": "ZVBHRFIQVBEVMBGD",
+            "serial": "WAGYLJWWJBWZMRUP",
             "map": [
                 [ 0, 544 , 0 , 34 , "brg" ],
                 [ 0, 578 , 64 , 34 , "brg" ],
