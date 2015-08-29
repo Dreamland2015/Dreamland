@@ -94,7 +94,6 @@ class SamPattern extends DLPattern
 		addParameter(user_var);
 		addModulator(saw_var).trigger();
 		addModulator(sin_var).trigger();
-		addLayer(new CylinderColor(lx));
 
 		Model m = (DreamlandDemo.Model)lx.model;
 
