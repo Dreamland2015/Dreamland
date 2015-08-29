@@ -230,7 +230,6 @@ class MultiDreamandPi:
             hostname = config['hostname']
             structure_name = config['topic']
             s = DreamlandPi(config, debug=debug)
-            print('s', type(s), s)
             self.sshes[structure_name] = (hostname, structure_name, s)
 
     def _do_on_all(self, fn):
