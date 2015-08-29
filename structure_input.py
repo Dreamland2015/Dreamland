@@ -24,6 +24,9 @@ def pressed():
 def released():
     print("released")
     pub.send(name, GPIO.LOW)
+
+if config.config.get('reversed', False) is True:
+    pressed, released = released, pressed
     
 while True:
     button.wait(GPIO.BUTTON_PRESSED, released)
