@@ -46,6 +46,7 @@ void setup()
 	// Patterns setup
 	lx.setPatterns(new LXPattern[] {
 		// new ControlProjectionSpeed(lx),
+		new SamPattern(lx),
 		new HelloWorldPattern(lx),
 		new ProjectionLayerTest(lx),
 		new BarbershopProjection(lx),

@@ -75,3 +75,46 @@ class BarbershopLamppostsPattern extends DLPattern
 		}
 	}
 }
+
+class SamPattern extends DLPattern
+{
+	private final BasicParameter rotationalSpeed = new BasicParameter("SPD",  10000, 1000);
+	private final SawLFO saw_var = new SawLFO(0, 6, 5000);
+	private final SinLFO sin_var = new SinLFO(0, 6, 5000);
+	final BasicParameter user_var = new BasicParameter("HUE", 0.5, 0.5, 60);
+	double xMid;
+	double yMid;
+	double zMid;
+
+	public SamPattern(LX lx)
+	{
+		super(lx);
+		saw_var.setPeriod(rotationalSpeed);
+		addParameter(rotationalSpeed);
+		addParameter(user_var);
+		addModulator(saw_var).trigger();
+		addModulator(sin_var).trigger();
+		addLayer(new CylinderColor(lx));
+
+		Model m = (DreamlandDemo.Model)lx.model;
+
+		this.xMid = m.carousel.cx; //lx.model.xMin + (lx.model.xRange / 2);
+		this.yMid = m.carousel.cy; //lx.model.yMin + (lx.model.yRange / 2);
+		this.zMid = m.carousel.cz; //lx.model.zMin + (lx.model.zRange / 2);
+
+		println("xrange: " + lx.model.xRange + "xmin: " + lx.model.xMin + "xmax: " + lx.model.xMax);
+		println("yrange: " + lx.model.yRange);
+	}
+
+	public void run(double deltaMs) {
+		for (int i = 0; i < 3; ++i) {
+			for (LXPoint p : model.points) {
+				//double bright = p.theta / 2 * 256;
+				//colors[p.index] = LXColor.RED;/a//t/hsb(200, 200, p.theta);
+
+				double bright = sin_var.getValuef() * sqrt(pow((float)(p.x - this.xMid), 2.0) + pow((float)(p.z - this.zMid), 2.0));
+				colors[p.index] = LXColor.hsb(200, 200, bright);
+			}
+		}
+	}
+}
