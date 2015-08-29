@@ -10,7 +10,8 @@ serverIp = "192.168.2.5"
 configs = [
     {
         'topic': 'carousel-top',
-        'hostname': "pi15.local",
+        #'hostname': "pi15.local",
+        'hostname': '192.168.2.115',
         'input': {'button': {'pin': 1}},
         'output': {
             'flame1': {'pin': 7},
@@ -20,13 +21,9 @@ configs = [
         'master': serverIp,
     },
      {
-         'topic': 'carouselBottom',
-         'hostname': "192.168.2.55",
-         'master': serverIp,
-     },
-     {
          'topic': 'center',
-         'hostname': 'pi10.local',
+         #'hostname': 'pi10.local',
+         'hostname': '192.168.2.110',
          'master': serverIp,
      },
      {
@@ -62,17 +59,20 @@ configs = [
      },
      {
          'topic': 'outerbench1',
-         'hostname': "192.168.2.57",
+         #'hostname': 'pi7.local',
+         'hostname': "192.168.2.107",
          'master': serverIp,
      },
      {
          'topic': 'outerbench2',
-         'hostname': "pi6.local",
+         #'hostname': "pi6.local",
+         'hostname': '192.168.2.106',
          'master': serverIp,
      },
      {
          'topic': 'outerbench3',
-         'hostname': "pi5.local",
+         #'hostname': "pi5.local",
+         'hostname': '192.168.105',
          'master': serverIp,
      }
 ]
