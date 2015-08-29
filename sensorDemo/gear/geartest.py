@@ -1,12 +1,14 @@
 import RPi.GPIO as GPIO
+import util
 import time
 import multiprocessing as mp
 # from multiprocessing import Process as mp_Process, Array as mp_Array
 from multiprocessing import Value as mp_Value, Lock as mp_Lock
-import zmq
 
 # Count direction of gear teeth. Should be 1 or -1
 COUNTDIR = 1
+# If we're only counting the tooth rising edges, set this to False
+USEFALLINGEDGE = True
 
 # number of teeth on gear. Should be 120 for Dreamland, 42 for demo gear.
 #NTEETH = 42
@@ -27,13 +29,14 @@ gearsensor3b_pin = 21
 # a number between 0 and 1.
 # Should be close to 0.5 (equivalent to 180 degrees) if sensor 3 was positioned
 # well. When it's 0.5, sensor 3 should see a gear tooth falling edge exactly when
-# when sensor 1 sees a rising edge. Value is not too critical any more...
-#sensor3_phase = 0.5
-sensor3_phase = 0.125
+# when sensor 1 sees a rising edge. Value is not too critical if sensor 3 is
+# not used...
+sensor3_phase = 0.5
+#sensor3_phase = 0.125
 
 # If use_sensor3 is True, it's used for more accurate speed and angle sensing
 use_sensor3 = False
- 
+
 class gts_data(object):
     """ Class for gear tooth sensor data shared between processes """
     def __init__(self, angle=0, speed=0, tcount1=0, tcount2=0, tcount3=0):
@@ -45,7 +48,7 @@ class gts_data(object):
         self.tcount1 = mp.Value('d', tcount1)
         self.tcount2 = mp.Value('d', tcount2)
         self.tcount3 = mp.Value('d', tcount3)
-        
+
         # time since last tooth rising edge
         t = time.time()
         self.edge1time = mp.Value('d', t)
@@ -54,7 +57,7 @@ class gts_data(object):
         self.edge1btime = mp.Value('d', t)
         self.edge2btime = mp.Value('d', t)
         self.edge3btime = mp.Value('d', t)
-  
+
     def getdata(self, whichdata):
         with self.lock:
             if whichdata == 'angle': return self.angle.value
@@ -69,7 +72,7 @@ class gts_data(object):
             elif whichdata == 'edge2btime': return self.edge2btime.value
             elif whichdata == 'edge3btime': return self.edge3btime.value
             else: pass
- 
+
     def setdata(self, whichdata, dat):
         with self.lock:
             if whichdata == 'angle': self.angle.value = dat
@@ -84,73 +87,80 @@ class gts_data(object):
             elif whichdata == 'edge2btime': self.edge2btime.value = dat
             elif whichdata == 'edge3btime': self.edge3btime.value = dat
             else: pass
- 
-def sensor_edge(ch, sdat, edgetype = "rising"):
+
+    def position_reset(self)
+       self.setdata(angle, 0)    
+
+def sensor_edge(ch, sdat, edgetype):
     """ 
     Callback function for a rising edge on a sensor. 
-    
+
     Function that gets called by GPIO on a RPi channel rising edge. Counts
     gear teeth sensed by sensor 1 and 3. Sensor 2 is the quadrature sensor
     that determines whether sensor 1 and 3 teeth counted up or down.
     Assumes that sensor 3 is 180 degrees out of phase w.r.t sensor 1.
-    
+
     Arguments:
     ch - the channels for sensor 1 or 3
     sdat - sensor data class 
-    edgetype - "rising" or "falling"
+    edgetype - should be "rising" or "falling"
     """
 
-    # sensor 1 or 3 just had an edge (since this callback function was called), so now
+    if ((edgetype == 'falling') and (USEFALLINGEDGE == False))
+        return
+
+    # Sensor 1 just had an edge (since this callback function was called), so now
     # we need to find the state of sensor 2 to get the rotation direction.
     sensor2 = GPIO.input(gearsensor2_pin)
     now = time.time()
     newtcount1 = newtcount3 = deltat1 = deltat3 = 0
 
-    if (ch == gearsensor1_pin):
-        # increment/decrement tooth counter
-        step = COUNTDIR if (sensor2==0) else -COUNTDIR
-        print("ch1: ", step)
+    if (ch == gearsensor1_pin or ch == gearsensor1b_pin):
+        # increment/decrement tooth counter. If we're counting both riding
+        # and falling edges, then each edge increments the tooth count by a half tooth.
+        # pin1 is set up for rising edges, pin1b for falling edges
+        if (USEFALLINGEDGE)
+            stepsize = 0.5
+        else
+            stepsize = 1
+
+        # We'll define the "forward" rotation direction as the one where
+        # sensor 2 sees a tooth gap when sensor 1 senses a tooth rising edge
+        if (((edgetype == 'rising') and (sensor2 == 0))
+         or ((edgetype == 'falling') and (sensor2 == 1)))
+            forwarddirection = True
+        else
+            forwarddirection = False
+
+        # Change the tooth count depending on rotation direction, and on
+        # which direction we want to count (set by COUNTDIR)
+        step = COUNTDIR*stepsize if forwarddirection else -COUNTDIR*stepsize
         newtcount1 = sdat.getdata('tcount1') + step
         sdat.setdata('tcount1', newtcount1)
+        print("ch1 -> edge:%s  step:%.1f  count:%.1f" % (edgetype, step, newcount1))
 
-        if use_sensor3:
-            # use sensor3 in addition to sensor1 for higher speed & angle resolution
-            # time since last sensor 3 tooth edge
-            deltat1 = now - sdat.getdata('edge3time')
-            # speed: teeth/second * degrees/tooth / sensor3 phase advance
-            speed = 1/deltat1 * 360/NTEETH / sensor3_phase
-            toothfraction = -(sensor3_phase * step) % COUNTDIR    # magic formula to be fixed
-            newangle = ((newtcount1+toothfraction) % NTEETH)* 360/NTEETH
-        else:
-            # time since last sensor 1 tooth edge
-            deltat1 = now - sdat.getdata('edge1time')
-            speed = 1/deltat1 * 360/NTEETH
-            newangle = (newtcount1 % NTEETH)* 360/NTEETH
+        # time since last sensor 1 tooth edge
+        deltat1 = now - sdat.getdata('edge1time')
+        speed = 1/deltat1 * 360/NTEETH   # speed is in teeth per second
+        newangle = (newtcount1 % NTEETH)* 360/NTEETH
 
         sdat.setdata('angle', newangle)
         sdat.setdata('speed', speed)
         sdat.setdata('edge1time', now)
-        speed1 = speed
-
-    elif (ch == gearsensor3_pin):
-#        if use_sensor3:  # needs to be fixed
-        step = -COUNTDIR if (sensor2==0) else COUNTDIR
-        print("ch3: ", step)
-        newtcount3 = sdat.getdata('tcount3') + step
-        sdat.setdata('tcount3', newtcount3)
-        deltat3 = now - sdat.getdata('edge3time')    # for debugging
-        speed = 1/deltat3 * 360/NTEETH
-        newangle = (newtcount3 % NTEETH)* 360/NTEETH
-        sdat.setdata('edge3time', now)
-        speed3 = speed
     else:
+        # we're not processing sensor 3 edge data any more
         return
 
+    angleM = sdat.getdata('angle')
+    speedM = sdat.getdata('speed')
     print("ch1: %d | ch3: %d | %.1f deg | %.4f speed"
                % (sdat.getdata('tcount1'), sdat.getdata('tcount3'),
-                  sdat.getdata('angle'), sdat.getdata('speed')) )
+                  angleM, speedM) )
+    message = "%s,%s" % (angleM, speedM)
+    pub.raw_send(message, 'motion')
 
 if __name__ == "__main__": 
+    pub = util.PubClient('192.168.2.5', 'motion')
     gtsdata = gts_data()
 
     GPIO.setmode(GPIO.BOARD)
@@ -163,24 +173,21 @@ if __name__ == "__main__":
 
     GPIO.add_event_detect(gearsensor1_pin, GPIO.RISING,
                           callback=lambda ch: sensor_up(ch, gtsdata, "rising"))
-    GPIO.add_event_detect(gearsensor3_pin, GPIO.RISING,
-                          callback=lambda ch: sensor_up(ch, gtsdata, "rising"))
     GPIO.add_event_detect(gearsensor1b_pin, GPIO.FALLING,
                           callback=lambda ch: sensor_up(ch, gtsdata, "falling"))
-    GPIO.add_event_detect(gearsensor3b_pin, GPIO.FALLING,
-                          callback=lambda ch: sensor_up(ch, gtsdata, "falling"))
- 
+
+# we're not processing sensor 3 edges any more
+#    GPIO.add_event_detect(gearsensor3_pin, GPIO.RISING,
+#                          callback=lambda ch: sensor_up(ch, gtsdata, "rising"))
+#    GPIO.add_event_detect(gearsensor3b_pin, GPIO.FALLING,
+#                          callback=lambda ch: sensor_up(ch, gtsdata, "falling"))
+
     print("waiting for gear teeth")
     while True:
         try:
-                curtime = time.time()
+            curtime = time.time()
         except KeyboardInterrupt:
-                GPIO.cleanup()
+            GPIO.cleanup()
         time.sleep(5)
- 
+
     GPIO.cleanup()
-
-
-
-
-
