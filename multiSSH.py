@@ -236,7 +236,7 @@ class MultiDreamandPi:
         threads = []
         for x in self.sshes.values():
             #fn(x)
-            t = threading.Thread(target=lambda: fn(x[2]))
+            t = threading.Thread(target=lambda: fn(x[2]), daemon=True)
             t.start()
             threads.append((x[0], x[1], t))
         for host, structure_name, t in threads:
