@@ -219,7 +219,7 @@ class DreamlandPi(SSHConnection):
         self.supervisor_reload()
 
     def do_partial_setup(self):
-        self.setup_fadecandy()
+        #self.setup_fadecandy()
         self.do_code_refresh()
 
 class MultiDreamandPi:
@@ -229,7 +229,6 @@ class MultiDreamandPi:
         for config in self.configs:
             hostname = config['hostname']
             structure_name = config['topic']
-            #print.
             s = DreamlandPi(config, debug=debug)
             print('s', type(s), s)
             self.sshes[structure_name] = (hostname, structure_name, s)
@@ -238,18 +237,20 @@ class MultiDreamandPi:
         threads = []
         for x in self.sshes.values():
             #fn(x)
-            t = threading.Thread(target=lambda: fn(x[2]), daemon=True)
+            t = threading.Thread(target=lambda: fn(x[2]))
             t.start()
             threads.append((x[0], x[1], t))
         for host, structure_name, t in threads:
             t.join()
-            print("Finisehd run for", structure_name, "at", host)
+            print("Finished run for", structure_name, "at", host)
 
     def do_full_setup(self):
         self._do_on_all(DreamlandPi.do_full_setup)
 
     def do_partial_setup(self):
         self._do_on_all(DreamlandPi.do_partial_setup)
+        print("Finished partial setup.")
+        sys.exit(0)
 
     def do_code_refresh(self):
         self._do_on_all(DreamlandPi.do_code_refresh)
