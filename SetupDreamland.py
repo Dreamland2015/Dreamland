@@ -77,8 +77,6 @@ configs = [
      }
 ]
 
-structure_worked_on = [x for x in configs if 'lamp' in x['topic']]
-s = multiSSH.MultiDreamandPi(structure_worked_on)
-#s = multiSSH.MultiDreamandPi(configs)
+s = multiSSH.MultiDreamandPi(configs)
 s.do_partial_setup()
 print('Finished setup run.')
