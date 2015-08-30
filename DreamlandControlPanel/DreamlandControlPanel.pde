@@ -95,20 +95,20 @@ class ControlPanelUI extends UIWindow {
 		int VERT_OFFSET = 140;
 		// Fire on main Carousel (4)
 		FireEnablePanel fpanel_c1 =
-			new FireEnablePanel(ui, "carouselTop", "fire1", x, y);
+			new FireEnablePanel(ui, "carousel-top", "flame1", x, y);
 		fpanel_c1.addToContainer(this);
 		//fire1 = fpanel1.fire;
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel2 =
-			new FireEnablePanel(ui, "carouselTop", "fire2", x, y);
+			new FireEnablePanel(ui, "carousel-top", "flame2", x, y);
 		fpanel2.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel3 =
-			new FireEnablePanel(ui, "carouselTop", "fire3", x, y);
+			new FireEnablePanel(ui, "carousel-top", "flame3", x, y);
 		fpanel3.addToContainer(this);
 		y += VERT_OFFSET;
 		FireEnablePanel fpanel4 =
-			new FireEnablePanel(ui, "carouselTop", "center", x, y);
+			new FireEnablePanel(ui, "carousel-top", "center", x, y);
 		fpanel4.addToContainer(this);
 
 		x = 120;

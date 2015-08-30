@@ -16,7 +16,7 @@ void psenvsub () {
         String[] contents= message[1].split(",");
 
         println(contents[1]);
-        rotationPosition = Float.parseFloat(contents[0]);
+        rotationPosition = -Float.parseFloat(contents[0]);
         rotationVelocity = Float.parseFloat(contents[1]);
 
     }

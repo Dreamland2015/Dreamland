@@ -25,6 +25,7 @@ class RGBProjection extends DLPattern
 	{
 		for (LXPoint p: model.points)
 		{
+			// brightness = rotationVelocity ;
 			colors[p.index] = lx.hsb(rotationPosition, 100, 100);
 		}
 	}
@@ -75,6 +76,13 @@ class HelloWorldPattern extends DLPattern
 			} 
 
 			for (LXPoint p : model.outerBenches.get(benchNum).points) 
+			{
+				float h = 255 - whatColor.getValuef();
+		    	int s = 100;
+		    	int b = 100;
+		    	colors[p.index]=lx.hsb(h + modifier, s, b);
+			} 
+			for (LXPoint p : model.kaleidoscopes.get(benchNum).points) 
 			{
 				float h = 255 - whatColor.getValuef();
 		    	int s = 100;
@@ -335,28 +343,3 @@ class PulseProjection extends LXPattern {
     }
   }
 }
-
-// class MoveYPositionProjection extends DLPattern
-// {
-//   private final float modelMin = model.yMin - 50;
-//   private final float modelMax = model.yMax + 50;
-//   private final BasicParameter yPos = new BasicParameter("yPos", 100, modelMin, modelMax);
-//   private final BasicParameter falloff = new BasicParameter("fall", 1, 0, 1);
-
-//   public MoveYPosition(LX lx)
-//   {
-//     super(lx);
-//       addParameter(yPos);
-//       addParameter(falloff);
-//   }
-
-//   public void run(double deltaMs) 
-//   {
-//     float hueValue = lx.getBaseHuef();
-//     for (LXPoint p : model.points)
-//     {
-//       float brightnessValue = max(0, 100 - abs(p.y - yPos.getValuef() * falloff.getValuef()));
-//       colors[p.index] = lx.hsb(hueValue, 100, brightnessValue);
-//     } 
-//   }
-// }
