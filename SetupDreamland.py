@@ -77,6 +77,7 @@ configs = [
      }
 ]
 
-s = multiSSH.MultiDreamandPi(configs)
-s.do_partial_setup()
-print('Finished setup run.')
+if __name__ == "__main__":
+    s = multiSSH.MultiDreamandPi(configs)
+    s.do_partial_setup()
+    print('Finished setup run.')

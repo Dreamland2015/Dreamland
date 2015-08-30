@@ -222,6 +222,9 @@ class DreamlandPi(SSHConnection):
         #self.setup_fadecandy()
         self.do_code_refresh()
 
+    def shutdown(self):
+        self.runCommand('sudo halt')
+
 class MultiDreamandPi:
     def __init__(self, configs, debug=False):
         self.configs = configs
@@ -256,3 +259,6 @@ class MultiDreamandPi:
 
     def supervisor_reload(self):
         self._do_on_all(DreamlandPi.supervisor_reload)
+
+    def shutdown(self):
+        self._do_on_all(DreamlandPi.shutdown)
