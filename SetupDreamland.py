@@ -72,7 +72,7 @@ configs = [
      {
          'topic': 'outerbench3',
          #'hostname': "pi5.local",
-         'hostname': '192.168.105',
+         'hostname': '192.168.2.105',
          'master': serverIp,
      }
 ]
