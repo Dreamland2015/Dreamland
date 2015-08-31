@@ -225,6 +225,9 @@ class DreamlandPi(SSHConnection):
     def shutdown(self):
         self.runCommand('sudo halt')
 
+    def ping(self):
+        self.runCommand('hostname')
+
 class MultiDreamandPi:
     def __init__(self, configs, debug=False):
         self.configs = configs
