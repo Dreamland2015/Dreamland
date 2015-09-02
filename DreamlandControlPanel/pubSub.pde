@@ -13,7 +13,7 @@ void zeromq_sub() {
         String []addr_tokens = full_message.split("[|]");
         //print(addr_tokens);
         String address = addr_tokens[0];
-        println(address);
+        //println(address);
         if (address.equals("motion"))
             continue;
         String []action_tokens = addr_tokens[1].split("[#]");
