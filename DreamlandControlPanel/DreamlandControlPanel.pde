@@ -9,6 +9,8 @@ P2LX lx;
 //private final int BG_COLOR = #292929;
 private final int WARNING_RED_COLOR = #B33A3A;
 
+private final int UI_HEIGHT = 740;
+
 ControlPanelUI cpui;
 public UIButton fire1;
 
@@ -28,6 +30,7 @@ class FireEnablePanel extends UIWindow {
 	boolean fire_enabled;
 	FireEnablePanel(UI ui, String myTopic, String myWhich, float panel_x, float panel_y) {
 		super(ui, myTopic + " " + myWhich, panel_x, panel_y, 100, 130);
+        print(myTopic + " " + myWhich);
 		this.topic = myTopic;
 		this.which = myWhich;
 
@@ -64,18 +67,39 @@ class FireEnablePanel extends UIWindow {
 			.addToContainer(this);
 		y += 50;
 
-		fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
-			ZMQ_pub pub = new ZMQ_pub(master, topic, which);
-			protected void onToggle(boolean enabled) {
-				if (fire_enabled && enabled) {
-					pub.sendMessage("0");
-					println(topic + "|" + which + " on");
-				} else {
-					pub.sendMessage("1");
-					println(topic + "|" + which + " off");
-				}
-			}
-		};
+        if (which == "allcenterside") {
+            fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
+                ZMQ_pub pub1 = new ZMQ_pub(master, topic, "flame1");
+                ZMQ_pub pub2 = new ZMQ_pub(master, topic, "flame2");
+                ZMQ_pub pub3 = new ZMQ_pub(master, topic, "flame3");
+                protected void onToggle(boolean enabled) {
+                    if (fire_enabled && enabled) {
+                        pub1.sendMessage("0");
+                        pub2.sendMessage("0");
+                        pub3.sendMessage("0");
+                        println(topic + "|" + which + " on");
+                    } else {
+                        pub1.sendMessage("1");
+                        pub2.sendMessage("1");
+                        pub3.sendMessage("1");
+                        println(topic + "|" + which + " off");
+                    }
+                }
+            };
+        } else {
+            fire = new UIButton(5, y, ELEMENT_WIDTH, 45) {
+                ZMQ_pub pub = new ZMQ_pub(master, topic, which);
+                protected void onToggle(boolean enabled) {
+                    if (fire_enabled && enabled) {
+                        pub.sendMessage("0");
+                        println(topic + "|" + which + " on");
+                    } else {
+                        pub.sendMessage("1");
+                        println(topic + "|" + which + " off");
+                    }
+                }
+            };
+        }
 		fire.setMomentary(true)	
 			.addToContainer(this);
 		// Hacky workaround by setting it true first.
@@ -88,7 +112,7 @@ class ControlPanelUI extends UIWindow {
 	// private final int ELEMENT_WIDTH = 80;
 
 	ControlPanelUI(UI ui) {
-		super(ui, "CtrlPanel", 0, 0, 230, 600);
+		super(ui, "CtrlPanel", 0, 0, 230, UI_HEIGHT);
 		println("created!");
 		int x = 10;
 		int y = 30;
@@ -110,7 +134,9 @@ class ControlPanelUI extends UIWindow {
 		FireEnablePanel fpanel4 =
 			new FireEnablePanel(ui, "carousel-top", "center", x, y);
 		fpanel4.addToContainer(this);
+		y += VERT_OFFSET;
 
+        int y_last = y;
 		x = 120;
 		y = 30;
 		// Fire on lanterns (3)
@@ -127,13 +153,16 @@ class ControlPanelUI extends UIWindow {
 		fpanel7.addToContainer(this);
 		y += VERT_OFFSET;
 
+		FireEnablePanel fpanel8 =
+			new FireEnablePanel(ui, "carouselTop", "allcenterside", 10, y_last);
+		fpanel8.addToContainer(this);
 	}
 }
 
 
 void setup()
 {
-	size(230, 600);
+	size(230, UI_HEIGHT);
 	//colorMode(RGB, );
 	background(#292929);
 
