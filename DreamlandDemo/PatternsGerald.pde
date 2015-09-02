@@ -343,3 +343,47 @@ class PulseProjection extends LXPattern {
     }
   }
 }
+
+class rainbowfadeautoProjection extends LXPattern {
+  //float period = 1000;
+  //private final BasicParameter periodT = new BasicParameter("T", 1, .001, 1000);
+  private final BasicParameter speed = new BasicParameter("speed", 5, .1, 25);
+  private final BasicParameter saturation = new BasicParameter("sat", 100, 30, 100);
+  private final BasicParameter bright = new BasicParameter("brite", 100, 40, 100);
+  private final SinLFO ysign = new SinLFO(1, -1, 10548);
+  private final SinLFO xsign = new SinLFO(-1, 1, 7893);
+  private final SinLFO zsign = new SinLFO(1, -1, 6211);
+  private final BasicParameter size = new BasicParameter("size", 2, 1.4, 8);
+  //private final BasicParameter ysign = new BasicParameter("ys", -1, -1, 1);
+  //private final BasicParameter xsign = new BasicParameter("xs", -1, -1, 1);
+  //private final BasicParameter zsign = new BasicParameter("zs", -1, -1, 1);
+
+  public rainbowfadeautoProjection(LX lx) {
+    super(lx);
+    addParameter(speed);
+    addParameter(saturation);
+    addParameter(size);
+    addParameter(bright);
+    //addParameter(periodT);
+    addModulator(ysign).trigger();
+    addModulator(xsign).trigger();
+    addModulator(zsign).trigger();
+    //addParameter(ysign);
+    //addParameter(xsign);
+    //addParameter(zsign);
+  }
+  public void run(double deltaMs) {
+
+  	float fadeSpeed = rotationVelocity * 60 / 360;
+  	fadeSpeed = fadeSpeed / 10;
+  	// float numRotations
+
+    for (LXPoint p : model.points) {
+      colors[p.index] = lx.hsb(
+      // lx.getBaseHuef() * speed.getValuef() - ((ysign.getValuef())*p.y + (xsign.getValuef())*p.x + (zsign.getValuef())*p.z) * size.getValuef(), 
+      lx.getBaseHuef() * rotationVelocity - ((ysign.getValuef())*p.y + (xsign.getValuef())*p.x + (zsign.getValuef())*p.z) * size.getValuef(), 
+      saturation.getValuef(), 
+      bright.getValuef());
+    }
+  }
+}

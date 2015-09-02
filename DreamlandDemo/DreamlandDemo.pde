@@ -48,7 +48,7 @@ void setup()
 		// new ControlProjectionSpeed(lx),
 		// new SamPattern(lx),
 		new HelloWorldPattern(lx),
-		
+		new rainbowfadeautoProjection(lx),
 		new ProjectionLayerTest(lx),
 		new BarbershopProjection(lx),
 		new RGBProjection(lx),
