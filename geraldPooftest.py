@@ -1,3 +1,4 @@
+#
 import util
 import time
 
@@ -8,7 +9,6 @@ serverIp = util.get_default_ip()
 pub1 = util.PubClient(serverIp, 'lampPost1')
 pub2 = util.PubClient(serverIp, 'lampPost2')
 pub3 = util.PubClient(serverIp, 'lampPost3')
-
 pubC = util.PubClient(serverIp, 'carousel-top')
 
 topSidePoofers =  ['flame1', 'flame2', 'flame3']
@@ -19,17 +19,18 @@ sub = util.SubClient(serverIp, 'motion')
 lps = [pub1, pub2, pub3]
 # lps = [pub1, pub2]
 OFF = 1
-ON = 1
+ON = 0
 
 def kill_all():
 	pub1.send('flame', OFF)
 	pub2.send('flame', OFF)
-	pub2.send('flame', OFF)
+	pub3.send('flame', OFF)
 	for which in topPoofers:
 		pubC.send(which, OFF)
 
 def poofCenter(centerPub, poofers, delay):
 	for poofer in poofers:
+		print("poof a center")
 		sendPoofCenterOn(centerPub, poofer)
 
 	time.sleep(delay)
@@ -38,24 +39,28 @@ def poofCenter(centerPub, poofers, delay):
 		sendPoofCenterOff(centerPub, poofer)
 
 def poofHorizSeq(centerPub, poofers, delay):
-	for poofer in poofers:
-		sendPoofCenter(centerPub, poofer, delay)
+    print('starting poofHorizSeq')
+    for poofer in poofers:
+        print("poof a horizontal: %s" % poofer)
+        sendPoofCenter(centerPub, poofer, delay)
+    print('ending poofHorizSeq')
 
 def sendPoofCenter(centerPub, poofer, delay):
-	print("poof")
 	centerPub.send(poofer,0)
 	time.sleep(delay)
 	centerPub.send(poofer,1)
+	time.sleep(delay)
 
 def sendPoofCenterOn(centerPub, poofer):
-	print("poof")
+	# print("center poof on")
 	centerPub.send(poofer,0)
 
 def sendPoofCenterOff(centerPub, poofer):
+	# print("center poof off")
 	centerPub.send(poofer,1)
 
 def sendPoof(poofer, delay):
-	print("poof")
+	print("poof a lp")
 	poofer.send('flame',0)
 	time.sleep(delay)
 	poofer.send('flame',1)
@@ -70,10 +75,22 @@ def multiPoof(poofers, delay, multiplier):
 	time.sleep(delay * multiplier)
 
 def go_big():
-	#poofHorizSeq(pubC, topSidePoofers, 0.015)
-	for poofer in topSidePoofers:
-		sendPoofCenter(pubC, poofer, .004)
-	sendPoofCenter(pubC, ['center'], .01)
+        #poofHorizSeq(pubC, topSidePoofers, 0.015)
+        print("starting gobig")
+        for poofer in topSidePoofers:
+            print("poofer %s" % poofer)
+            sendPoofCenter(pubC, poofer, .001)
+        sendPoofCenter(pubC, ['center'], 1)
+        print("ending gobig")
+        pass
+
+def seqLampPost(poofers, delay):
+	for poofer in poofers:
+		poofer.send('flame',0)
+		time.sleep(delay)
+		poofer.send('flame',1)
+		time.sleep(delay)
+		print('lp ')
 
 kill_all()
 rotations = 0
@@ -82,63 +99,45 @@ while True:
 	# print(message)
 	# print("rotations")
 	position, velocity = message[0].split(",")
-	if 0 < float(position) < 5:
+	#print("p=", position, "v=", velocity)
+	if 0 < float(position) <= 3:
 		rotations += 1
+		print('pos:', position, 'rotations A = ', rotations)
 	if rotations > 30:
 		rotations = 0
-
-	print(rotations)
+		print('rotations B = ', rotations)
 
 	position = (360 - float(position))
 
+	doeffect = 0
 	if 0 < position < 5:
 		sendPoof(pub1, 0.03)
 		sendPoof(pub2, 0.03)
+		sendPoof(pub3, 0.03)
 		# poofCenter(pubC, topPoofers, 0.03)
-	elif 120 < position < 125:
+		doeffect = 1
+	elif 180 < position < 185:
+		sendPoof(pub1, 0.03)
 		sendPoof(pub2, 0.03)
 		sendPoof(pub3, 0.03)
-		# poofCenter(pubC, topPoofers, 0.03)
-		# poofCenter(pubC, topSidePoofers, 0.1)
-	elif 240 < position < 245:
-		sendPoof(pub3, 0.03)
-		sendPoof(pub1, 0.03)
-		# poofCenter(pubC, topSidePoofers, 0.1)
-		poofCenter(pubC, topPoofers, 0.1)
-		# if rotations == 0:
-		# 	poofCenter(pubC, ['center'], 0.1)
-		# else:
-		# 	poofCenter(pubC, topSidePoofers, 0.3)
-	elif rotations == 4:
-		poofCenter(pubC, topSidePoofers, 0.001)
-		pass
+		doeffect = 1 
+#	elif 240 < position < 245:
+#		sendPoof(pub1, 0.03)
+#		sendPoof(pub2, 0.03)
+#		sendPoof(pub3, 0.03)
+	# elif rotations == 4:
+	# 	poofCenter(pubC, topSidePoofers, 0.05)
+	# 	pass
 
-	elif rotations == 15:
-		#poofHorizSeq(pubC, topSidePoofers, 0.001)
-		go_big()
-		pass
+	if doeffect == 1:
+	    if rotations == 3:
+		    poofHorizSeq(pubC, topSidePoofers, 0.001)
+		    # go_big()
+		    pass
 
-	# elif rotations == 25:
-	# 	for n in range(10):
-	# 		multiPoof(lps, 0.02, 2)
-
-
-	# if rotations == 4:
-	# 	poofCenter(pubC, topSidePoofers, 0.02)
-
-	# elif rotations == 15:
-	# 	poofHorizSeq(pubC, topSidePoofers, 0.015)
-
-
-
-	#if velocity
-
-
-	# sendPoof(pub1, 0.11)
-
-	# for poofer in lps:
-	# 	sendPoof(poofer, 0.2)
-
-	# time./sleep(1)
-
-
+	    elif rotations == 5:
+                    rotations = 0
+                    print("rotations: %s" % rotations)
+                    go_big()
+                    poofCenter(pubC, ['center'], 1.5)
+                    pass

@@ -138,12 +138,12 @@ public void setup()
 		// new ControlProjectionSpeed(lx),
 		// new SamPattern(lx),
 		new HelloWorldPattern(lx),
-		new rainbowfadeautoProjection(lx),
+		new rainbowfadeautoProjection(lx).setTransition(new DissolveTransition(lx)),
 		new ProjectionLayerTest(lx),
 		new BarbershopProjection(lx),
-		new RGBProjection(lx),
-		new PulseProjection(lx),
-		new WorkLightMode(lx),
+		new RGBProjection(lx).setTransition(new DissolveTransition(lx)),
+		new PulseProjection(lx).setTransition(new DissolveTransition(lx)),
+		// new WorkLightMode(lx),
 		new TestXPattern(lx),
 		new PythonProjection(lx),
 		new IteratorTestPattern(lx).setTransition(new DissolveTransition(lx)),
@@ -156,7 +156,7 @@ public void setup()
 		new TestZPattern(lx),
 		new Bouncing(lx),
 		new Cascade(lx),
-		new CrazyWaves(lx),
+		new CrazyWaves(lx).setTransition(new DissolveTransition(lx)),
 		new CrossSections(lx),
 		new DFC(lx),
 		new LayerDemoPattern(lx),
@@ -166,11 +166,11 @@ public void setup()
 		new RainbowInsanity(lx),
 		new SeeSaw(lx),
 		new ShiftingPlane(lx),
-		new SparkleTakeOver(lx),
+		new SparkleTakeOver(lx).setTransition(new DissolveTransition(lx)),
 		new Stripes(lx),
 		new Strobe(lx),
 		new SweepPattern(lx),
-		new Twinkle(lx),
+		new Twinkle(lx).setTransition(new DissolveTransition(lx)),
 		new block(lx),
 		new candycloudstar(lx),
 		new rainbowfade(lx),
@@ -4360,6 +4360,7 @@ class Button {
 /* Build FadeCandy output */
 
 LXOutput output;
+LXOutput the_output;
 
 class DreamlandFadecandyOutput extends FadecandyOutput {
   DreamlandFadecandyOutput(LX lx, String host, int port) {
@@ -4368,6 +4369,9 @@ class DreamlandFadecandyOutput extends FadecandyOutput {
   
   protected void didDispose(Exception x) {
     println("Fadecandy connection failure: " + host + ":" + port + " - " + x.toString());  
+    //output.enabled.setValue(false);
+    //output.enabled.setValue(false);
+    the_output.enabled.setValue(false);
   }
 }
 
@@ -4375,26 +4379,26 @@ public void buildOutputs()
 {
   output = new LXOutputGroup(lx);
   output.enabled.setValue(false);
+  the_output = output;
   lx.addOutput(output);
 
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.115", 7890));  // carousel-top
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.110", 7890));  // carousel-bottom
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.116", 7890));  // lamppost 1
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.108", 7890));  // lamppost 2
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.104", 7890));  // lamppost 3
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.107", 7890));  // outerbench 1
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.106", 7890));  // outerbench 2
-  // output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.105", 7890));  // outerbench 2
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.115", 7890));  // carousel-top
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.110", 7890));  // carousel-bottom
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.116", 7890));  // lamppost 1
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.108", 7890));  // lamppost 2
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.104", 7890));  // lamppost 3
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.107", 7890));  // outerbench 1
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.106", 7890));  // outerbench 2
+  output.addChild(new DreamlandFadecandyOutput(lx, "192.168.2.105", 7890));  // outerbench 2
 
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi15.local", 7890));  // carousel-top
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi10.local", 7890));  // carousel-bottom
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi16.local", 7890));  // lamppost 1
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi8.local", 7890));  // lamppost 2
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi4.local", 7890));  // lamppost 3
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi7.local", 7890));  // outerbench 1
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi5.local", 7890));  // outerbench 2
-  output.addChild(new DreamlandFadecandyOutput(lx, "pi6.local", 7890));  // outerbench 2
-
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi15.local", 7890));  // carousel-top
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi10.local", 7890));  // carousel-bottom
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi16.local", 7890));  // lamppost 1
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi8.local", 7890));  // lamppost 2
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi4.local", 7890));  // lamppost 3
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi7.local", 7890));  // outerbench 1
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi5.local", 7890));  // outerbench 2
+  //output.addChild(new DreamlandFadecandyOutput(lx, "pi6.local", 7890));  // outerbench 2
 }
 class MoveXPosition extends DLPattern
 {

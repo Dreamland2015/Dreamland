@@ -87,6 +87,7 @@ while True:
 	# print(message)
 	# print("rotations")
 	position, velocity = message[0].split(",")
+        print("pos: %d, vel: %d" % position, velocity)
 	if 0 < float(position) < 5:
 		rotations += 1
 	if rotations > 20:

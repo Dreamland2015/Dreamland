@@ -27,7 +27,7 @@ def doit():
                 #print('w', which, 'v', value)
                 if lp1_flame is True:
                     continue
-                if (time.time() - lp1_flame_time) < .1:
+                if (time.time() - lp1_flame_time) < .3:
                     print("skipping press")
                     continue
                 l1.send(target, value)
